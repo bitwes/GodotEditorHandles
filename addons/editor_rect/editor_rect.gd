@@ -4,22 +4,18 @@ class_name EditorRect
 
 var resizes  := []
 
-var lock_x = false
-var lock_x_value = 0
-var lock_y = false
-var lock_y_value = 0
-var drag_snap = Vector2(1, 1)
-var moveable := false
 var size = Vector2(100, 100) :
 	set(val):
 		size = val
-		if(lock_x):
-			size.x = lock_x_value
-		if(lock_y):
-			size.y = lock_y_value
+		if(erp.lock_x):
+			size.x = erp.lock_x_value
+		if(erp.lock_y):
+			size.y = erp.lock_y_value
 		queue_redraw()
 		apply_size()
 		resized.emit()
+		erp.size = size
+		
 var erp : EditorRectProperties
 
 
@@ -33,12 +29,11 @@ var _move_handle_size = 30
 
 signal resized
 
-func _apply_to_erp():
-	if(erp == null):
-		return
-		
-	erp.size = size
-	erp.position = position
+
+
+
+func _init(edit_rect_props : EditorRectProperties):
+	erp = edit_rect_props
 
 
 func _br_has_point(point):
@@ -56,7 +51,7 @@ func _editor_draw():
 		draw_rect(Rect2(size / -2, size), Color.WHITE, false, 1)
 		var c = size / 2
 		draw_circle(size/2, 10, Color.ORANGE)
-		if(moveable):
+		if(erp.moveable):
 			var s = Vector2(30, 30)
 			draw_rect(Rect2(Vector2.ZERO - s, s * 2), Color(1, 1, 1, .5))
 
@@ -86,16 +81,16 @@ func update_br(new_position):
 	var new_size = diff * 2
 	var size_diff = (size - new_size).abs()
 	# print(position, "::", new_position, "::", diff)
-	if(!lock_x and size_diff.x >= drag_snap.x):
-		size.x = new_size.x - int(new_size.x) % int(drag_snap.x)
-	if(!lock_y and size_diff.y >= drag_snap.y):
-		size.y = new_size.y - int(new_size.y) % int(drag_snap.y)
+	if(!erp.lock_x and size_diff.x >= erp.drag_snap.x):
+		size.x = new_size.x - int(new_size.x) % int(erp.drag_snap.x)
+	if(!erp.lock_y and size_diff.y >= erp.drag_snap.y):
+		size.y = new_size.y - int(new_size.y) % int(erp.drag_snap.y)
 
 
 func apply_size():
 	if(!is_inside_tree()):
 		return
-	_apply_to_erp()
+	
 	for element in resizes:
 		if(element is CollisionShape2D):
 			apply_size_to_collision_shape(element)

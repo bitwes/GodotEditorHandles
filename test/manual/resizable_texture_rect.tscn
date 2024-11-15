@@ -14,6 +14,7 @@ lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = null
+drag_snap = null
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [node name="ResizableTextureRect" type="Node2D"]

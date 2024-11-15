@@ -1,19 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://ukrwxq0jdjvh"]
+[gd_scene load_steps=10 format=3 uid="uid://ukrwxq0jdjvh"]
 
 [ext_resource type="PackedScene" uid="uid://c4qd3xkc68w6p" path="res://test/manual/resizable_texture_rect.tscn" id="1_1fpda"]
+[ext_resource type="Script" path="res://test/manual/manual_resize_testing.gd" id="1_5wxv1"]
 [ext_resource type="Script" path="res://addons/editor_rect/editor_rect_properties.gd" id="2_e6ubo"]
 [ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="3_r43y3"]
 
 [sub_resource type="Resource" id="Resource_sn4o7"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(236.198, 131.6)
+size = Vector2(286.198, 141.6)
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_56fgy"]
@@ -26,6 +28,7 @@ lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_n4dy3"]
@@ -38,38 +41,42 @@ lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_tm3qv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(72.1982, 343.6)
+size = Vector2(40.1982, 41.6)
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
 [sub_resource type="Resource" id="Resource_4rrbv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(480.198, 61.6)
+size = Vector2(482.198, 85.6)
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
 [node name="ManualResizeTesting" type="Node2D"]
+script = ExtResource("1_5wxv1")
 
 [node name="TextureRects" type="Node2D" parent="."]
 
 [node name="ResizableTextureRect" parent="TextureRects" instance=ExtResource("1_1fpda")]
-position = Vector2(123, 75)
+position = Vector2(153, 75)
 resize_properties = SubResource("Resource_sn4o7")
 
 [node name="ResizableTextureRect2" parent="TextureRects" instance=ExtResource("1_1fpda")]
@@ -87,5 +94,5 @@ position = Vector2(422, 146)
 editor_rect_props = SubResource("Resource_tm3qv")
 
 [node name="ResizableCollisionShape2" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(719, 138)
+position = Vector2(781, 137)
 editor_rect_props = SubResource("Resource_4rrbv")
