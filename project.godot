@@ -13,3 +13,7 @@ config_version=5
 config/name="EditorRect"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/editor_rect/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/kenyoni/plugin_reloader/plugin.cfg")

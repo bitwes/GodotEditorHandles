@@ -2,14 +2,15 @@
 extends Node2D
 class_name EditorRect
 
-@export_node_path var resizes : Array[NodePath] = []
-@export var lock_x = false
-@export var lock_x_value = 0
-@export var lock_y = false
-@export var lock_y_value = 0
-@export var drag_snap = Vector2(1, 1)
-@export var moveable := false
-@export var size = Vector2(100, 100) :
+var resizes  := []
+
+var lock_x = false
+var lock_x_value = 0
+var lock_y = false
+var lock_y_value = 0
+var drag_snap = Vector2(1, 1)
+var moveable := false
+var size = Vector2(100, 100) :
 	set(val):
 		size = val
 		if(lock_x):
@@ -19,6 +20,7 @@ class_name EditorRect
 		queue_redraw()
 		apply_size()
 		resized.emit()
+var erp : EditorRectProperties
 
 
 var is_being_edited = false:
@@ -30,6 +32,13 @@ var is_being_edited = false:
 var _move_handle_size = 30
 
 signal resized
+
+func _apply_to_erp():
+	if(erp == null):
+		return
+		
+	erp.size = size
+	erp.position = position
 
 
 func _br_has_point(point):
@@ -52,9 +61,17 @@ func _editor_draw():
 			draw_rect(Rect2(Vector2.ZERO - s, s * 2), Color(1, 1, 1, .5))
 
 
+# This makes all children editable and assumes that this editor rect
+# is a first level child and a sibling of things it edits.  You must
+# make the design time root node editable.  Only the parent of a node
+# can make a node have editable children.
+func _make_parent_have_editable_children():
+	get_parent().get_parent().set_editable_instance(get_parent(), true)
+
+
 func _ready() -> void:
 	if(Engine.is_editor_hint()):
-		pass
+		apply_size.call_deferred()
 	else:
 		apply_size.call_deferred()
 
@@ -78,15 +95,14 @@ func update_br(new_position):
 func apply_size():
 	if(!is_inside_tree()):
 		return
-
+	_apply_to_erp()
 	for element in resizes:
-		var n = get_node(element)
-		if(n is CollisionShape2D):
-			apply_size_to_collision_shape(n)
-		elif(n is Control):
-			apply_size_to_non_centered_size_thing(n)
+		if(element is CollisionShape2D):
+			apply_size_to_collision_shape(element)
+		elif(element is Control):
+			apply_size_to_non_centered_size_thing(element)
 		else:
-			Globals.lgr.error(self, ":  I don't know how to resize ", n)
+			push_error(self, ":  I don't know how to resize ", element)
 
 
 func apply_size_to_collision_shape(coll_shape : CollisionShape2D):
