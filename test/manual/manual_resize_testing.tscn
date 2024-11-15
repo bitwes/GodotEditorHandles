@@ -8,65 +8,65 @@
 [sub_resource type="Resource" id="Resource_sn4o7"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(286.198, 141.6)
+size = Vector2(291.398, 126)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_56fgy"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(142.598, 426)
+size = Vector2(162.598, 413.2)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_n4dy3"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(666.198, 157.6)
+size = Vector2(682.598, 143.2)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [sub_resource type="Resource" id="Resource_tm3qv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(40.1982, 41.6)
+size = Vector2(103.398, 284)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
 [sub_resource type="Resource" id="Resource_4rrbv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(482.198, 85.6)
+size = Vector2(73.3984, 170)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
@@ -90,9 +90,9 @@ resize_properties = SubResource("Resource_n4dy3")
 [node name="CollisionShapes" type="Node2D" parent="."]
 
 [node name="ResizableCollisionShape" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(422, 146)
+position = Vector2(413, 165)
 editor_rect_props = SubResource("Resource_tm3qv")
 
 [node name="ResizableCollisionShape2" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(781, 137)
+position = Vector2(806, 151)
 editor_rect_props = SubResource("Resource_4rrbv")

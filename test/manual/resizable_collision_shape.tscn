@@ -8,13 +8,13 @@
 resource_local_to_scene = true
 script = ExtResource("2_euusn")
 size = Vector2(144.7, 138)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
-drag_snap = null
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nvf70"]

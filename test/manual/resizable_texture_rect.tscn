@@ -8,13 +8,13 @@
 resource_local_to_scene = true
 script = ExtResource("2_8n61e")
 size = Vector2(176.998, 149.2)
+moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = null
-drag_snap = null
+drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("TextureRect")])
 
 [node name="ResizableTextureRect" type="Node2D"]

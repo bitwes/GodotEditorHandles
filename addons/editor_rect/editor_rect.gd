@@ -15,7 +15,7 @@ var size = Vector2(100, 100) :
 		apply_size()
 		resized.emit()
 		erp.size = size
-		
+
 var erp : EditorRectProperties
 
 
@@ -90,7 +90,7 @@ func update_br(new_position):
 func apply_size():
 	if(!is_inside_tree()):
 		return
-	
+
 	for element in resizes:
 		if(element is CollisionShape2D):
 			apply_size_to_collision_shape(element)
