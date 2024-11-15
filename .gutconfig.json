@@ -1,0 +1,35 @@
+{
+ "dirs": [
+  "res://test/unit"
+ ],
+ "hide_orphans": false,
+ "log_level": 3,
+ "compact_mode": true,
+ "should_exit": true,
+
+
+ "background_color": "262626ff",
+ "configured_dirs": [
+  "res://test/unit",
+  "res://test/integration"
+ ],
+ "disable_colors": false,
+ "double_strategy": 1,
+ "errors_do_not_cause_failure": false,
+ "font_color": "ccccccff",
+ "font_name": "CourierPrime",
+ "font_size": 16,
+ "gut_on_top": true,
+ "ignore_pause": false,
+ "include_subdirs": true,
+ "junit_xml_file": "",
+ "junit_xml_timestamp": false,
+ "opacity": 100,
+ "paint_after": 0.1,
+ "post_run_script": "",
+ "pre_run_script": "",
+ "prefix": "test_",
+ "should_exit_on_success": false,
+ "should_maximize": false,
+ "suffix": ".gd"
+}
