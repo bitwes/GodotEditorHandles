@@ -43,3 +43,12 @@ Once this becomes a real boy it'll be installable through the Asset Library.  Un
 * copy addons/EditorRect to your project.
 * enable the plugin.
 
+# Screenshots
+This is a node that has a `CollsionShape2D` that can be resized in another scene.
+![image](https://github.com/user-attachments/assets/895c6df6-c750-43d3-b5db-1409f121cc09)
+
+Here you can see the collision shape being resized in another scene.
+![image](https://github.com/user-attachments/assets/9f1c1cc7-3e04-48b1-b835-0d9dcf966e6c)
+
+
+
