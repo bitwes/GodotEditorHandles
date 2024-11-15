@@ -47,7 +47,7 @@ resizes = Array[NodePath]([NodePath("TextureRect")])
 [sub_resource type="Resource" id="Resource_tm3qv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(103.398, 284)
+size = Vector2(71.3984, 240.8)
 moveable = false
 position = Vector2(0, 0)
 lock_x = false
@@ -60,7 +60,7 @@ resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 [sub_resource type="Resource" id="Resource_4rrbv"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(73.3984, 170)
+size = Vector2(301.398, 61.6001)
 moveable = false
 position = Vector2(0, 0)
 lock_x = false
@@ -90,9 +90,9 @@ resize_properties = SubResource("Resource_n4dy3")
 [node name="CollisionShapes" type="Node2D" parent="."]
 
 [node name="ResizableCollisionShape" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(413, 165)
+position = Vector2(373, 196)
 editor_rect_props = SubResource("Resource_tm3qv")
 
 [node name="ResizableCollisionShape2" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(806, 151)
+position = Vector2(617, 69)
 editor_rect_props = SubResource("Resource_4rrbv")
