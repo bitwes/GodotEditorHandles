@@ -63,7 +63,7 @@ func _find_editor_rect(node : Node):
 
 func _handle_mouse_motion(event :InputEventMouseMotion) -> bool:
 	if(resizing):
-		editing.update_br(editing.get_local_mouse_position())
+		editing.handle_mouse_motion()
 		return true
 	else:
 		return false
@@ -74,7 +74,7 @@ func _handle_mouse_button(event : InputEventMouseButton):
 	if(event.button_index == MOUSE_BUTTON_LEFT):
 		var undo = get_undo_redo()
 		if(event.pressed):
-			if(editing._br_has_mouse()):
+			if(editing.do_handles_contain_mouse()):
 				resizing = true
 				undo.create_action("resize_editor_rect")
 				undo.add_undo_property(editing, 'size', editing.size)
