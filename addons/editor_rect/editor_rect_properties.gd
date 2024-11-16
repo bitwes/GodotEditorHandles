@@ -7,7 +7,11 @@ class_name EditorRectProperties
 	set(val):
 		moveable = val
 		notify_property_list_changed()
-@export var position := Vector2.ZERO
+@export var position := Vector2.ZERO:
+	set(val):
+		position = val
+		if(_editor_rect != null):
+			_editor_rect.position = position
 @export var lock_x := false :
 	set(val):
 		lock_x = val
@@ -22,12 +26,15 @@ class_name EditorRectProperties
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 @export_node_path var resizes : Array[NodePath] = []
 
+var _editor_rect : EditorRect = null
 
 func make_editor_rect(base_node : Node):
 	var to_return = EditorRect.new(self)
+	to_return.position = position
 	to_return.size = size
 	for np in resizes:
 		to_return.resizes.append(base_node.get_node(np))
+	_editor_rect = to_return
 	return to_return
 
 
