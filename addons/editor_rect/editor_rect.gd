@@ -54,13 +54,16 @@ signal resized
 
 func _init(edit_rect_props : EditorRectProperties):
 	erp = edit_rect_props
-	_move_handle.color = Color(1, 1, 1, .5)
+	_move_handle.color.a = .5
 	_move_handle.rect.size = Vector2(30, 30)
 	_move_handle.rect.position = _move_handle.rect.size / -2
 
 
 func _ready() -> void:
 	apply_size.call_deferred()
+	position = erp.position
+	for r in resizes:
+		r.position = erp.position
 
 
 func _draw() -> void:
@@ -103,7 +106,7 @@ func _update_handles():
 
 
 func _update_size_for_mouse_motion(new_position):
-	var diff = (position - new_position).abs()
+	var diff = (global_position - new_position).abs()
 	var new_size = diff * 2
 	var size_diff = (size - new_size).abs()
 
@@ -179,7 +182,7 @@ func handle_mouse_motion():
 	if(_focused_handle == _move_handle):
 		_handle_move_for_mouse_motion(get_global_mouse_position())
 	elif(_focused_handle != null):
-		_update_size_for_mouse_motion(get_local_mouse_position())
+		_update_size_for_mouse_motion(get_global_mouse_position())
 
 
 func release_handles():
