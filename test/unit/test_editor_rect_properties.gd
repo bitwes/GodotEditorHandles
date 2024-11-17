@@ -5,13 +5,14 @@ var dyn_script = load("res://addons/gut/dynamic_gdscript.gd").new()
 func before_all():
 	dyn_script.default_script_name_no_extension = "test_editor_rect_properties"
 
+
 # I made this because using `set` on a resource (just a resource?) does not go
 # through the setter and I wanted to make a parameterized test.
 func set_property_with_code(thing, prop_name, value):
 	var code = str("\n
 	func _init(thing, value):\n
 		thing.", prop_name, " = value")
-	var inst = dyn_script.create_script_from_source(code).new(thing, value)
+	dyn_script.create_script_from_source(code).new(thing, value)
 
 
 func assert_bit_flag_set(value, flag, msg=''):
@@ -115,3 +116,62 @@ func test_setting_moveable_enables_position():
 
 # --------------------
 #endregion
+
+
+func test_setting_size_in_signal_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.size.x += 1)
+	erp.size.x = 50
+	assert_eq(erp.size.x, 51.0)
+
+
+func test_setting_position_in_signal_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.position.y += 1)
+	erp.position.y = 50
+	assert_eq(erp.position.y, 51.0)
+
+
+func test_setting_position_and_size_in_handler_is_fine():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func():
+		erp.position.y += 1
+		erp.size.x += 1)
+	erp.position.y = 50
+	erp.size.x = 50
+	# size is set second, so it will be set to 50 then incremented
+	assert_eq(erp.size.x, 51.0, 'size')
+	# position is set first, so it will get incremented twice
+	assert_eq(erp.position.y, 52.0, 'position')
+
+
+func test_setting_moveable_in_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.moveable = true)
+	erp.moveable = false
+	assert_true(erp.moveable)
+
+func test_setting_lock_x_in_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.lock_x = true)
+	erp.lock_x = false
+	assert_true(erp.lock_x)
+
+func test_setting_lock_x_value_in_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.lock_x_value = 99)
+	erp.lock_x_value = 50
+	assert_eq(erp.lock_x_value, 99)
+
+
+func test_setting_lock_y_in_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.lock_y = true)
+	erp.lock_y = false
+	assert_true(erp.lock_y)
+
+func test_setting_lock_y_value_in_handler_does_not_cause_recursion():
+	var erp = EditorRectProperties.new()
+	erp.changed.connect(func(): erp.lock_y_value = 99)
+	erp.lock_y_value = 50
+	assert_eq(erp.lock_y_value, 99)

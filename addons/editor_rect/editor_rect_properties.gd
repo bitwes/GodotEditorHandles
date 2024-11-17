@@ -2,32 +2,31 @@
 extends Resource
 class_name EditorRectProperties
 
-## It's the size.  A clever combination of width and height to represent a
-## rectangular shape.
+# used to prevent signals from firing when a property is being set in a signal
+# handler.
+var _is_currently_setting_property = false
+
+## It's the size...width and height, as you would expect.
 @export var size := Vector2(100, 100) :
 	set(val):
 		size = val
-		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
-		resized.emit()
-		emit_changed()
+		_emit_signals([resized, changed])
+
 
 ## Whether the rect is moveable.  There will be a handle in the middle that you
 ## can use to drag it about.
 @export var moveable := false :
 	set(val):
 		moveable = val
-		notify_property_list_changed()
-		emit_changed()
+		_emit_signals([changed])
 
 ## The position of the rect, enabled only when moveable.
 @export var position := Vector2.ZERO:
 	set(val):
 		position = val
-		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
-		moved.emit()
-		emit_changed()
+		_emit_signals([moved, changed])
 
 ## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
 @export var lock_x := false :
@@ -36,8 +35,7 @@ class_name EditorRectProperties
 		if(lock_x):
 			size.x = lock_x_value
 			_apply_properties_to_editor_rect()
-		notify_property_list_changed()
-		emit_changed()
+		_emit_signals([changed])
 
 ## The locked width value
 @export var lock_x_value := 0 :
@@ -46,7 +44,7 @@ class_name EditorRectProperties
 		if(lock_x):
 			size.x = val
 			_apply_properties_to_editor_rect()
-		emit_changed()
+		_emit_signals([changed])
 
 ## Enable/Disable locking the height of the rect.  Disabled when x_lock enabled.
 @export var lock_y := false :
@@ -54,7 +52,7 @@ class_name EditorRectProperties
 		lock_y = val
 		if(lock_y):
 			size.y = lock_y_value
-			notify_property_list_changed()
+		_emit_signals([changed])
 
 ## The locked height value
 @export var lock_y_value := 0 :
@@ -62,7 +60,7 @@ class_name EditorRectProperties
 		lock_y_value = val
 		if(lock_y):
 			size.y = val
-		emit_changed()
+		_emit_signals([changed])
 
 ## Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
@@ -85,17 +83,6 @@ func _apply_properties_to_editor_rect():
 			_editor_rect.change_position(position)
 
 
-func make_editor_rect():
-	var to_return = EditorRect.new(self)
-	to_return.position = position
-	to_return.size = size
-	resized.emit()
-	moved.emit()
-
-	_editor_rect = to_return
-	return to_return
-
-
 func _validate_property(property: Dictionary):
 	if property.name == "lock_x" and lock_y:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
@@ -111,3 +98,26 @@ func _validate_property(property: Dictionary):
 
 	if property.name == "position" and !moveable:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
+
+
+func _emit_signals(signal_list : Array[Signal]):
+	notify_property_list_changed()
+	if(!_is_currently_setting_property):
+		_is_currently_setting_property = true
+		for s in signal_list:
+			if(s == changed):
+				emit_changed()
+			else:
+				s.emit()
+		_is_currently_setting_property = false
+
+
+func create_edit_control():
+	var to_return = EditorRect.new(self)
+	to_return.position = position
+	to_return.size = size
+	resized.emit()
+	moved.emit()
+
+	_editor_rect = to_return
+	return to_return

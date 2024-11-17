@@ -29,7 +29,7 @@ If you change the array of things to be resized on the base object, none of the 
 
 
 ## Two resources?
-If there was a resource to hold the list of nodes to be updated, and another resource to hold the properties then that might do something?  The list resource would not be "local to scene" (possibly enforced by code).  This way you could change the list resource and it will propigate, but the actual props would not.  We could probably look for one of these on the parent object in `make_editor_rect` to auto detect.  If not, then you'd have to set it with code probably.
+If there was a resource to hold the list of nodes to be updated, and another resource to hold the properties then that might do something?  The list resource would not be "local to scene" (possibly enforced by code).  This way you could change the list resource and it will propigate, but the actual props would not.  We could probably look for one of these on the parent object in `create_edit_control` to auto detect.  If not, then you'd have to set it with code probably.
 
 
 ## Versioning

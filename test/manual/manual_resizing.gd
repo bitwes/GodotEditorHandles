@@ -5,22 +5,14 @@ extends Node2D
 
 
 func _ready():
-	editor_rect.resized.connect(_on_editor_rect_resized)
-	editor_rect.moved.connect(_on_editor_rect_moved)
-	editor_rect.changed.connect(_on_editor_rect_changed)
-	add_child(editor_rect.make_editor_rect())
-	_on_editor_rect_changed()
+	editor_rect.changed.connect(apply_editor_rect)
+	add_child(editor_rect.create_edit_control())
+	apply_editor_rect()
 
 
-func _on_editor_rect_resized():
-	pass
-
-
-func _on_editor_rect_moved():
-	pass
-
-
-func _on_editor_rect_changed():
+func apply_editor_rect():
+	editor_rect.position = editor_rect.position.clamp(Vector2(-200, -200), Vector2(200, 200))
+	editor_rect.size = editor_rect.size.clamp(Vector2(50, 50), Vector2(500, 500))
 	$Sprite2D.scale = editor_rect.size / $Sprite2D.texture.get_size()
 	$Sprite2D.position = editor_rect.position
-	#print("changed")
+	

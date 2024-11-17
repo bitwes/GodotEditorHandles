@@ -26,7 +26,7 @@ extends Node2D # or whatever
 func _ready():
     # The source of the magic.  No magic if you don't use this.  You will have
     # to reload the scene after adding this.
-	add_child(resize_properties.make_editor_rect(self))
+	add_child(resize_properties.create_edit_control())
 ```
 
 ## Set the things to resize

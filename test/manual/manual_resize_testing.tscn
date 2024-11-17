@@ -9,9 +9,9 @@
 [sub_resource type="Resource" id="Resource_56fgy"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(482.766, 361.061)
+size = Vector2(483.661, 373.352)
 moveable = true
-position = Vector2(0, 0)
+position = Vector2(264.01, 179.116)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -22,7 +22,7 @@ drag_snap = Vector2(1, 1)
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
 size = Vector2(265.716, 137.647)
-moveable = false
+moveable = true
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
@@ -33,9 +33,9 @@ drag_snap = Vector2(1, 1)
 [sub_resource type="Resource" id="Resource_3w2w0"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(277.186, 322.441)
-moveable = true
-position = Vector2(382.443, -1.05344)
+size = Vector2(58.187, 446.17)
+moveable = false
+position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -45,9 +45,9 @@ drag_snap = Vector2(1, 1)
 [sub_resource type="Resource" id="Resource_w8y2q"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(314.773, 300.492)
+size = Vector2(461.852, 85.5317)
 moveable = false
-position = Vector2(174.357, 131.861)
+position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -57,9 +57,9 @@ drag_snap = Vector2(1, 1)
 [sub_resource type="Resource" id="Resource_xt3vr"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
-size = Vector2(556.069, 314.52)
+size = Vector2(377.066, 397.349)
 moveable = true
-position = Vector2(289.538, 43.9895)
+position = Vector2(198.857, 35.9445)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -92,5 +92,5 @@ collision_shape_props = SubResource("Resource_w8y2q")
 [node name="ResizeWithCode" type="Node2D" parent="."]
 
 [node name="ManualResizing" parent="ResizeWithCode" instance=ExtResource("5_trsqi")]
-position = Vector2(896, 98)
+position = Vector2(899, 209)
 editor_rect = SubResource("Resource_xt3vr")
