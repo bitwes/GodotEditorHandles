@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0uoq3mo3deub"]
+
+[ext_resource type="Script" path="res://test/manual/manual_resizing.gd" id="1_pa1hb"]
+[ext_resource type="Script" path="res://addons/editor_rect/editor_rect_properties.gd" id="2_487st"]
+[ext_resource type="Texture2D" uid="uid://cpjmmagggbf5n" path="res://icon.png" id="3_on3tv"]
+
+[sub_resource type="Resource" id="Resource_ghrk4"]
+resource_local_to_scene = true
+script = ExtResource("2_487st")
+size = Vector2(310, 217)
+moveable = true
+position = Vector2(-1.25, -1.5)
+lock_x = false
+lock_x_value = 0
+lock_y = false
+lock_y_value = 0
+drag_snap = Vector2(1, 1)
+resizes = Array[NodePath]([])
+
+[node name="ManualResizing" type="Node2D"]
+script = ExtResource("1_pa1hb")
+editor_rect = SubResource("Resource_ghrk4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.562807, 1.44392e-06, 4.33177e-07, 1)
+position = Vector2(-1.25, -1.5)
+scale = Vector2(2.42188, 1.69531)
+texture = ExtResource("3_on3tv")

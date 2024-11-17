@@ -1,5 +1,15 @@
+# TODO
+* I think editor_rect_properties needs to make itself local to scene in _init().  This way the user doesn't have to remember to do that.
+* DragSnap should not be looking at difference in size, but position (snap to grid, not incremental size change).
+* DragSnap should be applied to movement.
+
+
+# Move resize/move of targets to resource
+If the resource does the movement and resizing of nodes then we won't need to add an EditorRect control at runtime.
+
+
 # Setting which properties are editable
-It looks like we can use the ower and/or parent to decide if we are editing the object that has the properties or an instance of it in another scene.  This could be useful in deciding which properties are enabled/disabled/visible when editing the instance.
+It looks like we can use the owner and/or parent to decide if we are editing the object that has the properties or an instance of it in another scene.  This could be useful in deciding which properties are enabled/disabled/visible when editing the instance.
 
 ```
 print(self, '|  |', get_parent(), '|  |', owner)
@@ -9,31 +19,23 @@ ResizableCollisionShape:<Node2D#3590877944875>|  |@SubViewport@9109:<SubViewport
 ResizableCollisionShape2:<Node2D#3362120605849>|  |CollisionShapes:<Node2D#3362003165332>|  |ManualResizeTesting:<Node2D#3361768284150>
 ```
 
+# BIG ISSUE
+If the EditorRetProperties changes on the base object it can have bad repercussions wherever it is being used.
+* Renaming ruins everything, so that should be strongly discouraged.
+* Changing starting values will propigate to any instance in a scene, resetting the value (I'm pretty sure).
 
-# Ideas
-## I think the resource should do all the resizing.
-This means we don't need to make the editor rect when we aren't in the editor.  Since the editor_rect now requires a EditorRectProperties instance it can just call back to that to do the resizing.  The resource can then get a method that would do the resizing that could be called in _ready.
-```
-func _ready():
-    if(Engine.is_editor_hint()):
-        editor_rect_props.make_editor_rect(self)
-    else:
-        editor_rect_props.resize_all_the_things(self)
-```
-
-It turns out that resources can get to engine hints.  So it could just be:
-```
-func _ready():
-    editor_rect_props.do_what_you_gotta_do(self)
-```
+If you change the array of things to be resized on the base object, none of the instances will get that change.  This might need to be moved to code instead of an export.
 
 
-## Put more plugin logic into the control
-It seems like more logic could be moved out of the plugin script and into the control.  The plugin may have to call to the control, but the logic could live in the control where it makes more sense.
-* input handling
+## Two resources?
+If there was a resource to hold the list of nodes to be updated, and another resource to hold the properties then that might do something?  The list resource would not be "local to scene" (possibly enforced by code).  This way you could change the list resource and it will propigate, but the actual props would not.  We could probably look for one of these on the parent object in `make_editor_rect` to auto detect.  If not, then you'd have to set it with code probably.
 
 
+## Versioning
+There might be a way to put a version property when on the source object.  If the version does not match the source (there might be a tricky way to do this or you just do it in code) then something happens.
 
+## Validation callbacks
+If you could tie into the changing of values, then if your rules change you can validate values.  Validation methods would return a bool to indicate if the value should be accepted.-
 
 # Demo
 * Gap Laser

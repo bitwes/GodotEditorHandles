@@ -4,6 +4,7 @@ extends EditorPlugin
 var plugin_name = "Editor Rect"
 var editing : EditorRect
 var resizing = false
+var moving = false
 
 
 func _enter_tree():
@@ -62,8 +63,8 @@ func _find_editor_rect(node : Node):
 
 
 func _handle_mouse_motion(event :InputEventMouseMotion) -> bool:
-	if(resizing):
-		editing.update_br(editing.get_local_mouse_position())
+	if(resizing or moving):
+		editing.handle_mouse_motion()
 		return true
 	else:
 		return false
@@ -74,15 +75,27 @@ func _handle_mouse_button(event : InputEventMouseButton):
 	if(event.button_index == MOUSE_BUTTON_LEFT):
 		var undo = get_undo_redo()
 		if(event.pressed):
-			if(editing._br_has_mouse()):
+			if(editing.do_handles_contain_mouse()):
 				resizing = true
 				undo.create_action("resize_editor_rect")
 				undo.add_undo_property(editing, 'size', editing.size)
+				input_handled = true
+			elif(editing.does_move_handle_contain_mouse()):
+				moving = true
+				undo.create_action("move_editor_rect")
+				undo.add_undo_property(editing, "position", editing.position)
 				input_handled = true
 		elif(resizing):
 			input_handled = true
 			undo.add_do_property(editing, 'size', editing.size)
 			undo.commit_action()
 			resizing = false
+			editing.release_handles()
+		elif(moving):
+			input_handled = true
+			undo.add_do_property(editing, 'position', editing.position)
+			undo.commit_action()
+			moving = false
+			editing.release_handles()
 
 	return input_handled
