@@ -9,6 +9,7 @@ class_name EditorRectProperties
 		size = val
 		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
+		resized.emit()
 
 ## Whether the rect is moveable.  There will be a handle in the middle that you
 ## can use to drag it about.
@@ -23,6 +24,7 @@ class_name EditorRectProperties
 		position = val
 		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
+		moved.emit()
 
 ## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
 @export var lock_x := false :
@@ -56,7 +58,7 @@ class_name EditorRectProperties
 		if(lock_y):
 			size.y = val
 
-## Snap resizing to this increment.
+## Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
 # This gets set anytime there is a change in the editor.  Add an element, this
@@ -68,6 +70,12 @@ class_name EditorRectProperties
 @export_node_path var resizes : Array[NodePath] = []
 
 var _editor_rect : EditorRect = null
+
+signal resized
+signal moved
+
+func _init() -> void:
+	resource_local_to_scene = true
 
 # Set properties only if different to avoid recursion.
 func _apply_properties_to_editor_rect():

@@ -1,9 +1,15 @@
 # TODO
 * I think editor_rect_properties needs to make itself local to scene in _init().  This way the user doesn't have to remember to do that.
+* DragSnap should not be looking at difference in size, but position (snap to grid, not incremental size change).
+* DragSnap should be applied to movement.
+
+
+# Move resize/move of targets to resource
+If the resource does the movement and resizing of nodes then we won't need to add an EditorRect control at runtime.
 
 
 # Setting which properties are editable
-It looks like we can use the ower and/or parent to decide if we are editing the object that has the properties or an instance of it in another scene.  This could be useful in deciding which properties are enabled/disabled/visible when editing the instance.
+It looks like we can use the owner and/or parent to decide if we are editing the object that has the properties or an instance of it in another scene.  This could be useful in deciding which properties are enabled/disabled/visible when editing the instance.
 
 ```
 print(self, '|  |', get_parent(), '|  |', owner)
@@ -22,7 +28,7 @@ If you change the array of things to be resized on the base object, none of the 
 
 
 ## Two resources?
-If there was a resource to hold the list of nodes to be updated, and another resource to hold the properties then that might do something?  I lost faith in this idea as I was typing it.
+If there was a resource to hold the list of nodes to be updated, and another resource to hold the properties then that might do something?  The list resource would not be "local to scene" (possibly enforced by code).  This way you could change the list resource and it will propigate, but the actual props would not.  We could probably look for one of these on the parent object in `make_editor_rect` to auto detect.  If not, then you'd have to set it with code probably.
 
 
 ## Versioning

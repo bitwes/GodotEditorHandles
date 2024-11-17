@@ -60,9 +60,6 @@ var _focused_handle = null :
 		queue_redraw()
 
 
-signal resized
-
-
 func _init(edit_rect_props : EditorRectProperties):
 	erp = edit_rect_props
 	_move_handle.color.a = .5
@@ -87,7 +84,6 @@ func _update_for_size():
 	_update_handles()
 	queue_redraw()
 	_update_resizes_properties()
-	resized.emit()
 	erp.size = size
 
 

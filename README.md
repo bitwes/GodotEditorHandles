@@ -36,7 +36,7 @@ Currently supported:
 
 Set the Node Paths in the "Resizes" array for all the things you want to be resized by the EditorRect.
 
-You can also connect to the `resize` signal and move things yourself.  This will be fired during design time and run time.
+You can also connect to the `resized` and `moved` signals and change things yourself.  These signals are emitted during design time and run time.
 
 # Install
 Once this becomes a real boy it'll be installable through the Asset Library.  Until then:
