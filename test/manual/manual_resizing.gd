@@ -7,12 +7,20 @@ extends Node2D
 func _ready():
 	editor_rect.resized.connect(_on_editor_rect_resized)
 	editor_rect.moved.connect(_on_editor_rect_moved)
-	add_child(editor_rect.make_editor_rect(self))
+	editor_rect.changed.connect(_on_editor_rect_changed)
+	add_child(editor_rect.make_editor_rect())
+	_on_editor_rect_changed()
 
 
 func _on_editor_rect_resized():
-	$Sprite2D.scale = editor_rect.size / $Sprite2D.texture.get_size()
+	pass
 
 
 func _on_editor_rect_moved():
+	pass
+
+
+func _on_editor_rect_changed():
+	$Sprite2D.scale = editor_rect.size / $Sprite2D.texture.get_size()
 	$Sprite2D.position = editor_rect.position
+	#print("changed")

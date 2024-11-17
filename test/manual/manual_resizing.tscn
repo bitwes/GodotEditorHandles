@@ -7,15 +7,14 @@
 [sub_resource type="Resource" id="Resource_ghrk4"]
 resource_local_to_scene = true
 script = ExtResource("2_487st")
-size = Vector2(310, 217)
+size = Vector2(236, 190)
 moveable = true
-position = Vector2(-1.25, -1.5)
+position = Vector2(24, -27.5)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 drag_snap = Vector2(1, 1)
-resizes = Array[NodePath]([])
 
 [node name="ManualResizing" type="Node2D"]
 script = ExtResource("1_pa1hb")
@@ -23,8 +22,8 @@ editor_rect = SubResource("Resource_ghrk4")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.562807, 1.44392e-06, 4.33177e-07, 1)
-position = Vector2(-1.25, -1.5)
-scale = Vector2(2.42188, 1.69531)
+position = Vector2(24, -27.5)
+scale = Vector2(1.84375, 1.48438)
 texture = ExtResource("3_on3tv")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]

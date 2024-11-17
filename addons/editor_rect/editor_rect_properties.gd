@@ -10,6 +10,7 @@ class_name EditorRectProperties
 		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
 		resized.emit()
+		emit_changed()
 
 ## Whether the rect is moveable.  There will be a handle in the middle that you
 ## can use to drag it about.
@@ -17,6 +18,7 @@ class_name EditorRectProperties
 	set(val):
 		moveable = val
 		notify_property_list_changed()
+		emit_changed()
 
 ## The position of the rect, enabled only when moveable.
 @export var position := Vector2.ZERO:
@@ -25,6 +27,7 @@ class_name EditorRectProperties
 		notify_property_list_changed()
 		_apply_properties_to_editor_rect()
 		moved.emit()
+		emit_changed()
 
 ## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
 @export var lock_x := false :
@@ -34,6 +37,7 @@ class_name EditorRectProperties
 			size.x = lock_x_value
 			_apply_properties_to_editor_rect()
 		notify_property_list_changed()
+		emit_changed()
 
 ## The locked width value
 @export var lock_x_value := 0 :
@@ -42,6 +46,7 @@ class_name EditorRectProperties
 		if(lock_x):
 			size.x = val
 			_apply_properties_to_editor_rect()
+		emit_changed()
 
 ## Enable/Disable locking the height of the rect.  Disabled when x_lock enabled.
 @export var lock_y := false :
@@ -57,6 +62,7 @@ class_name EditorRectProperties
 		lock_y_value = val
 		if(lock_y):
 			size.y = val
+		emit_changed()
 
 ## Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
@@ -79,7 +85,7 @@ func _apply_properties_to_editor_rect():
 			_editor_rect.change_position(position)
 
 
-func make_editor_rect(base_node : Node):
+func make_editor_rect():
 	var to_return = EditorRect.new(self)
 	to_return.position = position
 	to_return.size = size

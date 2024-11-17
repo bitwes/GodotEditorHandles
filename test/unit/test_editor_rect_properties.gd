@@ -1,5 +1,19 @@
 extends GutTest
 
+var dyn_script = load("res://addons/gut/dynamic_gdscript.gd").new()
+
+func before_all():
+	dyn_script.default_script_name_no_extension = "test_editor_rect_properties"
+
+# I made this because using `set` on a resource (just a resource?) does not go
+# through the setter and I wanted to make a parameterized test.
+func set_property_with_code(thing, prop_name, value):
+	var code = str("\n
+	func _init(thing, value):\n
+		thing.", prop_name, " = value")
+	var inst = dyn_script.create_script_from_source(code).new(thing, value)
+
+
 func assert_bit_flag_set(value, flag, msg=''):
 	var anded = value & flag
 	var display = str("Expected ", flag, " to be set in ", value, ' ', msg)
@@ -37,6 +51,25 @@ func test_new_erp_is_local_to_scene():
 	var erp = EditorRectProperties.new()
 	assert_true(erp.resource_local_to_scene)
 
+
+var _changed_emit_props = [
+	['size', Vector2(3, 4)],
+	['moveable', true],
+	['position', Vector2(1, 2)],
+	['lock_x', true],
+	['lock_x_value', 99],
+	['lock_y', true],
+	['lock_y_value', 99]
+]
+func test_properties_emit_changed_signal(p = use_parameters(_changed_emit_props)):
+	var erp = EditorRectProperties.new()
+	watch_signals(erp)
+	set_property_with_code(erp, p[0], p[1])
+	assert_signal_emitted(erp, "changed", ' for ' + p[0])
+
+
+#region Property enable/disable
+# --------------------
 
 func test_default_disabled_properties(p = use_parameters([
 				"lock_x_value",	"lock_y_value", "position"])):
@@ -80,4 +113,5 @@ func test_setting_moveable_enables_position():
 	var prop_props = find_property("position", erp.get_property_list())
 	assert_bit_flag_not_set(prop_props.usage, PROPERTY_USAGE_READ_ONLY)
 
-
+# --------------------
+#endregion

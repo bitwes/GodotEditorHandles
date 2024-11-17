@@ -37,10 +37,6 @@ var is_being_edited = false:
 		is_being_edited = val
 		queue_redraw()
 		_focused_handle = null
-var resizes := [] :
-	set(val):
-		resizes = val
-		print("editor_rect.gd resizes = ", val)
 
 
 var _move_handle_size = 30
@@ -69,7 +65,6 @@ func _init(edit_rect_props : EditorRectProperties):
 
 func _ready() -> void:
 	position = erp.position
-	_update_resizes_properties.call_deferred()
 
 
 func _draw() -> void:
@@ -83,7 +78,6 @@ func _draw() -> void:
 func _update_for_size():
 	_update_handles()
 	queue_redraw()
-	_update_resizes_properties()
 	erp.size = size
 
 
@@ -118,8 +112,6 @@ func _update_size_for_mouse_motion(new_position):
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position
 	erp.position = position
-	for r in resizes:
-		r.global_position = new_position
 
 
 func _get_first_handle_containing_point(point):
@@ -132,22 +124,6 @@ func _get_first_handle_containing_point(point):
 			to_return = h
 		idx += 1
 	return to_return
-
-
-func _update_resizes_properties():
-	if(erp.moveable):
-		for r in resizes:
-			r.position = position
-
-	if(is_inside_tree()):
-		for element in resizes:
-			if(element is CollisionShape2D):
-				_apply_size_to_collision_shape(element)
-			elif(element is Control):
-				_apply_size_to_non_centered_size_thing(element)
-			else:
-				push_error(self, ":  I don't know how to resize ", element)
-
 
 
 func _apply_size_to_collision_shape(coll_shape : CollisionShape2D):
@@ -171,16 +147,11 @@ func _apply_size_to_non_centered_size_thing(thing : Variant):
 ## cleaner
 func change_global_position(new_position):
 	global_position = new_position
-	for r in resizes:
-		r.global_position = new_position
 
 
 ## change_global_position except it's for "position" instead.
 func change_position(new_position):
 	position = new_position
-	for r in resizes:
-		r.position = new_position
-
 
 
 func do_handles_contain_mouse():
