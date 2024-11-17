@@ -92,6 +92,9 @@ func make_editor_rect(base_node : Node):
 	to_return.size = size
 	for np in resizes:
 		to_return.resizes.append(base_node.get_node(np))
+	resized.emit()
+	moved.emit()
+
 	_editor_rect = to_return
 	return to_return
 

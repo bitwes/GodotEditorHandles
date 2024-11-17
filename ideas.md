@@ -2,7 +2,8 @@
 * I think editor_rect_properties needs to make itself local to scene in _init().  This way the user doesn't have to remember to do that.
 * DragSnap should not be looking at difference in size, but position (snap to grid, not incremental size change).
 * DragSnap should be applied to movement.
-
+* Minimum Size
+* Draw a line from the center of the EditorRect to the parent?
 
 # Move resize/move of targets to resource
 If the resource does the movement and resizing of nodes then we won't need to add an EditorRect control at runtime.

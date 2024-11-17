@@ -1,28 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://ukrwxq0jdjvh"]
+[gd_scene load_steps=11 format=3 uid="uid://ukrwxq0jdjvh"]
 
 [ext_resource type="PackedScene" uid="uid://c4qd3xkc68w6p" path="res://test/manual/resizable_texture_rect.tscn" id="1_1fpda"]
 [ext_resource type="Script" path="res://test/manual/manual_resize_testing.gd" id="1_5wxv1"]
 [ext_resource type="Script" path="res://addons/editor_rect/editor_rect_properties.gd" id="2_e6ubo"]
 [ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="3_r43y3"]
+[ext_resource type="PackedScene" uid="uid://c0uoq3mo3deub" path="res://test/manual/manual_resizing.tscn" id="5_trsqi"]
 
 [sub_resource type="Resource" id="Resource_56fgy"]
 resource_local_to_scene = true
 script = ExtResource("2_e6ubo")
 size = Vector2(949.994, 895.6)
 moveable = true
-position = Vector2(0, 0)
-lock_x = false
-lock_x_value = 0
-lock_y = false
-lock_y_value = 0
-drag_snap = Vector2(1, 1)
-resizes = Array[NodePath]([NodePath("TextureRect")])
-
-[sub_resource type="Resource" id="Resource_sn4o7"]
-resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
-size = Vector2(204.794, 159.2)
-moveable = false
 position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
@@ -70,6 +58,19 @@ lock_y_value = 0
 drag_snap = Vector2(1, 1)
 resizes = Array[NodePath]([NodePath("Area2D/CollisionShape2D")])
 
+[sub_resource type="Resource" id="Resource_xt3vr"]
+resource_local_to_scene = true
+script = ExtResource("2_e6ubo")
+size = Vector2(491.91, 318.652)
+moveable = true
+position = Vector2(229.292, 59.2636)
+lock_x = false
+lock_x_value = 0
+lock_y = false
+lock_y_value = 0
+drag_snap = Vector2(1, 1)
+resizes = Array[NodePath]([])
+
 [node name="ManualResizeTesting" type="Node2D"]
 script = ExtResource("1_5wxv1")
 
@@ -78,10 +79,6 @@ script = ExtResource("1_5wxv1")
 [node name="ResizableTextureRect2" parent="TextureRects" instance=ExtResource("1_1fpda")]
 position = Vector2(73, 63)
 resize_properties = SubResource("Resource_56fgy")
-
-[node name="ResizableTextureRect" parent="TextureRects" instance=ExtResource("1_1fpda")]
-position = Vector2(228, 85)
-resize_properties = SubResource("Resource_sn4o7")
 
 [node name="ResizableTextureRect3" parent="TextureRects" instance=ExtResource("1_1fpda")]
 position = Vector2(388, 582)
@@ -96,3 +93,9 @@ collision_shape_props = SubResource("Resource_3w2w0")
 [node name="ResizableCollisionShape2" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
 position = Vector2(635, 65)
 collision_shape_props = SubResource("Resource_w8y2q")
+
+[node name="ResizeWithCode" type="Node2D" parent="."]
+
+[node name="ManualResizing" parent="ResizeWithCode" instance=ExtResource("5_trsqi")]
+position = Vector2(896, 98)
+editor_rect = SubResource("Resource_xt3vr")
