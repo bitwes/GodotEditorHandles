@@ -2,7 +2,8 @@
 extends Resource
 class_name EditorRectProperties
 
-## Size
+## It's the size.  A clever combination of width and height to represent a
+## rectangular shape.
 @export var size := Vector2(100, 100) :
 	set(val):
 		size = val
@@ -82,7 +83,6 @@ func make_editor_rect(base_node : Node):
 	to_return.position = position
 	to_return.size = size
 	for np in resizes:
-		print("appending")
 		to_return.resizes.append(base_node.get_node(np))
 	_editor_rect = to_return
 	return to_return
