@@ -61,13 +61,6 @@ class_name EditorRectProperties
 ## Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
-# This gets set anytime there is a change in the editor.  Add an element, this
-# gets set.  Set an element, this gets set.  This could be used to update the
-# editor rect resizes array, and probably should.  Probably.
-## Paths to nodes that this rect will resize/move.  Currently supported nodes:
-## - Control
-## - CollisionShape2D (with a shape that has a size property)
-@export_node_path var resizes : Array[NodePath] = []
 
 var _editor_rect : EditorRect = null
 
@@ -90,8 +83,6 @@ func make_editor_rect(base_node : Node):
 	var to_return = EditorRect.new(self)
 	to_return.position = position
 	to_return.size = size
-	for np in resizes:
-		to_return.resizes.append(base_node.get_node(np))
 	resized.emit()
 	moved.emit()
 
