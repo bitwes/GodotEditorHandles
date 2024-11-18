@@ -5,8 +5,8 @@ extends Node2D
 
 
 func _ready():
+	editor_rect.editor_setup(self)
 	editor_rect.changed.connect(apply_editor_rect)
-	add_child(editor_rect.create_edit_control())
 	apply_editor_rect()
 
 

@@ -2,8 +2,6 @@ extends GutTest
 
 var dyn_script = load("res://addons/gut/dynamic_gdscript.gd").new()
 
-func before_all():
-	dyn_script.default_script_name_no_extension = "test_editor_rect_properties"
 
 
 # I made this because using `set` on a resource (just a resource?) does not go
@@ -42,7 +40,31 @@ func find_property(prop_name, prop_list):
 		idx += 1
 	return to_return
 
+func assert_property_usage_bit_flag_set(object, property_name, flag):
+	var props = object.get_property_list()
+	var prop = find_property(property_name, props)
+	assert_bit_flag_set(prop.usage, flag, str(' for ', property_name, ' on ', object))
 
+
+func assert_property_usage_bit_flag_not_set(object, property_name, flag):
+	var props = object.get_property_list()
+	var prop = find_property(property_name, props)
+	assert_bit_flag_not_set(prop.usage, flag, str(' for ', property_name, ' on ', object))
+
+
+
+# -----------------------------
+# Setup/Teardown
+# -----------------------------
+func before_all():
+	dyn_script.default_script_name_no_extension = "test_editor_rect_properties"
+
+
+
+
+# -----------------------------
+# Begin Tests
+# -----------------------------
 func test_can_make_one():
 	var erp = EditorRectProperties.new()
 	assert_not_null(erp)
@@ -69,9 +91,16 @@ func test_properties_emit_changed_signal(p = use_parameters(_changed_emit_props)
 	assert_signal_emitted(erp, "changed", ' for ' + p[0])
 
 
+func test_default_values():
+	var erp = EditorRectProperties.new()
+	assert_false(erp.moveable, 'moveable')
+	assert_false(erp.lock_x, 'lock_x')
+	assert_false(erp.lock_y, 'lock_y')
+
+
+
 #region Property enable/disable
 # --------------------
-
 func test_default_disabled_properties(p = use_parameters([
 				"lock_x_value",	"lock_y_value", "position"])):
 	var erp = EditorRectProperties.new()
@@ -116,8 +145,8 @@ func test_setting_moveable_enables_position():
 
 # --------------------
 #endregion
-
-
+#region Signal
+# --------------------
 func test_setting_size_in_signal_handler_does_not_cause_recursion():
 	var erp = EditorRectProperties.new()
 	erp.changed.connect(func(): erp.size.x += 1)
@@ -175,3 +204,50 @@ func test_setting_lock_y_value_in_handler_does_not_cause_recursion():
 	erp.changed.connect(func(): erp.lock_y_value = 99)
 	erp.lock_y_value = 50
 	assert_eq(erp.lock_y_value, 99)
+# --------------------
+#endregion
+#region Hidden/disabled properties
+# --------------------
+func test_setting_hidden_props_signals_list_changed():
+	var erp = EditorRectProperties.new()
+	watch_signals(erp)
+	erp.set_hidden_instance_properties(['asdf'])
+	assert_signal_emitted(erp, 'property_list_changed')
+
+
+func test_hidden_properties_are_visible_when_not_editing_an_instance():
+	var erp = EditorRectProperties.new()
+	erp.set_hidden_instance_properties(['lock_y'])
+	assert_property_usage_bit_flag_set(erp, 'lock_y', PROPERTY_USAGE_EDITOR)
+
+
+func test_hidden_properties_are_not_visible_when_editing_an_instance():
+	var erp = EditorRectProperties.new()
+	erp._is_instance = true
+	erp.set_hidden_instance_properties(['lock_y'])
+	assert_property_usage_bit_flag_not_set(erp, 'lock_y', PROPERTY_USAGE_EDITOR)
+
+
+func test_setting_disabled_props_signals_list_changed():
+	var erp := EditorRectProperties.new()
+	watch_signals(erp)
+	erp.set_disabled_instance_properties(['asdf'])
+	assert_signal_emitted(erp, 'property_list_changed')
+
+
+func test_disabled_properties_are_enabled_when_not_editing_an_instance():
+	var erp = EditorRectProperties.new()
+	erp.set_disabled_instance_properties(['lock_x'])
+	assert_property_usage_bit_flag_not_set(erp, 'lock_x', PROPERTY_USAGE_READ_ONLY)
+
+
+func test_disabled_properties_are_disabled_when_editing_an_instance():
+	var erp = EditorRectProperties.new()
+	erp._is_instance = true
+	erp.set_disabled_instance_properties(['lock_x'])
+	assert_property_usage_bit_flag_set(erp, 'lock_x', PROPERTY_USAGE_READ_ONLY)
+
+
+
+# --------------------
+#endregion

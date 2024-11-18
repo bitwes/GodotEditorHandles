@@ -7,9 +7,9 @@
 [sub_resource type="Resource" id="Resource_xn0uh"]
 resource_local_to_scene = true
 script = ExtResource("2_8n61e")
-size = Vector2(630.739, 664.68)
-moveable = true
-position = Vector2(537.663, -55.5873)
+size = Vector2(590.01, 574.171)
+moveable = false
+position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -21,8 +21,8 @@ script = ExtResource("1_ug7y2")
 resize_properties = SubResource("Resource_xn0uh")
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = 222.293
-offset_top = -387.927
-offset_right = 853.032
-offset_bottom = 276.753
+offset_left = -295.005
+offset_top = -287.086
+offset_right = 295.005
+offset_bottom = 287.086
 texture = ExtResource("1_6urua")

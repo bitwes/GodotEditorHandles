@@ -6,6 +6,9 @@ class_name EditorRectProperties
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
 var _editor_rect : EditorRect = null
+var _is_instance = false
+var _hidden_props := []
+var _disabled_props := []
 
 ## It's the size...width and height, as you would expect.
 @export var size := Vector2(100, 100) :
@@ -103,6 +106,12 @@ func _validate_property(property: Dictionary):
 	if property.name == "position" and !moveable:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
+	if(_is_instance):
+		if(property.name in _hidden_props):
+			property.usage ^= PROPERTY_USAGE_EDITOR
+		elif(property.name in _disabled_props):
+			property.usage |= PROPERTY_USAGE_READ_ONLY
+
 
 func _emit_signals(signal_list : Array[Signal]):
 	notify_property_list_changed()
@@ -116,17 +125,36 @@ func _emit_signals(signal_list : Array[Signal]):
 		_is_currently_setting_property = false
 
 
-## Call this in ready and add it as a child.  This is the control that provides
-## the resize and movement handles in the editor.  This control will not do
-## anything at runtime.  You probably want to call this only when
+## Call this in ready.  You probably want to call this only when
 ## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
 ## all the time.
-func create_edit_control():
-	var to_return = EditorRect.new(self)
+## for_what should ALWAYS be the root node of the scene.  I don't think there is
+## a way to determine what this resource is for, so you have to tell it.  Also
+## the control has to be added to the root node for it to be found by the plugin
+## when selecting the node in other scenes.
+func editor_setup(for_what):
+	var to_return : EditorRect = EditorRect.new(self)
+	_is_instance = for_what.owner != null
 	to_return.position = position
 	to_return.size = size
 	resized.emit()
 	moved.emit()
-
 	_editor_rect = to_return
+	for_what.add_child(to_return)
 	return to_return
+
+
+## The names of properties that should not appear in the inspector when editing
+## instances of this scene.  This does not prevent the values from being
+## changed in code.
+func set_hidden_instance_properties(to_hide : Array):
+	_hidden_props = to_hide
+	notify_property_list_changed()
+
+
+## The names of propeties that should always be disabled in the inspector when
+## editing instances of this scene.  This does not prevent the values from
+## being changed in code.
+func set_disabled_instance_properties(to_disable : Array):
+	_disabled_props = to_disable
+	notify_property_list_changed()
