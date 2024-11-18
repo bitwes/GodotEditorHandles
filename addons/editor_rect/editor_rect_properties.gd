@@ -3,8 +3,9 @@ extends Resource
 class_name EditorRectProperties
 
 # used to prevent signals from firing when a property is being set in a signal
-# handler.
+# handler (such as clamping the position or size).
 var _is_currently_setting_property = false
+var _editor_rect : EditorRect = null
 
 ## It's the size...width and height, as you would expect.
 @export var size := Vector2(100, 100) :
@@ -12,7 +13,6 @@ var _is_currently_setting_property = false
 		size = val
 		_apply_properties_to_editor_rect()
 		_emit_signals([resized, changed])
-
 
 ## Whether the rect is moveable.  There will be a handle in the middle that you
 ## can use to drag it about.
@@ -66,13 +66,17 @@ var _is_currently_setting_property = false
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
 
-var _editor_rect : EditorRect = null
-
+## Emitted when size changes  You can also use the signal "changed".
 signal resized
+## Emitted when position changes.  You can also use the signal "changed".
 signal moved
 
+
 func _init() -> void:
+	# This resource should always be local to scene since that is what it is
+	# created for.
 	resource_local_to_scene = true
+
 
 # Set properties only if different to avoid recursion.
 func _apply_properties_to_editor_rect():
@@ -112,6 +116,11 @@ func _emit_signals(signal_list : Array[Signal]):
 		_is_currently_setting_property = false
 
 
+## Call this in ready and add it as a child.  This is the control that provides
+## the resize and movement handles in the editor.  This control will not do
+## anything at runtime.  You probably want to call this only when
+## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
+## all the time.
 func create_edit_control():
 	var to_return = EditorRect.new(self)
 	to_return.position = position
