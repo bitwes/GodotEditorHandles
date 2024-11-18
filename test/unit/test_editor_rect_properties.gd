@@ -248,6 +248,6 @@ func test_disabled_properties_are_disabled_when_editing_an_instance():
 	assert_property_usage_bit_flag_set(erp, 'lock_x', PROPERTY_USAGE_READ_ONLY)
 
 
-
 # --------------------
 #endregion
+

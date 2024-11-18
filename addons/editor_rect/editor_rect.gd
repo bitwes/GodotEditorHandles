@@ -161,6 +161,9 @@ func do_handles_contain_mouse():
 
 
 func does_move_handle_contain_mouse():
+	if(!erp.moveable):
+		return false
+
 	if(_move_handle.rect.has_point(get_local_mouse_position())):
 		_focused_handle = _move_handle
 		return true
