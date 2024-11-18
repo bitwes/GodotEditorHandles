@@ -7,13 +7,14 @@
 [sub_resource type="Resource" id="Resource_xn0uh"]
 resource_local_to_scene = true
 script = ExtResource("2_8n61e")
+resizable = null
 size = Vector2(590.01, 574.171)
-moveable = false
-position = Vector2(0, 0)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
+moveable = false
+position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
 [node name="ResizableTextureRect" type="Node2D"]

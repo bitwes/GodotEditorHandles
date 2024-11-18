@@ -86,8 +86,9 @@ func _editor_draw():
 		# Border
 		draw_rect(Rect2(size / -2, size), Color.WHITE, false, 1)
 
-		for key in _handles:
-			_handles[key].draw(self)
+		if(erp.resizable):
+			for key in _handles:
+				_handles[key].draw(self)
 
 		if(erp.moveable):
 			_move_handle.draw(self)
@@ -155,6 +156,8 @@ func change_position(new_position):
 
 
 func do_handles_contain_mouse():
+	if(!erp.resizable):
+		return false
 	var handle = _get_first_handle_containing_point(get_local_mouse_position())
 	_focused_handle = handle
 	return  _focused_handle != null

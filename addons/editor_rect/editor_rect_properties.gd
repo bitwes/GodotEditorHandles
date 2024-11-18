@@ -10,26 +10,18 @@ var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
 
+## Enable/disable resizing the rect.
+@export var resizable := true :
+	set(val):
+		resizable = val
+		_emit_signals([changed])
+
 ## It's the size...width and height, as you would expect.
 @export var size := Vector2(100, 100) :
 	set(val):
 		size = val
 		_apply_properties_to_editor_rect()
 		_emit_signals([resized, changed])
-
-## Whether the rect is moveable.  There will be a handle in the middle that you
-## can use to drag it about.
-@export var moveable := false :
-	set(val):
-		moveable = val
-		_emit_signals([changed])
-
-## The position of the rect, enabled only when moveable.
-@export var position := Vector2.ZERO:
-	set(val):
-		position = val
-		_apply_properties_to_editor_rect()
-		_emit_signals([moved, changed])
 
 ## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
 @export var lock_x := false :
@@ -65,6 +57,20 @@ var _disabled_props := []
 			size.y = val
 		_emit_signals([changed])
 
+## Whether the rect is moveable.  There will be a handle in the middle that you
+## can use to drag it about.
+@export var moveable := false :
+	set(val):
+		moveable = val
+		_emit_signals([changed])
+
+## The position of the rect, enabled only when moveable.
+@export var position := Vector2.ZERO:
+	set(val):
+		position = val
+		_apply_properties_to_editor_rect()
+		_emit_signals([moved, changed])
+
 ## Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
@@ -91,19 +97,22 @@ func _apply_properties_to_editor_rect():
 
 
 func _validate_property(property: Dictionary):
-	if property.name == "lock_x" and lock_y:
+	if property.name == "lock_x" and (lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
-	if property.name == "lock_y" and lock_x:
+	if property.name == "lock_y" and (lock_x or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
-	if property.name == "lock_x_value" and !lock_x:
+	if property.name == "lock_x_value" and (!lock_x or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
-	if property.name == "lock_y_value" and !lock_y:
+	if property.name == "lock_y_value" and (!lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
 	if property.name == "position" and !moveable:
+		property.usage |= PROPERTY_USAGE_READ_ONLY
+
+	if property.name == "size" and !resizable:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
 	if(_is_instance):
@@ -111,6 +120,7 @@ func _validate_property(property: Dictionary):
 			property.usage ^= PROPERTY_USAGE_EDITOR
 		elif(property.name in _disabled_props):
 			property.usage |= PROPERTY_USAGE_READ_ONLY
+
 
 
 func _emit_signals(signal_list : Array[Signal]):

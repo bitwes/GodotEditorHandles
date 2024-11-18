@@ -1,10 +1,13 @@
 # TODO
 * DragSnap should not be looking at difference in size, but position (snap to grid, not incremental size change).
 * DragSnap should be applied to movement.
+* DragSnap should be zero by default?
+* Should DragSnap be a float or int?
 * Draw a line from the center of the EditorRect to the parent?
 * You can still move the rect when movable is disabled by dragging where the move handle is (even though you can't see it)
 * Add a resizable flag
 * You can implement min/max sizes and positions in code.  It would be nice if the mouse honored those instead of the dragging just stopping.  Not sure if it is possible to keep the mouse at the same location if the resize/movement doesn't change any values.
+
 
 # How to break everything
 * Rename the variable.  Renaming the variable will lose all settings on all instances.

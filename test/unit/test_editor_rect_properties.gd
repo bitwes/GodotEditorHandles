@@ -40,6 +40,7 @@ func find_property(prop_name, prop_list):
 		idx += 1
 	return to_return
 
+
 func assert_property_usage_bit_flag_set(object, property_name, flag):
 	var props = object.get_property_list()
 	var prop = find_property(property_name, props)
@@ -82,20 +83,25 @@ var _changed_emit_props = [
 	['lock_x', true],
 	['lock_x_value', 99],
 	['lock_y', true],
-	['lock_y_value', 99]
+	['lock_y_value', 99],
+	['resizable', false]
 ]
 func test_properties_emit_changed_signal(p = use_parameters(_changed_emit_props)):
 	var erp = EditorRectProperties.new()
 	watch_signals(erp)
 	set_property_with_code(erp, p[0], p[1])
 	assert_signal_emitted(erp, "changed", ' for ' + p[0])
+	assert_signal_emitted(erp, 'property_list_changed', ' for ' + p[0])
 
 
 func test_default_values():
 	var erp = EditorRectProperties.new()
+	assert_true(erp.resizable, 'resizable')
 	assert_false(erp.moveable, 'moveable')
 	assert_false(erp.lock_x, 'lock_x')
 	assert_false(erp.lock_y, 'lock_y')
+	assert_eq(erp.lock_x_value, 0, 'lock_x_value')
+	assert_eq(erp.lock_y_value, 0, 'lock_y_value')
 
 
 
@@ -107,6 +113,25 @@ func test_default_disabled_properties(p = use_parameters([
 	var prop_props = find_property(p, erp.get_property_list())
 	assert_false(prop_props.is_empty(), str('prop ', p, ' was found'))
 	assert_bit_flag_set(prop_props.usage, PROPERTY_USAGE_READ_ONLY, str(' on ', p))
+
+
+func test_unsetting_resizable_disables_size_related_props():
+	var erp = EditorRectProperties.new()
+	erp.resizable = false
+	assert_property_usage_bit_flag_set(erp, 'size', PROPERTY_USAGE_READ_ONLY)
+	assert_property_usage_bit_flag_set(erp, 'lock_x', PROPERTY_USAGE_READ_ONLY)
+	assert_property_usage_bit_flag_set(erp, 'lock_y', PROPERTY_USAGE_READ_ONLY)
+	assert_property_usage_bit_flag_not_set(erp, 'resizable', PROPERTY_USAGE_READ_ONLY)
+
+
+func test_when_resizable_unchecked_and_locks_enabled_lock_values_are_disabled():
+	var erp = EditorRectProperties.new()
+	erp.lock_x = true
+	erp.lock_y = true
+	erp.resizable = false
+	assert_property_usage_bit_flag_set(erp, 'lock_x_value', PROPERTY_USAGE_READ_ONLY)
+	assert_property_usage_bit_flag_set(erp, 'lock_y_value', PROPERTY_USAGE_READ_ONLY)
+
 
 
 func test_setting_lock_x_enables_lock_x_value():
