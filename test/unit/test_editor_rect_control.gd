@@ -12,12 +12,12 @@ func after_each():
 
 
 func _new_editor_rect_control():
-	var erp = EditorHandles.new()
+	var eh = EditorHandles.new()
 	# editor_setup does the add_child
-	var erc = autofree(erp.editor_setup(self))
+	var erc = autofree(eh.editor_setup(self))
 
 	# Center at (100, 100), corners at (50, 50) and (150, 150)
-	erc.erp.size = Vector2(100, 100)
+	erc.eh.size = Vector2(100, 100)
 	erc.position = Vector2(100, 100)
 
 	# get around it not drawing when not in editor.
@@ -35,7 +35,7 @@ func test_can_make_one():
 func test_when_moveable_center_handle_contains_mouse():
 	var erc = _new_editor_rect_control()
 	erc.position = Vector2(100, 100)
-	erc.erp.moveable = true
+	erc.eh.moveable = true
 	_sender.mouse_motion(Vector2(100, 100)).wait_frames(5)
 	await _sender.idle
 	assert_true(erc.does_move_handle_contain_mouse())
@@ -44,7 +44,7 @@ func test_when_moveable_center_handle_contains_mouse():
 
 func test_when_not_moveable_center_handle_does_not_contain_mouse():
 	var erc = _new_editor_rect_control()
-	erc.erp.moveable = false
+	erc.eh.moveable = false
 	erc.position = Vector2(100, 100)
 	_sender.mouse_motion(Vector2(100, 100)).wait_frames(5)
 	await _sender.idle
@@ -53,13 +53,12 @@ func test_when_not_moveable_center_handle_does_not_contain_mouse():
 
 func test_when_resizable_side_handles_contain_mouse():
 	var erc = _new_editor_rect_control()
-	erc.erp._editor_rect = erc
 	erc.is_being_edited = true
 	erc.draw.connect(func(): erc._editor_draw())
 
-	erc.erp.size = Vector2(100, 100)
+	erc.eh.size = Vector2(100, 100)
 	erc.position = Vector2(100, 100)
-	erc.erp.resizable = true
+	erc.eh.resizable = true
 	erc.queue_redraw()
 
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
@@ -70,14 +69,13 @@ func test_when_resizable_side_handles_contain_mouse():
 
 func test_when_not_resizable_side_handles_do_not_contain_mouse():
 	var erc = _new_editor_rect_control()
-	erc.erp._editor_rect = erc
 	erc.is_being_edited = true
 	erc.draw.connect(func(): erc._editor_draw())
 
-	erc.erp.size = Vector2(100, 100)
+	erc.eh.size = Vector2(100, 100)
 	erc.position = Vector2(100, 100)
 
-	erc.erp.resizable = false
+	erc.eh.resizable = false
 	erc.queue_redraw()
 
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)

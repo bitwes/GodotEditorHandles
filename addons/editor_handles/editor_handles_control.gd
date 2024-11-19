@@ -16,16 +16,16 @@ class SideHandle:
 		draw_on.draw_rect(rect, c)
 
 
-var erp : EditorHandles
+var eh : EditorHandles
 var size = Vector2(100, 100) :
 	set(val):
-		if(erp.lock_x):
-			size.x = erp.lock_x_value
+		if(eh.lock_x):
+			size.x = eh.lock_x_value
 		else:
 			size.x = val.x
 
-		if(erp.lock_y):
-			size.y = erp.lock_y_value
+		if(eh.lock_y):
+			size.y = eh.lock_y_value
 		else:
 			size.y = val.y
 
@@ -56,14 +56,14 @@ var _focused_handle = null :
 
 
 func _init(edit_rect_props : EditorHandles):
-	erp = edit_rect_props
+	eh = edit_rect_props
 	_move_handle.color.a = .5
 	_move_handle.rect.size = Vector2(30, 30)
 	_move_handle.rect.position = _move_handle.rect.size / -2
 
 
 func _ready() -> void:
-	position = erp.position
+	position = eh.position
 
 
 func _draw() -> void:
@@ -77,7 +77,7 @@ func _draw() -> void:
 func _update_for_size():
 	_update_handles()
 	queue_redraw()
-	erp.size = size
+	eh.size = size
 
 
 func _editor_draw():
@@ -85,11 +85,11 @@ func _editor_draw():
 		# Border
 		draw_rect(Rect2(size / -2, size), Color.WHITE, false, 1)
 
-		if(erp.resizable):
+		if(eh.resizable):
 			for key in _handles:
 				_handles[key].draw(self)
 
-		if(erp.moveable):
+		if(eh.moveable):
 			_move_handle.draw(self)
 
 
@@ -103,15 +103,15 @@ func _update_size_for_mouse_motion(new_position):
 	var new_size = diff * 2
 	var size_diff = (size - new_size).abs()
 
-	if(!erp.lock_x and size_diff.x >= erp.drag_snap.x):
-		size.x = new_size.x - int(new_size.x) % int(erp.drag_snap.x)
-	if(!erp.lock_y and size_diff.y >= erp.drag_snap.y):
-		size.y = new_size.y - int(new_size.y) % int(erp.drag_snap.y)
+	if(!eh.lock_x and size_diff.x >= eh.drag_snap.x):
+		size.x = new_size.x - int(new_size.x) % int(eh.drag_snap.x)
+	if(!eh.lock_y and size_diff.y >= eh.drag_snap.y):
+		size.y = new_size.y - int(new_size.y) % int(eh.drag_snap.y)
 
 
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position
-	erp.position = position
+	eh.position = position
 
 
 func _get_first_handle_containing_point(point):
@@ -125,14 +125,6 @@ func _get_first_handle_containing_point(point):
 		idx += 1
 	return to_return
 
-
-func _apply_size_to_collision_shape(coll_shape : CollisionShape2D):
-	coll_shape.shape.size = size
-
-
-func _apply_size_to_non_centered_size_thing(thing : Variant):
-	thing.position = position - (size * .5)
-	thing.size = size
 
 # --------------------
 #endregion
@@ -155,7 +147,7 @@ func change_position(new_position):
 
 
 func do_handles_contain_mouse():
-	if(!erp.resizable):
+	if(!eh.resizable):
 		return false
 	var handle = _get_first_handle_containing_point(get_local_mouse_position())
 	_focused_handle = handle
@@ -163,7 +155,7 @@ func do_handles_contain_mouse():
 
 
 func does_move_handle_contain_mouse():
-	if(!erp.moveable):
+	if(!eh.moveable):
 		return false
 
 	if(_move_handle.rect.has_point(get_local_mouse_position())):
