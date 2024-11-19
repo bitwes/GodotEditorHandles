@@ -19,5 +19,6 @@ func _ready():
 
 
 func _on_resize_properties_changed():
+	resize_properties.size = resize_properties.size.max($TextureRect.texture.get_size())
 	$TextureRect.size = resize_properties.size
 	$TextureRect.position = resize_properties.position - $TextureRect.size / 2

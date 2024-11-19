@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqns8x0646dej"]
+
+[ext_resource type="Script" path="res://test/manual/dumbell.gd" id="1_xi3xt"]
+[ext_resource type="Script" path="res://addons/editor_rect/editor_rect_properties.gd" id="2_prur1"]
+[ext_resource type="Texture2D" uid="uid://wv03lnx2jywn" path="res://icon.svg" id="3_2resm"]
+
+[sub_resource type="Resource" id="Resource_40e7k"]
+resource_local_to_scene = true
+script = ExtResource("2_prur1")
+resizable = true
+size = Vector2(164.5, 30)
+lock_x = false
+lock_x_value = 0
+lock_y = true
+lock_y_value = 30
+moveable = false
+position = Vector2(0, 0)
+drag_snap = Vector2(1, 1)
+
+[node name="Dumbell" type="Node2D"]
+script = ExtResource("1_xi3xt")
+rectable = SubResource("Resource_40e7k")
+
+[node name="Center" type="Sprite2D" parent="."]
+scale = Vector2(1.28516, 0.234375)
+texture = ExtResource("3_2resm")
+
+[node name="Right" type="Sprite2D" parent="."]
+position = Vector2(82.25, 0)
+scale = Vector2(0.5, 0.479)
+texture = ExtResource("3_2resm")
+
+[node name="Left" type="Sprite2D" parent="."]
+position = Vector2(-82.25, 0)
+scale = Vector2(0.5, 0.479)
+texture = ExtResource("3_2resm")
