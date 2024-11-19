@@ -2,16 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://c4qd3xkc68w6p" path="res://test/manual/resizable_texture_rect.tscn" id="1_1fpda"]
 [ext_resource type="Script" path="res://test/manual/manual_resize_testing.gd" id="1_5wxv1"]
-[ext_resource type="Script" path="res://addons/editor_rect/editor_rect_properties.gd" id="2_e6ubo"]
+[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="3_kctkp"]
 [ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="3_r43y3"]
 [ext_resource type="PackedScene" uid="uid://c0uoq3mo3deub" path="res://test/manual/manual_resizing.tscn" id="5_trsqi"]
 [ext_resource type="PackedScene" uid="uid://cqns8x0646dej" path="res://test/manual/dumbell.tscn" id="6_32o2b"]
 
-[sub_resource type="Resource" id="Resource_56fgy"]
+[sub_resource type="Resource" id="Resource_on711"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
+script = ExtResource("3_kctkp")
 resizable = true
-size = Vector2(233, 285.4)
+size = Vector2(535.625, 490.632)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -20,11 +20,11 @@ moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_n4dy3"]
+[sub_resource type="Resource" id="Resource_7m5yi"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
+script = ExtResource("3_kctkp")
 resizable = true
-size = Vector2(322.861, 137.249)
+size = Vector2(216.512, 168.362)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -33,54 +33,54 @@ moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_3w2w0"]
+[sub_resource type="Resource" id="Resource_qw2tt"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
+script = ExtResource("3_kctkp")
 resizable = true
-size = Vector2(227.4, 175.001)
-lock_x = false
-lock_x_value = 0
+size = Vector2(50, 756.08)
+lock_x = true
+lock_x_value = 50
 lock_y = false
 lock_y_value = 0
 moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_w8y2q"]
+[sub_resource type="Resource" id="Resource_hkbg6"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
+script = ExtResource("3_kctkp")
 resizable = true
-size = Vector2(66.4834, 249.353)
-lock_x = false
-lock_x_value = 0
+size = Vector2(50, 324.023)
+lock_x = true
+lock_x_value = 50
 lock_y = false
 lock_y_value = 0
 moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_xt3vr"]
+[sub_resource type="Resource" id="Resource_2ks5u"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
-resizable = false
-size = Vector2(284, 252)
+script = ExtResource("3_kctkp")
+resizable = true
+size = Vector2(293.671, 299.813)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = true
-position = Vector2(23.1035, 128.404)
+position = Vector2(200, 200)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_7tvup"]
+[sub_resource type="Resource" id="Resource_f0n8p"]
 resource_local_to_scene = true
-script = ExtResource("2_e6ubo")
+script = ExtResource("3_kctkp")
 resizable = true
-size = Vector2(177.393, 30)
+size = Vector2(492.83, 20)
 lock_x = false
 lock_x_value = 0
 lock_y = true
-lock_y_value = 30
+lock_y_value = 20
 moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
@@ -92,29 +92,29 @@ script = ExtResource("1_5wxv1")
 
 [node name="ResizableTextureRect2" parent="TextureRects" instance=ExtResource("1_1fpda")]
 position = Vector2(199, 102)
-resize_properties = SubResource("Resource_56fgy")
+resize_properties = SubResource("Resource_on711")
 
 [node name="ResizableTextureRect3" parent="TextureRects" instance=ExtResource("1_1fpda")]
-position = Vector2(343, 389)
-resize_properties = SubResource("Resource_n4dy3")
+position = Vector2(460, 441)
+resize_properties = SubResource("Resource_7m5yi")
 
 [node name="CollisionShapes" type="Node2D" parent="."]
 
 [node name="ResizableCollisionShape" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(718, 479)
-collision_shape_props = SubResource("Resource_3w2w0")
+position = Vector2(710, 383)
+collision_shape_props = SubResource("Resource_qw2tt")
 
 [node name="ResizableCollisionShape2" parent="CollisionShapes" instance=ExtResource("3_r43y3")]
-position = Vector2(532, 159)
-collision_shape_props = SubResource("Resource_w8y2q")
+position = Vector2(584, 191)
+collision_shape_props = SubResource("Resource_hkbg6")
 
 [node name="ResizeWithCode" type="Node2D" parent="."]
 
 [node name="ManualResizing" parent="ResizeWithCode" instance=ExtResource("5_trsqi")]
 position = Vector2(779, 98)
-editor_rect = SubResource("Resource_xt3vr")
+editor_rect = SubResource("Resource_2ks5u")
 
 [node name="Dumbell" parent="." instance=ExtResource("6_32o2b")]
-position = Vector2(282, 538)
+position = Vector2(580, 567)
 scale = Vector2(2, 2)
-rectable = SubResource("Resource_7tvup")
+rectable = SubResource("Resource_f0n8p")

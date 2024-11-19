@@ -1,7 +1,7 @@
 @tool
 extends Node2D
 
-@export var editor_rect : EditorRectProperties
+@export var editor_rect : EditorHandles
 
 
 func _ready():

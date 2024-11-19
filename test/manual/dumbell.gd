@@ -1,7 +1,7 @@
 @tool
 extends Node2D
 
-@export var rectable : EditorRectProperties
+@export var rectable : EditorHandles
 @onready var center = $Center
 @onready var left = $Left
 @onready var right = $Right
@@ -10,6 +10,7 @@ extends Node2D
 func _ready():
 	rectable.editor_setup(self)
 	rectable.resized.connect(_resize_for_rect)
+	_resize_for_rect()
 
 
 func _resize_for_rect():
