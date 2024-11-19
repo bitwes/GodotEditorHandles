@@ -12,7 +12,7 @@ func after_each():
 
 
 func _new_editor_rect_control():
-	var erp = EditorRectProperties.new()
+	var erp = EditorHandles.new()
 	# editor_setup does the add_child
 	var erc = autofree(erp.editor_setup(self))
 
@@ -28,7 +28,7 @@ func _new_editor_rect_control():
 
 
 func test_can_make_one():
-	var erc = autofree(EditorRect.new(EditorRectProperties.new()))
+	var erc = autofree(EditorHandlesControl.new(EditorHandles.new()))
 	assert_not_null(erc)
 
 
