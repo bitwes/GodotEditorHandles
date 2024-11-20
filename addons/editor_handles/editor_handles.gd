@@ -10,6 +10,12 @@ var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
 
+## When resizing, it will expand in all directions from the center.
+@export var expand_from_center := true :
+	set(val):
+		expand_from_center = val
+		_apply_properties_to_handles_ctrl()
+
 ## Enable/disable resizing the rect.
 @export var resizable := true :
 	set(val):
@@ -94,6 +100,7 @@ func _apply_properties_to_handles_ctrl():
 			_handles_ctrl.size = size
 		if(_handles_ctrl.position != position):
 			_handles_ctrl.change_position(position)
+		_handles_ctrl.queue_redraw()
 
 
 func _validate_property(property: Dictionary):

@@ -98,7 +98,7 @@ func _update_handles():
 	_handles.tl.rect.position = Vector2(size / -2) - _handles.tl.rect.size / 2
 
 
-func _update_size_for_mouse_motion(new_position):
+func _update_size_expand_from_center(new_position):
 	var diff = (global_position - new_position).abs()
 	var new_size = diff * 2
 	var size_diff = (size - new_size).abs()
@@ -108,6 +108,28 @@ func _update_size_for_mouse_motion(new_position):
 	if(!eh.lock_y and size_diff.y >= eh.drag_snap.y):
 		size.y = new_size.y - int(new_size.y) % int(eh.drag_snap.y)
 
+func _update_size_by_side(mouse_global_pos):
+	if(_focused_handle == _handles.tl):
+		var diff = _focused_handle.rect.position + global_position - mouse_global_pos
+		var new_size = size + diff
+		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
+		size = new_size
+		position -= diff / 2
+		eh.position = position
+	if(_focused_handle == _handles.br):
+		var diff = mouse_global_pos - global_position - _handles.br.rect.position
+		var new_size = abs(size + diff)
+		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
+		size = new_size
+		position += diff / 2
+		eh.position = position
+
+
+func _update_size_for_mouse_motion(new_position):
+	if(eh.expand_from_center):
+		_update_size_expand_from_center(new_position)
+	else:
+		_update_size_by_side(new_position)
 
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position

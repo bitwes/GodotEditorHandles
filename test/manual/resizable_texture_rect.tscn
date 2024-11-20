@@ -7,14 +7,15 @@
 [sub_resource type="Resource" id="Resource_nxr5t"]
 resource_local_to_scene = true
 script = ExtResource("2_qagh0")
+expand_from_center = false
 resizable = true
-size = Vector2(292, 290)
+size = Vector2(1103.75, 393.872)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = false
-position = Vector2(0, 0)
+moveable = true
+position = Vector2(0.372314, -4.63702)
 drag_snap = Vector2(1, 1)
 
 [node name="ResizableTextureRect" type="Node2D"]
@@ -22,8 +23,8 @@ script = ExtResource("1_ug7y2")
 resize_properties = SubResource("Resource_nxr5t")
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -146.0
-offset_top = -145.0
-offset_right = 146.0
-offset_bottom = 145.0
+offset_left = -551.505
+offset_top = -201.573
+offset_right = 552.25
+offset_bottom = 192.299
 texture = ExtResource("1_6urua")
