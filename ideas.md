@@ -9,6 +9,9 @@
 * You can implement min/max sizes and positions in code.  It would be nice if the mouse honored those instead of the dragging just stopping.  Not sure if it is possible to keep the mouse at the same location if the resize/movement doesn't change any values.
 * Resizing when scale of parent has been changed is not right.
 * Dragging when rotated means you have to drag on a different axis.
+* Could use some scaling on the drawing.  Handles are too small when zoomed out.  The handles should be the same size always.
+* rotation handles would be cool
+* Expand from center option.  Currently it is "expand from center", but it should get an option and have more handles so it can be used both ways.
 
 
 # How to break everything

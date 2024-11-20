@@ -52,6 +52,7 @@ func _find_editor_handles_control(node : Node):
 	if(node == null):
 		return null
 
+	# I don't tihnk this could ever happen with how things are now.
 	if(node is EditorHandlesControl):
 		return node
 
