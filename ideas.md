@@ -14,6 +14,10 @@
 * Expand from center option.  Currently it is "expand from center", but it should get an option and have more handles so it can be used both ways.
 
 
+# Handle drawing resource
+Could add a bunch of handle drawing resources, and allow the user to make their own so that they can make handles look however they'd like.
+
+
 # How to break everything
 * Rename the variable.  Renaming the variable will lose all settings on all instances.
     * I doubt there is anything that can be done to about this, but it would be nice.

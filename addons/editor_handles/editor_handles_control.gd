@@ -42,9 +42,14 @@ var _move_handle_size = 30
 var _side_handle_size = 20
 var _move_handle = SideHandle.new()
 var _handles = {
-	br = SideHandle.new(),
 	tl = SideHandle.new(),
+	ct = SideHandle.new(),
+	tr = SideHandle.new(),
 	cr = SideHandle.new(),
+	br = SideHandle.new(),
+	cb = SideHandle.new(),
+	bl = SideHandle.new(),
+	cl = SideHandle.new()
 }
 var _focused_handle = null :
 	set(val):
@@ -58,9 +63,20 @@ var _focused_handle = null :
 
 func _init(edit_rect_props : EditorHandles):
 	eh = edit_rect_props
+	_init_handles()
+
+
+func _init_handles():
 	_move_handle.color.a = .5
 	_move_handle.rect.size = Vector2(30, 30)
 	_move_handle.rect.position = _move_handle.rect.size / -2
+
+	# These handles don't work yet.  Remove these when they work.
+	_handles.ct.color = Color.RED
+	_handles.cb.color = Color.RED
+	_handles.bl.color = Color.RED
+	_handles.cl.color = Color.RED
+	_handles.tr.color = Color.RED
 
 
 func _ready() -> void:
@@ -88,16 +104,28 @@ func _editor_draw():
 
 		if(eh.resizable):
 			for key in _handles:
-				_handles[key].draw(self)
+				var hdl = _handles[key]
+				if(eh.expand_from_center and hdl in [_handles.tl, _handles.br]):
+					hdl.draw(self)
+				elif(!eh.expand_from_center):
+					hdl.draw(self)
 
 		if(eh.moveable):
 			_move_handle.draw(self)
 
 
 func _update_handles():
-	_handles.br.rect.position = Vector2(size / 2) - _handles.br.rect.size / 2
-	_handles.tl.rect.position = Vector2(size / -2) - _handles.tl.rect.size / 2
-	_handles.cr.rect.position = Vector2(size.x / 2, 0) -_handles.cr.rect.size / 2
+	_handles.tl.rect.position = Vector2(size / -2)
+	_handles.ct.rect.position = Vector2(0, size.y / -2)
+	_handles.tr.rect.position = Vector2(size.x /2, size.y / -2)
+	_handles.cr.rect.position = Vector2(size.x / 2, 0)
+	_handles.br.rect.position = Vector2(size / 2)
+	_handles.cb.rect.position = Vector2(0, size.y / 2)
+	_handles.bl.rect.position = Vector2(size.x / -2, size.y / 2)
+	_handles.cl.rect.position = Vector2(size.x / -2, 0)
+
+	for key in _handles:
+		_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
 func _update_size_expand_from_center(new_position):
@@ -110,7 +138,9 @@ func _update_size_expand_from_center(new_position):
 	if(!eh.lock_y and size_diff.y >= eh.drag_snap.y):
 		size.y = new_size.y - int(new_size.y) % int(eh.drag_snap.y)
 
+
 func _update_size_by_side(mouse_global_pos):
+	var new_local_pos =  mouse_global_pos - global_position
 	if(_focused_handle == _handles.tl):
 		var diff = _focused_handle.rect.position + global_position - mouse_global_pos
 		var new_size = size + diff
@@ -118,20 +148,33 @@ func _update_size_by_side(mouse_global_pos):
 		size = new_size
 		position -= diff / 2
 		eh.position = position
-	elif(_focused_handle == _handles.br):
-		var diff = mouse_global_pos - global_position - _handles.br.rect.position
-		var new_size = abs(size + diff)
-		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
-		size = new_size
-		position += diff / 2
-		eh.position = position
 	elif(_focused_handle == _handles.cr):
-		var diff = Vector2(mouse_global_pos.x - global_position.x - _handles.br.rect.position.x, 0)
+		var diff = Vector2(mouse_global_pos.x - global_position.x - _focused_handle.rect.position.x, 0)
 		var new_size = abs(size + diff)
 		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
 		size = new_size
 		position += diff / 2
 		eh.position = position
+	elif(_focused_handle == _handles.br):
+		var diff = mouse_global_pos - global_position - _focused_handle.rect.position
+		var new_size = abs(size + diff)
+		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
+		size = new_size
+		position += diff / 2
+		eh.position = position
+	# elif(_focused_handle == _handles.bl):
+	# 	var diff =  new_local_pos - _focused_handle.rect.position
+	# 	var new_size = size + diff
+	# 	print("---\n  mgp = ", mouse_global_pos,
+	# 		"\n  nlp = ", new_local_pos,
+	# 		"\n  hp  = ", _focused_handle.rect.position,
+	# 		"\n  diff = ", diff)
+	# 	size = new_size
+	# 	position.x += diff.x / 2
+	# 	position.y -= diff.y / 2
+	# 	eh.position = position
+
+
 
 
 
