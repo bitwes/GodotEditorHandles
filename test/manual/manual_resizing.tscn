@@ -4,27 +4,26 @@
 [ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_tas10"]
 [ext_resource type="Texture2D" uid="uid://cpjmmagggbf5n" path="res://icon.png" id="3_on3tv"]
 
-[sub_resource type="Resource" id="Resource_o5in6"]
+[sub_resource type="Resource" id="Resource_ppac3"]
 resource_local_to_scene = true
 script = ExtResource("2_tas10")
 resizable = true
-size = Vector2(345.9, 220.2)
+size = Vector2(293.3, 191.2)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
-moveable = true
-position = Vector2(23.0499, 2.89983)
+moveable = false
+position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
 [node name="ManualResizing" type="Node2D"]
 script = ExtResource("1_pa1hb")
-editor_rect = SubResource("Resource_o5in6")
+editor_handles = SubResource("Resource_ppac3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.562807, 1.44392e-06, 4.33177e-07, 1)
-position = Vector2(23.0499, 2.89983)
-scale = Vector2(2.70234, 1.72032)
+scale = Vector2(2.29141, 1.49375)
 texture = ExtResource("3_on3tv")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]

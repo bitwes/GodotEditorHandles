@@ -130,8 +130,8 @@ func _get_first_handle_containing_point(point):
 #endregion
 #region Public
 # --------------------
-## Mechanism for EditorRectProperties to update the global position of
-## this editor_rect without causing recursion and allowing the manipulated
+## Mechanism for EditorHandles to update the global position of this contorl
+## without causing recursion and allowing the manipulated
 ## objects to have their position changed.  This function is needed because
 ## this extends Node2D which has a position property that, as far as I can tell,
 ## cannot notify of a change without manually doing it in _process.  Checking

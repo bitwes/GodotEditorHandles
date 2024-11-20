@@ -58,7 +58,7 @@ func assert_property_usage_bit_flag_not_set(object, property_name, flag):
 # Setup/Teardown
 # -----------------------------
 func before_all():
-	dyn_script.default_script_name_no_extension = "test_editor_rect_properties"
+	dyn_script.default_script_name_no_extension = "test_editor_handles"
 
 
 

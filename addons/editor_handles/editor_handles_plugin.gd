@@ -17,13 +17,13 @@ func _exit_tree():
 
 func _handles(object: Object) -> bool:
 	if(object is Node):
-		return _find_editor_rect(object) != null
+		return _find_editor_handles_control(object) != null
 	else:
 		return false
 
 
 func _edit(object: Object) -> void:
-	var new_rect = _find_editor_rect(object)
+	var new_rect = _find_editor_handles_control(object)
 	if(new_rect != editing):
 		if(editing != null):
 			editing.is_being_edited = false
@@ -48,7 +48,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 # ------------------------
 # Private
 # ------------------------
-func _find_editor_rect(node : Node):
+func _find_editor_handles_control(node : Node):
 	if(node == null):
 		return null
 

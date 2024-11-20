@@ -11,7 +11,7 @@ func after_each():
 	_sender.clear()
 
 
-func _new_editor_rect_control():
+func _new_editor_handles_control():
 	var eh = EditorHandles.new()
 	# editor_setup does the add_child
 	var erc = autofree(eh.editor_setup(self))
@@ -33,7 +33,7 @@ func test_can_make_one():
 
 
 func test_when_moveable_center_handle_contains_mouse():
-	var erc = _new_editor_rect_control()
+	var erc = _new_editor_handles_control()
 	erc.position = Vector2(100, 100)
 	erc.eh.moveable = true
 	_sender.mouse_motion(Vector2(100, 100)).wait_frames(5)
@@ -43,7 +43,7 @@ func test_when_moveable_center_handle_contains_mouse():
 
 
 func test_when_not_moveable_center_handle_does_not_contain_mouse():
-	var erc = _new_editor_rect_control()
+	var erc = _new_editor_handles_control()
 	erc.eh.moveable = false
 	erc.position = Vector2(100, 100)
 	_sender.mouse_motion(Vector2(100, 100)).wait_frames(5)
@@ -52,7 +52,7 @@ func test_when_not_moveable_center_handle_does_not_contain_mouse():
 
 
 func test_when_resizable_side_handles_contain_mouse():
-	var erc = _new_editor_rect_control()
+	var erc = _new_editor_handles_control()
 	erc.is_being_edited = true
 	erc.draw.connect(func(): erc._editor_draw())
 
@@ -68,7 +68,7 @@ func test_when_resizable_side_handles_contain_mouse():
 
 
 func test_when_not_resizable_side_handles_do_not_contain_mouse():
-	var erc = _new_editor_rect_control()
+	var erc = _new_editor_handles_control()
 	erc.is_being_edited = true
 	erc.draw.connect(func(): erc._editor_draw())
 

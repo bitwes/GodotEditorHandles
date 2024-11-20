@@ -59,7 +59,7 @@ moveable = false
 position = Vector2(0, 0)
 drag_snap = Vector2(1, 1)
 
-[sub_resource type="Resource" id="Resource_2ks5u"]
+[sub_resource type="Resource" id="Resource_yf320"]
 resource_local_to_scene = true
 script = ExtResource("3_kctkp")
 resizable = true
@@ -112,7 +112,7 @@ collision_shape_props = SubResource("Resource_hkbg6")
 
 [node name="ManualResizing" parent="ResizeWithCode" instance=ExtResource("5_trsqi")]
 position = Vector2(770, 82)
-editor_rect = SubResource("Resource_2ks5u")
+editor_handles = SubResource("Resource_yf320")
 
 [node name="Dumbell" parent="." instance=ExtResource("6_32o2b")]
 position = Vector2(580, 567)
