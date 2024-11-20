@@ -7,13 +7,18 @@ class SideHandle:
 	var color2 = Color.BLUE
 
 	var active = false
+	# Local position.
 	var rect = Rect2(Vector2.ZERO, Vector2(20, 20))
+
+	func get_center():
+		return rect.position + rect.size / 2
 
 	func draw(draw_on):
 		var c = color
 		if(active):
 			c = color2
 		draw_on.draw_rect(rect, c)
+
 
 
 var eh : EditorHandles
@@ -71,16 +76,10 @@ func _init_handles():
 	_move_handle.rect.size = Vector2(30, 30)
 	_move_handle.rect.position = _move_handle.rect.size / -2
 
-	# These handles don't work yet.  Remove these when they work.
-	_handles.ct.color = Color.RED
-	_handles.cb.color = Color.RED
-	_handles.bl.color = Color.RED
-	_handles.cl.color = Color.RED
-	_handles.tr.color = Color.RED
-
 
 func _ready() -> void:
 	position = eh.position
+	_update_handles()
 
 
 func _draw() -> void:
@@ -139,47 +138,11 @@ func _update_size_expand_from_center(new_position):
 		size.y = new_size.y - int(new_size.y) % int(eh.drag_snap.y)
 
 
-func _update_size_by_side(mouse_global_pos):
-	var new_local_pos =  mouse_global_pos - global_position
-	if(_focused_handle == _handles.tl):
-		var diff = _focused_handle.rect.position + global_position - mouse_global_pos
-		var new_size = size + diff
-		size = new_size
-		position -= diff / 2
-		eh.position = position
-	elif(_focused_handle == _handles.cr):
-		var diff = Vector2(mouse_global_pos.x - global_position.x - _focused_handle.rect.position.x, 0)
-		var new_size = abs(size + diff)
-		size = new_size
-		position += diff / 2
-		eh.position = position
-	elif(_focused_handle == _handles.br):
-		var diff = mouse_global_pos - global_position - _focused_handle.rect.position
-		var new_size = abs(size + diff)
-		size = new_size
-		position += diff / 2
-		eh.position = position
-	# elif(_focused_handle == _handles.bl):
-	# 	var diff =  new_local_pos - _focused_handle.rect.position
-	# 	var new_size = size + diff
-	# 	print("---\n  mgp = ", mouse_global_pos,
-	# 		"\n  nlp = ", new_local_pos,
-	# 		"\n  hp  = ", _focused_handle.rect.position,
-	# 		"\n  diff = ", diff)
-	# 	size = new_size
-	# 	position.x += diff.x / 2
-	# 	position.y -= diff.y / 2
-	# 	eh.position = position
-
-
-
-
-
 func _update_size_for_mouse_motion(new_position):
 	if(eh.expand_from_center):
 		_update_size_expand_from_center(new_position)
 	else:
-		_update_size_by_side(new_position)
+		resize_sides_drag_handle_to(_focused_handle, new_position)
 
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position
@@ -247,5 +210,20 @@ func handle_mouse_motion():
 
 func release_handles():
 	_focused_handle = null
+
+
+func resize_sides_drag_handle_to(handle, mouse_global_pos):
+	var diff = mouse_global_pos - (global_position + handle.rect.position)
+	size += (diff * handle.get_center().sign())
+	position += ((diff / 2.0) * handle.get_center().sign().abs())
+	eh.position = position
+
+
+func print_info():
+	print("--- ", self, " ---")
+	print("  position = ", position, ' :: ', eh.position)
+	print("  size = ", size, ' :: ', eh.size)
+	for key in _handles:
+		print("  ", key, "  l: ", _handles[key].get_center(), ' g: ', _handles[key].get_center() + position)
 # --------------------
 #endregion

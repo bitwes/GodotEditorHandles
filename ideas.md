@@ -12,6 +12,7 @@
 * Could use some scaling on the drawing.  Handles are too small when zoomed out.  The handles should be the same size always.
 * rotation handles would be cool
 * Expand from center option.  Currently it is "expand from center", but it should get an option and have more handles so it can be used both ways.
+* when resizing sides, undo should contain a size and position value, otherwise undo doesn't undo the move.
 
 
 # Handle drawing resource
