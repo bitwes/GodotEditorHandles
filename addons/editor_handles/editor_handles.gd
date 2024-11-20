@@ -10,6 +10,12 @@ var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
 
+## When resizing, it will expand in all directions from the center.
+@export var expand_from_center := true :
+	set(val):
+		expand_from_center = val
+		_apply_properties_to_handles_ctrl()
+
 ## Enable/disable resizing the rect.
 @export var resizable := true :
 	set(val):
@@ -71,7 +77,7 @@ var _disabled_props := []
 		_apply_properties_to_handles_ctrl()
 		_emit_signals([moved, changed])
 
-## Snap resizing/movement to this increment.
+## NOT IMPLMENTED YET.  Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
 
@@ -94,9 +100,15 @@ func _apply_properties_to_handles_ctrl():
 			_handles_ctrl.size = size
 		if(_handles_ctrl.position != position):
 			_handles_ctrl.change_position(position)
+		_handles_ctrl.queue_redraw()
 
 
 func _validate_property(property: Dictionary):
+	# Not supported yet so it is always hidden.  Already in use so I didn't
+	# want to remove it.
+	if property.name == "drag_snap":
+		property.usage ^= PROPERTY_USAGE_EDITOR
+
 	if property.name == "lock_x" and (lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
