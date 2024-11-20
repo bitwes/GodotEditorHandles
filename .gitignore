@@ -1,7 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-
+.DS_Store
 
 /addons/gut**
 /addons/bitools**

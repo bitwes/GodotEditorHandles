@@ -1,14 +1,14 @@
 @tool
 extends EditorPlugin
 
-var plugin_name = "Editor Rect"
-var editing : EditorRect
+var plugin_name = "EditorHandles"
+var editing : EditorHandlesControl
 var resizing = false
 var moving = false
 
 
 func _enter_tree():
-	add_custom_type(plugin_name, "Node2D", preload("editor_rect.gd"), preload("icon.svg"))
+	add_custom_type(plugin_name, "Resource", preload("editor_handles.gd"), preload("icon.svg"))
 
 
 func _exit_tree():
@@ -17,13 +17,13 @@ func _exit_tree():
 
 func _handles(object: Object) -> bool:
 	if(object is Node):
-		return _find_editor_rect(object) != null
+		return _find_editor_handles_control(object) != null
 	else:
 		return false
 
 
 func _edit(object: Object) -> void:
-	var new_rect = _find_editor_rect(object)
+	var new_rect = _find_editor_handles_control(object)
 	if(new_rect != editing):
 		if(editing != null):
 			editing.is_being_edited = false
@@ -48,16 +48,17 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 # ------------------------
 # Private
 # ------------------------
-func _find_editor_rect(node : Node):
+func _find_editor_handles_control(node : Node):
 	if(node == null):
 		return null
 
-	if(node is EditorRect):
+	# I don't tihnk this could ever happen with how things are now.
+	if(node is EditorHandlesControl):
 		return node
 
 	var er = null
 	for child in node.get_children():
-		if(child is EditorRect):
+		if(child is EditorHandlesControl):
 			er = child
 	return er
 
@@ -77,12 +78,12 @@ func _handle_mouse_button(event : InputEventMouseButton):
 		if(event.pressed):
 			if(editing.do_handles_contain_mouse()):
 				resizing = true
-				undo.create_action("resize_editor_rect")
+				undo.create_action("resize_editor_handles")
 				undo.add_undo_property(editing, 'size', editing.size)
 				input_handled = true
 			elif(editing.does_move_handle_contain_mouse()):
 				moving = true
-				undo.create_action("move_editor_rect")
+				undo.create_action("move_editor_handles")
 				undo.add_undo_property(editing, "position", editing.position)
 				input_handled = true
 		elif(resizing):

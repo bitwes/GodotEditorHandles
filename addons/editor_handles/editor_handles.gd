@@ -1,11 +1,11 @@
 @tool
 extends Resource
-class_name EditorRectProperties
+class_name EditorHandles
 
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
-var _editor_rect : EditorRect = null
+var _handles_ctrl : EditorHandlesControl = null
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
@@ -20,7 +20,7 @@ var _disabled_props := []
 @export var size := Vector2(100, 100) :
 	set(val):
 		size = val
-		_apply_properties_to_editor_rect()
+		_apply_properties_to_handles_ctrl()
 		_emit_signals([resized, changed])
 
 ## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
@@ -29,7 +29,7 @@ var _disabled_props := []
 		lock_x = val
 		if(lock_x):
 			size.x = lock_x_value
-			_apply_properties_to_editor_rect()
+			_apply_properties_to_handles_ctrl()
 		_emit_signals([changed])
 
 ## The locked width value
@@ -38,7 +38,7 @@ var _disabled_props := []
 		lock_x_value = val
 		if(lock_x):
 			size.x = val
-			_apply_properties_to_editor_rect()
+			_apply_properties_to_handles_ctrl()
 		_emit_signals([changed])
 
 ## Enable/Disable locking the height of the rect.  Disabled when x_lock enabled.
@@ -68,7 +68,7 @@ var _disabled_props := []
 @export var position := Vector2.ZERO:
 	set(val):
 		position = val
-		_apply_properties_to_editor_rect()
+		_apply_properties_to_handles_ctrl()
 		_emit_signals([moved, changed])
 
 ## Snap resizing/movement to this increment.
@@ -88,12 +88,12 @@ func _init() -> void:
 
 
 # Set properties only if different to avoid recursion.
-func _apply_properties_to_editor_rect():
-	if(_editor_rect != null):
-		if(_editor_rect.size != size):
-			_editor_rect.size = size
-		if(_editor_rect.position != position):
-			_editor_rect.change_position(position)
+func _apply_properties_to_handles_ctrl():
+	if(_handles_ctrl != null):
+		if(_handles_ctrl.size != size):
+			_handles_ctrl.size = size
+		if(_handles_ctrl.position != position):
+			_handles_ctrl.change_position(position)
 
 
 func _validate_property(property: Dictionary):
@@ -143,13 +143,13 @@ func _emit_signals(signal_list : Array[Signal]):
 ## the control has to be added to the root node for it to be found by the plugin
 ## when selecting the node in other scenes.
 func editor_setup(for_what):
-	var to_return : EditorRect = EditorRect.new(self)
+	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position
 	to_return.size = size
 	resized.emit()
 	moved.emit()
-	_editor_rect = to_return
+	_handles_ctrl = to_return
 	for_what.add_child(to_return)
 	return to_return
 
