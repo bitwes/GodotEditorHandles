@@ -208,7 +208,6 @@ func resize_expand_center_drag_handle_to(handle, new_position):
 		size.y = new_size.y
 
 
-
 func resize_sides_drag_handle_to(handle, mouse_global_pos):
 	var diff = mouse_global_pos - (global_position + handle.rect.position)
 	size += diff * handle.get_center().sign()
