@@ -86,30 +86,12 @@ func test_when_not_resizable_side_handles_do_not_contain_mouse():
 
 #region Resize edges
 # --------------------
-func _new_region_resize_control():
-	var eh = EditorHandles.new()
-	eh.position = Vector2(200, 200)
-	eh.size = Vector2(100, 100)
-	eh.expand_from_center = false
-	eh.moveable = true
-	var ehc = _new_editor_handles_control(eh)
-	return ehc
-
-func _drag_handle_by(ehc, handle, movement):
+func _resize_sides_drag_handle_by(ehc, handle, movement):
 	var hdl_glob_pos = handle.rect.position + ehc.eh.position
 	ehc.resize_sides_drag_handle_to(handle, hdl_glob_pos + movement)
 
-func _assert_handle_drag(handle_key, p):
-	var ehc = _new_region_resize_control()
-	_drag_handle_by(ehc, ehc._handles[handle_key], p.move_by)
-	assert_eq(ehc.size, p.new_size, 'size')
-	assert_eq(ehc.position, p.new_position, 'position')
-	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
 
-
-
-
-var _drag_params = ParameterFactory.named_parameters(
+var _resize_size_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'move_by', 'new_size', 'new_position'],[
 	['tl', Vector2(-4, -4), Vector2(104, 104), Vector2(198, 198)],
 	['tl', Vector2(4, 4), Vector2(96, 96), Vector2(202, 202)],
@@ -126,5 +108,115 @@ var _drag_params = ParameterFactory.named_parameters(
 	['tr', Vector2(4, -4), Vector2(104, 104), Vector2(202, 198)],
 	['tr', Vector2(-4, 4), Vector2(96, 96), Vector2(198, 202)]
 ])
-func test_move_all_around(p = use_parameters(_drag_params)):
-	_assert_handle_drag(p.handle_key, p)
+func test_resize_sides(p = use_parameters(_resize_size_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = false
+	eh.moveable = true
+	var ehc = _new_editor_handles_control(eh)
+
+	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, p.new_size, 'size')
+	assert_eq(ehc.position, p.new_position, 'position')
+	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
+
+func test_resize_sides_lock_x(p = use_parameters(_resize_size_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = false
+	eh.moveable = true
+	eh.lock_x = true
+	eh.lock_x_value = 60
+	var ehc = _new_editor_handles_control(eh)
+
+	var check_size = Vector2(eh.lock_x_value, p.new_size.y)
+	var check_pos = Vector2(eh.position.x, p.new_position.y)
+
+	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, check_size, 'size')
+	assert_eq(ehc.position, check_pos, 'position')
+	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
+
+
+func test_resize_sides_lock_y(p = use_parameters(_resize_size_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = false
+	eh.moveable = true
+	eh.lock_y = true
+	eh.lock_y_value = 60
+	var ehc = _new_editor_handles_control(eh)
+
+	var check_size = Vector2(p.new_size.x, eh.lock_y_value)
+	var check_pos = Vector2(p.new_position.x, eh.position.y)
+
+	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, check_size, 'size')
+	assert_eq(ehc.position, check_pos, 'position')
+	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
+
+
+
+
+
+func _resize_expand_center_drag_handle_by(ehc, handle, movement):
+	var hdl_glob_pos = handle.get_center() + ehc.position
+	ehc.resize_expand_center_drag_handle_to(handle, hdl_glob_pos + movement)
+
+var _resize_expand_center_drag_params = ParameterFactory.named_parameters(
+	['handle_key', 'move_by', 'new_size'],[
+	['tl', Vector2(-1, -1), Vector2(102, 102)],
+	['tl', Vector2(10, 10), Vector2(80, 80)],
+	['br', Vector2(1, 1), Vector2(102, 102)],
+	['br', Vector2(-20, -20), Vector2(60, 60)],
+	['cr', Vector2(10, 10), Vector2(120, 100)],
+	['cb', Vector2(10, 10), Vector2(100, 120)]
+])
+func test_resize_expand_center(p = use_parameters(_resize_expand_center_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = true
+	eh.moveable = false
+	var ehc = _new_editor_handles_control(eh)
+
+	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, p.new_size, 'size')
+
+
+func test_resize_expand_center_lock_width(p = use_parameters(_resize_expand_center_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = true
+	eh.moveable = false
+	eh.lock_x = true
+	eh.lock_x_value = 50
+	var ehc = _new_editor_handles_control(eh)
+
+	# Override expected x, since x is locked.
+	var check_size = Vector2(eh.lock_x_value, p.new_size.y)
+
+
+	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, check_size, 'size')
+
+
+func test_resize_expand_center_lock_height(p = use_parameters(_resize_expand_center_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = true
+	eh.moveable = false
+	eh.lock_y = true
+	eh.lock_y_value = 50
+	var ehc = _new_editor_handles_control(eh)
+
+	# Override expected y, since y is locked.
+	var check_size = Vector2(p.new_size.x, eh.lock_y_value)
+
+	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, check_size, 'size')

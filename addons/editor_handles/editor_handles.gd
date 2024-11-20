@@ -77,7 +77,7 @@ var _disabled_props := []
 		_apply_properties_to_handles_ctrl()
 		_emit_signals([moved, changed])
 
-## Snap resizing/movement to this increment.
+## NOT IMPLMENTED YET.  Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
 
@@ -104,6 +104,11 @@ func _apply_properties_to_handles_ctrl():
 
 
 func _validate_property(property: Dictionary):
+	# Not supported yet so it is always hidden.  Already in use so I didn't
+	# want to remove it.
+	if property.name == "drag_snap":
+		property.usage ^= PROPERTY_USAGE_EDITOR
+
 	if property.name == "lock_x" and (lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 

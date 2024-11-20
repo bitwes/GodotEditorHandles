@@ -104,10 +104,7 @@ func _editor_draw():
 		if(eh.resizable):
 			for key in _handles:
 				var hdl = _handles[key]
-				if(eh.expand_from_center and hdl in [_handles.tl, _handles.br]):
-					hdl.draw(self)
-				elif(!eh.expand_from_center):
-					hdl.draw(self)
+				hdl.draw(self)
 
 		if(eh.moveable):
 			_move_handle.draw(self)
@@ -127,22 +124,6 @@ func _update_handles():
 		_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
-func _update_size_expand_from_center(new_position):
-	var diff = (global_position - new_position).abs()
-	var new_size = diff * 2
-	var size_diff = (size - new_size).abs()
-
-	if(!eh.lock_x and size_diff.x >= eh.drag_snap.x):
-		size.x = new_size.x - int(new_size.x) % int(eh.drag_snap.x)
-	if(!eh.lock_y and size_diff.y >= eh.drag_snap.y):
-		size.y = new_size.y - int(new_size.y) % int(eh.drag_snap.y)
-
-
-func _update_size_for_mouse_motion(new_position):
-	if(eh.expand_from_center):
-		_update_size_expand_from_center(new_position)
-	else:
-		resize_sides_drag_handle_to(_focused_handle, new_position)
 
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position
@@ -205,17 +186,37 @@ func handle_mouse_motion():
 	if(_focused_handle == _move_handle):
 		_handle_move_for_mouse_motion(get_global_mouse_position())
 	elif(_focused_handle != null):
-		_update_size_for_mouse_motion(get_global_mouse_position())
+		if(eh.expand_from_center):
+			resize_expand_center_drag_handle_to(_focused_handle, get_global_mouse_position())
+		else:
+			resize_sides_drag_handle_to(_focused_handle, get_global_mouse_position())
+
 
 
 func release_handles():
 	_focused_handle = null
 
 
+func resize_expand_center_drag_handle_to(handle, new_position):
+	var new_half_size = (global_position - new_position).abs()
+	var new_size = new_half_size * 2
+	var size_diff = (size - new_size).abs()
+
+	if(!eh.lock_x and handle.get_center().x != 0):
+		size.x = new_size.x
+	if(!eh.lock_y and handle.get_center().y != 0):
+		size.y = new_size.y
+
+
+
 func resize_sides_drag_handle_to(handle, mouse_global_pos):
 	var diff = mouse_global_pos - (global_position + handle.rect.position)
-	size += (diff * handle.get_center().sign())
-	position += ((diff / 2.0) * handle.get_center().sign().abs())
+	size += diff * handle.get_center().sign()
+	if(eh.lock_x):
+		diff.x = 0
+	if(eh.lock_y):
+		diff.y = 0
+	position += (diff / 2.0) * handle.get_center().sign().abs()
 	eh.position = position
 
 
