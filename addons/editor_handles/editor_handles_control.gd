@@ -43,7 +43,8 @@ var _side_handle_size = 20
 var _move_handle = SideHandle.new()
 var _handles = {
 	br = SideHandle.new(),
-	tl = SideHandle.new()
+	tl = SideHandle.new(),
+	cr = SideHandle.new(),
 }
 var _focused_handle = null :
 	set(val):
@@ -96,6 +97,7 @@ func _editor_draw():
 func _update_handles():
 	_handles.br.rect.position = Vector2(size / 2) - _handles.br.rect.size / 2
 	_handles.tl.rect.position = Vector2(size / -2) - _handles.tl.rect.size / 2
+	_handles.cr.rect.position = Vector2(size.x / 2, 0) -_handles.cr.rect.size / 2
 
 
 func _update_size_expand_from_center(new_position):
@@ -116,13 +118,21 @@ func _update_size_by_side(mouse_global_pos):
 		size = new_size
 		position -= diff / 2
 		eh.position = position
-	if(_focused_handle == _handles.br):
+	elif(_focused_handle == _handles.br):
 		var diff = mouse_global_pos - global_position - _handles.br.rect.position
 		var new_size = abs(size + diff)
 		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
 		size = new_size
 		position += diff / 2
 		eh.position = position
+	elif(_focused_handle == _handles.cr):
+		var diff = Vector2(mouse_global_pos.x - global_position.x - _handles.br.rect.position.x, 0)
+		var new_size = abs(size + diff)
+		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
+		size = new_size
+		position += diff / 2
+		eh.position = position
+
 
 
 func _update_size_for_mouse_motion(new_position):
