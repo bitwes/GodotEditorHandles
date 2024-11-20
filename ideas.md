@@ -15,7 +15,7 @@
 
 
 # Handle drawing resource
-Could add a bunch of handle drawing resources, and allow the user to make their own so that they can make handles look however they'd like.
+Could add a bunch of handle drawing resources, and allow the user to make their own so that they can make handles look however they'd like.  Or maybe just a callback, or something.  IDK.  Resource would have to have a `_draw_on(draw_on, handle)` that they could then use `draw_on.draw_rect(handle.rect)` or something like that.  Might need a scale passed in.  Who really knows, I'm tired but just keep typing.
 
 
 # How to break everything

@@ -144,21 +144,18 @@ func _update_size_by_side(mouse_global_pos):
 	if(_focused_handle == _handles.tl):
 		var diff = _focused_handle.rect.position + global_position - mouse_global_pos
 		var new_size = size + diff
-		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
 		size = new_size
 		position -= diff / 2
 		eh.position = position
 	elif(_focused_handle == _handles.cr):
 		var diff = Vector2(mouse_global_pos.x - global_position.x - _focused_handle.rect.position.x, 0)
 		var new_size = abs(size + diff)
-		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
 		size = new_size
 		position += diff / 2
 		eh.position = position
 	elif(_focused_handle == _handles.br):
 		var diff = mouse_global_pos - global_position - _focused_handle.rect.position
 		var new_size = abs(size + diff)
-		print(_focused_handle.rect, '::', mouse_global_pos, '::',diff, '::', new_size)
 		size = new_size
 		position += diff / 2
 		eh.position = position
