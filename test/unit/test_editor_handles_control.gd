@@ -95,20 +95,15 @@ var _resize_size_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'move_by', 'new_size', 'new_position'],[
 	['tl', Vector2(-4, -4), Vector2(104, 104), Vector2(198, 198)],
 	['tl', Vector2(4, 4), Vector2(96, 96), Vector2(202, 202)],
-
 	['br',Vector2(4, 4), Vector2(104, 104), Vector2(202, 202)],
-
 	['cr', Vector2(4, 4), Vector2(104, 100), Vector2(202, 200)],
-
 	['bl', Vector2(-4, 4), Vector2(104, 104), Vector2(198, 202)],
-
 	['cb', Vector2(-4, 4), Vector2(100, 104), Vector2(200, 202)],
 	['cb', Vector2(200, -20), Vector2(100, 80), Vector2(200, 190)],
-
 	['tr', Vector2(4, -4), Vector2(104, 104), Vector2(202, 198)],
 	['tr', Vector2(-4, 4), Vector2(96, 96), Vector2(198, 202)]
 ])
-func test_resize_sides(p = use_parameters(_resize_size_drag_params)):
+func test_resize_sides_basic(p = use_parameters(_resize_size_drag_params)):
 	var eh = EditorHandles.new()
 	eh.position = Vector2(200, 200)
 	eh.size = Vector2(100, 100)
@@ -160,20 +155,15 @@ func test_resize_sides_lock_y(p = use_parameters(_resize_size_drag_params)):
 
 
 var _resize_size_rotated_drag_params = ParameterFactory.named_parameters(
-	['handle_key', 'rotation', 'move_by', 'new_size', 'new_position'],[
-	['tl', 90, Vector2(-20, -20), Vector2(120, 120), Vector2(190, 190)],
+	['handle_key', 'rotation', 'move_by', 'new_size', 'new_position', 'pause'],[
+	['tl', 90, Vector2(-20, -20), Vector2(120, 120), Vector2(210, 190)],
+	['br', 90, Vector2(20, 20), Vector2(120, 120), Vector2(190, 210), true],
 
 	# ['tl', 0, Vector2(4, 4), Vector2(96, 96), Vector2(202, 202)],
-
-	# ['br', 0, Vector2(4, 4), Vector2(104, 104), Vector2(202, 202)],
-
 	# ['cr', 0, Vector2(4, 4), Vector2(104, 100), Vector2(202, 200)],
-
 	# ['bl', 0, Vector2(-4, 4), Vector2(104, 104), Vector2(198, 202)],
-
 	# ['cb', 0, Vector2(-4, 4), Vector2(100, 104), Vector2(200, 202)],
 	# ['cb', 0, Vector2(200, -20), Vector2(100, 80), Vector2(200, 190)],
-
 	# ['tr', 0, Vector2(4, -4), Vector2(104, 104), Vector2(202, 198)],
 	# ['tr', 0, Vector2(-4, 4), Vector2(96, 96), Vector2(198, 202)]
 ])
@@ -190,9 +180,11 @@ func test_resize_sides_when_rotated(p = use_parameters(_resize_size_rotated_drag
 	ehc._handles[p.handle_key].color = Color.BLUE
 	ehc.queue_redraw()
 
-	# await wait_seconds(1)
+	if(p.pause == true):
+		await wait_seconds(1)
 	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
-	# await wait_seconds(1)
+	if(p.pause == true):
+		await wait_seconds(1)
 	assert_almost_eq(ehc.size, p.new_size, Vector2(.1, .1),'size')
 	assert_almost_eq(ehc.position, p.new_position, Vector2(.1, .1), 'position')
 	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')

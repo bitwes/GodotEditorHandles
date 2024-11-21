@@ -213,6 +213,9 @@ func resize_expand_center_drag_handle_to(handle, new_position):
 
 func resize_sides_drag_handle_to(handle, mouse_global_pos):
 	var grot = get_global_transform().affine_inverse().get_rotation()
+	if(grot != 0.0):
+		push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
+		return
 	var diff = mouse_global_pos - (global_position + handle.rect.position)
 	size += diff * handle.get_center().sign()
 	if(eh.lock_x):
@@ -220,8 +223,7 @@ func resize_sides_drag_handle_to(handle, mouse_global_pos):
 	if(eh.lock_y):
 		diff.y = 0
 
-	var pos_change :Vector2 = (diff / 2.0) * handle.get_center().sign().abs()
-
+	var pos_change : Vector2 = (diff / 2.0) * handle.get_center().sign().abs()
 	position += pos_change
 	eh.position = position
 
@@ -234,6 +236,14 @@ func print_info():
 		print("  ", key, "  l: ", _handles[key].get_center(), ' g: ', _handles[key].get_center() + position)
 # --------------------
 #endregion
+
+
+func _translate_glob_pos(glob_pos):
+	var viewport_transform_inverted = get_viewport().get_global_canvas_transform().affine_inverse()
+	var viewport_position = viewport_transform_inverted.basis_xform(glob_pos)
+	var global_transform_inverted = get_global_transform().affine_inverse()
+	var target_position = global_transform_inverted.basis_xform(viewport_position).round() # pixel perfect positions
+	return target_position
 
 
 
