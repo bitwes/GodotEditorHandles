@@ -57,7 +57,8 @@ var _handles = {
 	bl = SideHandle.new(),
 	cl = SideHandle.new()
 }
-var _focused_handle = null :
+
+var _focused_handle : SideHandle = null :
 	set(val):
 		if(_focused_handle != null):
 			_focused_handle.active = false
