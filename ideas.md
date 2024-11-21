@@ -14,6 +14,7 @@
 * Expand from center option.  Currently it is "expand from center", but it should get an option and have more handles so it can be used both ways.
 * when resizing sides, undo should contain a size and position value, otherwise undo doesn't undo the move.
 * hide or visibly disable handles when lock_x or lock_y would prevent them from being used.
+* Do I need to honor the currently selected editor mode (move, resize, rotate, scale, etc)?
 
 
 # Handle drawing resource
@@ -53,3 +54,10 @@ Allows you to make a tool node that has parts that can be resized and moved whil
 - GoditorRect
 - LessEditableChildren
 - EditorHandles
+
+
+# Reference Material
+GDQuest:   How to Create a 2d Manipulator in Godot 3.1: Editor Plugin Overview
+https://www.youtube.com/watch?v=H6TfKYtuM9U
+GDQuest:  Canvas Input, Undo, and Redo in Godot: Plugin Tutorial 2
+https://www.youtube.com/watch?v=RDx5B_AzkPI
