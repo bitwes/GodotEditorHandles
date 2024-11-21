@@ -32,7 +32,42 @@ func test_can_make_one():
 	var ehc = autofree(EditorHandlesControl.new(EditorHandles.new()))
 	assert_not_null(ehc)
 
+func test_lock_x_disables_handles():
+	var ehc = _new_editor_handles_control()
+	ehc.eh.lock_x = true
 
+	for key in ['tl', 'tr', 'cr', 'br', 'bl', 'cl']:
+		assert_true(ehc._handles[key].disabled, str(key, ' disabled'))
+
+
+func test_lock_x_disables_handles_when_set_before_instanced():
+	var eh = EditorHandles.new()
+	eh.lock_x = true
+	var ehc = _new_editor_handles_control(eh)
+
+	for key in ['tl', 'tr', 'cr', 'br', 'bl', 'cl']:
+		assert_true(ehc._handles[key].disabled, str(key, ' disabled'))
+
+
+func test_lock_y_disables_handles():
+	var ehc = _new_editor_handles_control()
+	ehc.eh.lock_y = true
+
+	for key in ['tl', 'ct', 'tr', 'br', 'cb', 'bl']:
+		assert_true(ehc._handles[key].disabled, str(key, ' disabled'))
+
+
+func test_lock_y_disables_handles_when_set_before_instanced():
+	var eh = EditorHandles.new()
+	eh.lock_y = true
+	var ehc = _new_editor_handles_control(eh)
+
+	for key in ['tl', 'ct', 'tr', 'br', 'cb', 'bl']:
+		assert_true(ehc._handles[key].disabled, str(key, ' disabled'))
+
+
+#region handle mouse detection
+# --------------------
 func test_when_moveable_center_handle_contains_mouse():
 	var ehc = _new_editor_handles_control()
 	ehc.position = Vector2(100, 100)
@@ -82,8 +117,24 @@ func test_when_not_resizable_side_handles_do_not_contain_mouse():
 
 	assert_false(ehc.do_handles_contain_mouse())
 
+func test_when_handle_disabled_handle_does_not_contain_mouse():
+	var ehc = _new_editor_handles_control()
+	ehc.is_being_edited = true
 
+	ehc.eh.size = Vector2(100, 100)
+	ehc.position = Vector2(100, 100)
 
+	ehc._handles.tl.disabled = true
+	ehc.queue_redraw()
+
+	# tl
+	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
+	await _sender.idle
+
+	assert_false(ehc.do_handles_contain_mouse())
+
+# --------------------
+#endregion
 #region Resize edges
 # --------------------
 func _resize_sides_drag_handle_by(ehc, handle, movement):

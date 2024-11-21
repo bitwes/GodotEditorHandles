@@ -36,6 +36,7 @@ var _disabled_props := []
 		if(lock_x):
 			size.x = lock_x_value
 			_apply_properties_to_handles_ctrl()
+		_disable_handles_for_locks()
 		_emit_signals([changed])
 
 ## The locked width value
@@ -53,6 +54,7 @@ var _disabled_props := []
 		lock_y = val
 		if(lock_y):
 			size.y = lock_y_value
+		_disable_handles_for_locks()
 		_emit_signals([changed])
 
 ## The locked height value
@@ -147,6 +149,18 @@ func _emit_signals(signal_list : Array[Signal]):
 		_is_currently_setting_property = false
 
 
+func _disable_handles_for_locks():
+	if(_handles_ctrl != null):
+		for key in ['tl', 'tr','br', 'bl']:
+			_handles_ctrl._handles[key].disabled = lock_x or lock_y
+
+		for key in ['cr', 'cl']:
+			_handles_ctrl._handles[key].disabled = lock_x
+
+		for key in ['ct', 'cb']:
+			_handles_ctrl._handles[key].disabled = lock_y
+
+
 ## Call this in ready.  You probably want to call this only when
 ## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
 ## all the time.
@@ -163,6 +177,7 @@ func editor_setup(for_what):
 	moved.emit()
 	_handles_ctrl = to_return
 	for_what.add_child(to_return)
+	_disable_handles_for_locks()
 	return to_return
 
 
