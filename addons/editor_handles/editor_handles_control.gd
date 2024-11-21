@@ -165,6 +165,7 @@ func change_position(new_position):
 func do_handles_contain_mouse():
 	if(!eh.resizable):
 		return false
+
 	var handle = _get_first_handle_containing_point(get_local_mouse_position())
 	_focused_handle = handle
 	return  _focused_handle != null
@@ -174,7 +175,8 @@ func does_move_handle_contain_mouse():
 	if(!eh.moveable):
 		return false
 
-	if(_move_handle.rect.has_point(get_local_mouse_position())):
+	var adj_mouse = get_local_mouse_position().rotated(get_global_transform().get_rotation())
+	if(_move_handle.rect.has_point(adj_mouse)):
 		_focused_handle = _move_handle
 		return true
 	else:
@@ -192,13 +194,14 @@ func handle_mouse_motion():
 			resize_sides_drag_handle_to(_focused_handle, get_global_mouse_position())
 
 
-
 func release_handles():
 	_focused_handle = null
 
 
 func resize_expand_center_drag_handle_to(handle, new_position):
-	var new_half_size = (global_position - new_position).abs()
+	var grot = get_global_transform().affine_inverse().get_rotation()
+	new_position = new_position.rotated(grot)
+	var new_half_size = (global_position.rotated(grot) - new_position).abs()
 	var new_size = new_half_size * 2
 	var size_diff = (size - new_size).abs()
 
@@ -209,13 +212,17 @@ func resize_expand_center_drag_handle_to(handle, new_position):
 
 
 func resize_sides_drag_handle_to(handle, mouse_global_pos):
+	var grot = get_global_transform().affine_inverse().get_rotation()
 	var diff = mouse_global_pos - (global_position + handle.rect.position)
 	size += diff * handle.get_center().sign()
 	if(eh.lock_x):
 		diff.x = 0
 	if(eh.lock_y):
 		diff.y = 0
-	position += (diff / 2.0) * handle.get_center().sign().abs()
+
+	var pos_change :Vector2 = (diff / 2.0) * handle.get_center().sign().abs()
+
+	position += pos_change
 	eh.position = position
 
 
@@ -227,3 +234,20 @@ func print_info():
 		print("  ", key, "  l: ", _handles[key].get_center(), ' g: ', _handles[key].get_center() + position)
 # --------------------
 #endregion
+
+
+
+# This is the code from GDQuest's 2nd video.  I now have to fight this function
+# and make it do what I need it to do.  There's a good chance it won't even do
+# what I need it to do.  But it might.
+func the_calculations(event_position):
+	var viewport_transform_inverted = get_viewport().get_global_canvase_transform().affine_inverse
+	var viewport_position = viewport_transform_inverted.xform(event_position)
+	var global_transform_inverted = get_global_transform().affine_inverse()
+	var target_position = global_transform_inverted.xform(viewport_position).round() # pixel perfect positions
+
+	# @4:39 in 2nd video, this should be this thing's size..maybe.  He's using
+	# rect_extents.offset but I don't remember what that actuallis here.
+	var unknown = Vector2(1, 1)
+	var target_size = (target_position - unknown).abs() * 2.0
+	size = target_size
