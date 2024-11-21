@@ -5,7 +5,7 @@ class_name EditorHandlesControl
 class SideHandle:
 	var color = Color.ORANGE
 	var color2 = Color.BLUE
-
+	var disabled = false
 	var active = false
 	# Local position.
 	var rect = Rect2(Vector2.ZERO, Vector2(20, 20))
@@ -14,10 +14,11 @@ class SideHandle:
 		return rect.position + rect.size / 2
 
 	func draw(draw_on):
-		var c = color
-		if(active):
-			c = color2
-		draw_on.draw_rect(rect, c)
+		if(!disabled):
+			var c = color
+			if(active):
+				c = color2
+			draw_on.draw_rect(rect, c)
 
 
 
@@ -124,7 +125,6 @@ func _update_handles():
 		_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
-
 func _handle_move_for_mouse_motion(new_position):
 	global_position = new_position
 	eh.position = position
@@ -139,6 +139,8 @@ func _get_first_handle_containing_point(point):
 		if(h.rect.has_point(point)):
 			to_return = h
 		idx += 1
+	if(to_return != null and to_return.disabled):
+		to_return = null
 	return to_return
 
 
