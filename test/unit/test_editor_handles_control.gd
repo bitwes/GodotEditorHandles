@@ -325,9 +325,9 @@ func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_s
 
 var _resize_expand_center_rotated_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'rotation', 'move_by', 'new_size', 'pause'],[
-	['tl', 90, Vector2(20, -20), Vector2(140, 140),],
-	['br', 90, Vector2(-20, 20), Vector2(140, 140), true],
-	['cb', 90, Vector2(-20, 0), Vector2(120, 100), true]
+	['tl', 90, Vector2(20, -20), Vector2(140, 140), ],
+	['br', 90, Vector2(-20, 20), Vector2(140, 140), ],
+	['cb', 90, Vector2(-20, 0), Vector2(100, 140), ]
 ])
 func test_resize_expand_center_rotated(p = use_parameters(_resize_expand_center_rotated_drag_params)):
 	var eh = EditorHandles.new()

@@ -216,9 +216,9 @@ func release_handles():
 
 
 func drag_handle_expand_center(handle, change_in_position):
-	var size_diff = change_in_position * handle.position.sign() * 2
-	size_diff = get_global_transform().affine_inverse().basis_xform(size_diff)
-	var new_size = size + size_diff# * get_global_transform().affine_inverse().get_scale()
+	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
+	var size_diff = adj_change * handle.position.sign() * 2
+	var new_size = size + size_diff
 
 	if(!eh.lock_x):
 		size.x = new_size.x
