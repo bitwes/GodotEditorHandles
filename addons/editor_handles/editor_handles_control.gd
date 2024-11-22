@@ -3,26 +3,26 @@ extends Node2D
 class_name EditorHandlesControl
 
 class SideHandle:
+	# Local position.
+	var _rect : Rect2 = Rect2(Vector2.ZERO, Vector2(20, 20))
+
 	var color = Color.ORANGE
 	var color2 = Color.BLUE
 	var disabled = false
 	var active = false
-
+	## Center of handle, not rect position.
 	var position = Vector2.ZERO :
 		set(val):
 			position = val
 			_rect.position = position - _rect.size / 2
-
 	var size = Vector2(20, 20) :
 		set(val):
 			size = val
 			_rect.size = val
 
+
 	func has_point(point):
 		return _rect.has_point(point)
-
-	# Local position.
-	var _rect = Rect2(Vector2.ZERO, Vector2(20, 20))
 
 
 	func draw(draw_on):
@@ -199,12 +199,13 @@ func does_move_handle_contain_mouse():
 		return false
 
 
-func handle_mouse_motion():
+func handle_mouse_motion(event :InputEventMouseMotion):
 	if(_focused_handle == _move_handle):
 		_handle_move_for_mouse_motion(get_global_mouse_position())
 	elif(_focused_handle != null):
+		var e = event.xformed_by(get_viewport().get_global_canvas_transform().affine_inverse())
 		if(eh.expand_from_center):
-			resize_expand_center_drag_handle_to(_focused_handle, get_global_mouse_position())
+			drag_handle_expand_center(_focused_handle, e.relative)
 		else:
 			resize_sides_drag_handle_to(_focused_handle, get_global_mouse_position())
 
@@ -213,16 +214,14 @@ func release_handles():
 	_focused_handle = null
 
 
-func resize_expand_center_drag_handle_to(handle, new_position):
-	var grot = get_global_transform().affine_inverse().get_rotation()
-	new_position = new_position.rotated(grot)
-	var new_half_size = (global_position.rotated(grot) - new_position).abs()
-	var new_size = new_half_size * 2
-	var size_diff = (size - new_size).abs()
+func drag_handle_expand_center(handle, change_in_position):
+	var size_diff = change_in_position * handle.position.sign() * 2
+	size_diff = get_global_transform().affine_inverse().basis_xform(size_diff)
+	var new_size = size + size_diff# * get_global_transform().affine_inverse().get_scale()
 
-	if(!eh.lock_x and handle.position.x != 0):
+	if(!eh.lock_x):
 		size.x = new_size.x
-	if(!eh.lock_y and handle.position.y != 0):
+	if(!eh.lock_y):
 		size.y = new_size.y
 
 
@@ -257,7 +256,7 @@ func _translate_glob_pos(glob_pos):
 	var viewport_transform_inverted = get_viewport().get_global_canvas_transform().affine_inverse()
 	var viewport_position = viewport_transform_inverted.basis_xform(glob_pos)
 	var global_transform_inverted = get_global_transform().affine_inverse()
-	var target_position = global_transform_inverted.basis_xform(viewport_position).round() # pixel perfect positions
+	var target_position = global_transform_inverted.basis_xform(viewport_position) # pixel perfect positions
 	return target_position
 
 

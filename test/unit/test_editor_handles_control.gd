@@ -246,10 +246,6 @@ func test_resize_sides_when_rotated(p = use_parameters(_resize_size_rotated_drag
 #region resize expand center
 # --------------------
 
-func _resize_expand_center_drag_handle_by(ehc, handle, movement):
-	var hdl_glob_pos = handle.position + ehc.position
-	ehc.resize_expand_center_drag_handle_to(handle, hdl_glob_pos + movement)
-
 var _resize_expand_center_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'move_by', 'new_size'],[
 	['tl', Vector2(-1, -1), Vector2(102, 102)],
@@ -267,7 +263,7 @@ func test_resize_expand_center(p = use_parameters(_resize_expand_center_drag_par
 	eh.moveable = false
 	var ehc = _new_editor_handles_control(eh)
 
-	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, p.new_size, 'size')
 
 
@@ -285,7 +281,7 @@ func test_resize_expand_center_lock_width(p = use_parameters(_resize_expand_cent
 	var check_size = Vector2(eh.lock_x_value, p.new_size.y)
 
 
-	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, check_size, 'size')
 
 
@@ -302,11 +298,58 @@ func test_resize_expand_center_lock_height(p = use_parameters(_resize_expand_cen
 	# Override expected y, since y is locked.
 	var check_size = Vector2(p.new_size.x, eh.lock_y_value)
 
-	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, check_size, 'size')
 
+var _resize_expand_center_scaled_drag_params = ParameterFactory.named_parameters(
+	['handle_key', 'scale',         'move_by',         'new_size'],[
+	['tl',          Vector2(2, 2),  Vector2(-10, -10),   Vector2(60, 60)],
+	['br',          Vector2(2, 2),  Vector2(10, 10),   Vector2(60, 60)],
+	# ['tl', Vector2(10, 10), Vector2(80, 80)],
+	# ['br', Vector2(1, 1), Vector2(102, 102)],
+	# ['br', Vector2(-20, -20), Vector2(60, 60)],
+	# ['cr', Vector2(10, 10), Vector2(120, 100)],
+	# ['cb', Vector2(10, 10), Vector2(100, 120)]
+])
+func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_scaled_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(50, 50)
+	eh.expand_from_center = true
+	eh.moveable = false
+	var ehc = _new_editor_handles_control(eh)
+	ehc.scale = p.scale
 
-func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_drag_params)):
-	pending()
+	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
+	assert_eq(ehc.size, p.new_size, 'size')
+
+
+func _print_translation(ehc, x, y):
+	var glob_pos = Vector2(x, y)
+	var result = ehc._translate_glob_pos(glob_pos)
+	print(glob_pos, ' -> ', result, ' for: scale=', ehc.scale, ' rot=', ehc.rotation_degrees)
+
+func test_a_bunch_of_things_i_dont_understand():
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = true
+	eh.moveable = false
+	var ehc = _new_editor_handles_control(eh)
+
+	_print_translation(ehc, 100, 100)
+
+	ehc.rotation_degrees = 90
+	_print_translation(ehc, 100, 100)
+
+	ehc.rotation_degrees = 0
+	ehc.scale = Vector2(2, 2)
+	_print_translation(ehc, 100, 100)
+
+	ehc.rotation_degrees = 180
+	ehc.scale = Vector2(.5, .5)
+	_print_translation(ehc, 100, 100)
+
+	pass_test("this does nothing but I don't like warnings")
 # --------------------
 #endregion
