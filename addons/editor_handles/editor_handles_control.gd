@@ -19,6 +19,7 @@ class SideHandle:
 		set(val):
 			size = val
 			_rect.size = val
+			_rect.position = position - _rect.size / 2
 
 
 	func has_point(point):

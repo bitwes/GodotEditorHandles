@@ -323,6 +323,33 @@ func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_s
 	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, p.new_size, 'size')
 
+var _resize_expand_center_rotated_drag_params = ParameterFactory.named_parameters(
+	['handle_key', 'rotation', 'move_by', 'new_size', 'pause'],[
+	['tl', 90, Vector2(20, -20), Vector2(140, 140),],
+	['br', 90, Vector2(-20, 20), Vector2(140, 140), true],
+	['cb', 90, Vector2(-20, 0), Vector2(120, 100), true]
+])
+func test_resize_expand_center_rotated(p = use_parameters(_resize_expand_center_rotated_drag_params)):
+	var eh = EditorHandles.new()
+	eh.position = Vector2(200, 200)
+	eh.size = Vector2(100, 100)
+	eh.expand_from_center = true
+	eh.moveable = true
+
+	var ehc = _new_editor_handles_control(eh)
+	ehc.rotation_degrees = p.rotation
+	ehc._handles.ct.color = Color.RED
+	ehc._handles[p.handle_key].color = Color.BLUE
+	ehc.queue_redraw()
+
+	if(p.pause == true):
+		await wait_seconds(1)
+	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
+	if(p.pause == true):
+		await wait_seconds(1)
+	assert_almost_eq(ehc.size, p.new_size, Vector2(.1, .1),'size')
+	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
+
 
 func _print_translation(ehc, x, y):
 	var glob_pos = Vector2(x, y)

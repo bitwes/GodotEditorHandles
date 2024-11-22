@@ -20,7 +20,7 @@ drag_snap = Vector2(1, 1)
 
 [node name="ResizableTextureRect" type="Node2D"]
 position = Vector2(400, 400)
-scale = Vector2(2, 2)
+rotation = 1.5708
 script = ExtResource("1_ug7y2")
 resize_properties = SubResource("Resource_nxr5t")
 
