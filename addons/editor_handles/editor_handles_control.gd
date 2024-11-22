@@ -227,16 +227,13 @@ func drag_handle_expand_center(handle, change_in_position):
 
 
 func drag_handle_drag_side(handle, change_in_position):
-	# var grot = get_global_transform().affine_inverse().get_rotation()
-	# if(grot != 0.0):
-	# 	push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
-	# 	return
 	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
-	size += adj_change * handle.position.sign()
 	if(eh.lock_x):
 		adj_change.x = 0
 	if(eh.lock_y):
 		adj_change.y = 0
+
+	size += adj_change * handle.position.sign()
 
 	var pos_change : Vector2 = (adj_change / 2.0) * handle.position.sign().abs()
 	position += pos_change
@@ -251,28 +248,3 @@ func print_info():
 		print("  ", key, "  l: ", _handles[key].position, ' g: ', _handles[key].position + position)
 # --------------------
 #endregion
-
-
-func _translate_glob_pos(glob_pos):
-	var viewport_transform_inverted = get_viewport().get_global_canvas_transform().affine_inverse()
-	var viewport_position = viewport_transform_inverted.basis_xform(glob_pos)
-	var global_transform_inverted = get_global_transform().affine_inverse()
-	var target_position = global_transform_inverted.basis_xform(viewport_position) # pixel perfect positions
-	return target_position
-
-
-
-# This is the code from GDQuest's 2nd video.  I now have to fight this function
-# and make it do what I need it to do.  There's a good chance it won't even do
-# what I need it to do.  But it might.
-func the_calculations(event_position):
-	var viewport_transform_inverted = get_viewport().get_global_canvase_transform().affine_inverse
-	var viewport_position = viewport_transform_inverted.xform(event_position)
-	var global_transform_inverted = get_global_transform().affine_inverse()
-	var target_position = global_transform_inverted.xform(viewport_position).round() # pixel perfect positions
-
-	# @4:39 in 2nd video, this should be this thing's size..maybe.  He's using
-	# rect_extents.offset but I don't remember what that actuallis here.
-	var unknown = Vector2(1, 1)
-	var target_size = (target_position - unknown).abs() * 2.0
-	size = target_size
