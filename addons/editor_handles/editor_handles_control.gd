@@ -3,22 +3,35 @@ extends Node2D
 class_name EditorHandlesControl
 
 class SideHandle:
+	# Local position.
+	var _rect : Rect2 = Rect2(Vector2.ZERO, Vector2(20, 20))
+
 	var color = Color.ORANGE
 	var color2 = Color.BLUE
 	var disabled = false
 	var active = false
-	# Local position.
-	var rect = Rect2(Vector2.ZERO, Vector2(20, 20))
+	## Center of handle, not rect position.
+	var position = Vector2.ZERO :
+		set(val):
+			position = val
+			_rect.position = position - _rect.size / 2
+	var size = Vector2(20, 20) :
+		set(val):
+			size = val
+			_rect.size = val
+			_rect.position = position - _rect.size / 2
 
-	func get_center():
-		return rect.position + rect.size / 2
+
+	func has_point(point):
+		return _rect.has_point(point)
+
 
 	func draw(draw_on):
 		if(!disabled):
 			var c = color
 			if(active):
 				c = color2
-			draw_on.draw_rect(rect, c)
+			draw_on.draw_rect(_rect, c)
 
 
 
@@ -75,8 +88,8 @@ func _init(edit_rect_props : EditorHandles):
 
 func _init_handles():
 	_move_handle.color.a = .5
-	_move_handle.rect.size = Vector2(30, 30)
-	_move_handle.rect.position = _move_handle.rect.size / -2
+	_move_handle.size = Vector2(30, 30)
+	# _move_handle.rect.position = _move_handle.rect.size / -2
 
 
 func _ready() -> void:
@@ -113,17 +126,17 @@ func _editor_draw():
 
 
 func _update_handles():
-	_handles.tl.rect.position = Vector2(size / -2)
-	_handles.ct.rect.position = Vector2(0, size.y / -2)
-	_handles.tr.rect.position = Vector2(size.x /2, size.y / -2)
-	_handles.cr.rect.position = Vector2(size.x / 2, 0)
-	_handles.br.rect.position = Vector2(size / 2)
-	_handles.cb.rect.position = Vector2(0, size.y / 2)
-	_handles.bl.rect.position = Vector2(size.x / -2, size.y / 2)
-	_handles.cl.rect.position = Vector2(size.x / -2, 0)
+	_handles.tl.position = Vector2(size / -2)
+	_handles.ct.position = Vector2(0, size.y / -2)
+	_handles.tr.position = Vector2(size.x /2, size.y / -2)
+	_handles.cr.position = Vector2(size.x / 2, 0)
+	_handles.br.position = Vector2(size / 2)
+	_handles.cb.position = Vector2(0, size.y / 2)
+	_handles.bl.position = Vector2(size.x / -2, size.y / 2)
+	_handles.cl.position = Vector2(size.x / -2, 0)
 
-	for key in _handles:
-		_handles[key].rect.position -= _handles[key].rect.size / 2
+	# for key in _handles:
+	# 	_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
 func _handle_move_for_mouse_motion(new_position):
@@ -137,7 +150,7 @@ func _get_first_handle_containing_point(point):
 	var keys = _handles.keys()
 	while(idx < keys.size() and to_return == null):
 		var h = _handles[keys[idx]]
-		if(h.rect.has_point(point)):
+		if(h.has_point(point)):
 			to_return = h
 		idx += 1
 	if(to_return != null and to_return.disabled):
@@ -179,7 +192,7 @@ func does_move_handle_contain_mouse():
 		return false
 
 	var adj_mouse = get_local_mouse_position().rotated(get_global_transform().get_rotation())
-	if(_move_handle.rect.has_point(adj_mouse)):
+	if(_move_handle.has_point(adj_mouse)):
 		_focused_handle = _move_handle
 		return true
 	else:
@@ -187,46 +200,42 @@ func does_move_handle_contain_mouse():
 		return false
 
 
-func handle_mouse_motion():
+func handle_mouse_motion(event :InputEventMouseMotion):
 	if(_focused_handle == _move_handle):
 		_handle_move_for_mouse_motion(get_global_mouse_position())
 	elif(_focused_handle != null):
+		var e = event.xformed_by(get_viewport().get_global_canvas_transform().affine_inverse())
 		if(eh.expand_from_center):
-			resize_expand_center_drag_handle_to(_focused_handle, get_global_mouse_position())
+			drag_handle_expand_center(_focused_handle, e.relative)
 		else:
-			resize_sides_drag_handle_to(_focused_handle, get_global_mouse_position())
+			drag_handle_drag_side(_focused_handle, e.relative)
 
 
 func release_handles():
 	_focused_handle = null
 
 
-func resize_expand_center_drag_handle_to(handle, new_position):
-	var grot = get_global_transform().affine_inverse().get_rotation()
-	new_position = new_position.rotated(grot)
-	var new_half_size = (global_position.rotated(grot) - new_position).abs()
-	var new_size = new_half_size * 2
-	var size_diff = (size - new_size).abs()
+func drag_handle_expand_center(handle, change_in_position):
+	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
+	var size_diff = adj_change * handle.position.sign() * 2
+	var new_size = size + size_diff
 
-	if(!eh.lock_x and handle.get_center().x != 0):
+	if(!eh.lock_x):
 		size.x = new_size.x
-	if(!eh.lock_y and handle.get_center().y != 0):
+	if(!eh.lock_y):
 		size.y = new_size.y
 
 
-func resize_sides_drag_handle_to(handle, mouse_global_pos):
-	var grot = get_global_transform().affine_inverse().get_rotation()
-	if(grot != 0.0):
-		push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
-		return
-	var diff = mouse_global_pos - (global_position + handle.rect.position)
-	size += diff * handle.get_center().sign()
+func drag_handle_drag_side(handle, change_in_position):
+	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
 	if(eh.lock_x):
-		diff.x = 0
+		adj_change.x = 0
 	if(eh.lock_y):
-		diff.y = 0
+		adj_change.y = 0
 
-	var pos_change : Vector2 = (diff / 2.0) * handle.get_center().sign().abs()
+	size += adj_change * handle.position.sign()
+
+	var pos_change : Vector2 = (adj_change / 2.0) * handle.position.sign().abs()
 	position += pos_change
 	eh.position = position
 
@@ -236,31 +245,6 @@ func print_info():
 	print("  position = ", position, ' :: ', eh.position)
 	print("  size = ", size, ' :: ', eh.size)
 	for key in _handles:
-		print("  ", key, "  l: ", _handles[key].get_center(), ' g: ', _handles[key].get_center() + position)
+		print("  ", key, "  l: ", _handles[key].position, ' g: ', _handles[key].position + position)
 # --------------------
 #endregion
-
-
-func _translate_glob_pos(glob_pos):
-	var viewport_transform_inverted = get_viewport().get_global_canvas_transform().affine_inverse()
-	var viewport_position = viewport_transform_inverted.basis_xform(glob_pos)
-	var global_transform_inverted = get_global_transform().affine_inverse()
-	var target_position = global_transform_inverted.basis_xform(viewport_position).round() # pixel perfect positions
-	return target_position
-
-
-
-# This is the code from GDQuest's 2nd video.  I now have to fight this function
-# and make it do what I need it to do.  There's a good chance it won't even do
-# what I need it to do.  But it might.
-func the_calculations(event_position):
-	var viewport_transform_inverted = get_viewport().get_global_canvase_transform().affine_inverse
-	var viewport_position = viewport_transform_inverted.xform(event_position)
-	var global_transform_inverted = get_global_transform().affine_inverse()
-	var target_position = global_transform_inverted.xform(viewport_position).round() # pixel perfect positions
-
-	# @4:39 in 2nd video, this should be this thing's size..maybe.  He's using
-	# rect_extents.offset but I don't remember what that actuallis here.
-	var unknown = Vector2(1, 1)
-	var target_size = (target_position - unknown).abs() * 2.0
-	size = target_size

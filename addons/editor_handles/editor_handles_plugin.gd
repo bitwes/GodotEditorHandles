@@ -65,7 +65,7 @@ func _find_editor_handles_control(node : Node):
 
 func _handle_mouse_motion(event :InputEventMouseMotion) -> bool:
 	if(resizing or moving):
-		editing.handle_mouse_motion()
+		editing.handle_mouse_motion(event)
 		return true
 	else:
 		return false
