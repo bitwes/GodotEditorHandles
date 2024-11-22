@@ -227,10 +227,10 @@ func drag_handle_expand_center(handle, change_in_position):
 
 
 func drag_handle_drag_side(handle, change_in_position):
-	var grot = get_global_transform().affine_inverse().get_rotation()
-	if(grot != 0.0):
-		push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
-		return
+	# var grot = get_global_transform().affine_inverse().get_rotation()
+	# if(grot != 0.0):
+	# 	push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
+	# 	return
 	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
 	size += adj_change * handle.position.sign()
 	if(eh.lock_x):
