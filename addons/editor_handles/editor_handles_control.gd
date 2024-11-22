@@ -7,18 +7,30 @@ class SideHandle:
 	var color2 = Color.BLUE
 	var disabled = false
 	var active = false
-	# Local position.
-	var rect = Rect2(Vector2.ZERO, Vector2(20, 20))
 
-	func get_center():
-		return rect.position + rect.size / 2
+	var position = Vector2.ZERO :
+		set(val):
+			position = val
+			_rect.position = position - _rect.size / 2
+
+	var size = Vector2(20, 20) :
+		set(val):
+			size = val
+			_rect.size = val
+
+	func has_point(point):
+		return _rect.has_point(point)
+
+	# Local position.
+	var _rect = Rect2(Vector2.ZERO, Vector2(20, 20))
+
 
 	func draw(draw_on):
 		if(!disabled):
 			var c = color
 			if(active):
 				c = color2
-			draw_on.draw_rect(rect, c)
+			draw_on.draw_rect(_rect, c)
 
 
 
@@ -75,8 +87,8 @@ func _init(edit_rect_props : EditorHandles):
 
 func _init_handles():
 	_move_handle.color.a = .5
-	_move_handle.rect.size = Vector2(30, 30)
-	_move_handle.rect.position = _move_handle.rect.size / -2
+	_move_handle.size = Vector2(30, 30)
+	# _move_handle.rect.position = _move_handle.rect.size / -2
 
 
 func _ready() -> void:
@@ -113,17 +125,17 @@ func _editor_draw():
 
 
 func _update_handles():
-	_handles.tl.rect.position = Vector2(size / -2)
-	_handles.ct.rect.position = Vector2(0, size.y / -2)
-	_handles.tr.rect.position = Vector2(size.x /2, size.y / -2)
-	_handles.cr.rect.position = Vector2(size.x / 2, 0)
-	_handles.br.rect.position = Vector2(size / 2)
-	_handles.cb.rect.position = Vector2(0, size.y / 2)
-	_handles.bl.rect.position = Vector2(size.x / -2, size.y / 2)
-	_handles.cl.rect.position = Vector2(size.x / -2, 0)
+	_handles.tl.position = Vector2(size / -2)
+	_handles.ct.position = Vector2(0, size.y / -2)
+	_handles.tr.position = Vector2(size.x /2, size.y / -2)
+	_handles.cr.position = Vector2(size.x / 2, 0)
+	_handles.br.position = Vector2(size / 2)
+	_handles.cb.position = Vector2(0, size.y / 2)
+	_handles.bl.position = Vector2(size.x / -2, size.y / 2)
+	_handles.cl.position = Vector2(size.x / -2, 0)
 
-	for key in _handles:
-		_handles[key].rect.position -= _handles[key].rect.size / 2
+	# for key in _handles:
+	# 	_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
 func _handle_move_for_mouse_motion(new_position):
@@ -137,7 +149,7 @@ func _get_first_handle_containing_point(point):
 	var keys = _handles.keys()
 	while(idx < keys.size() and to_return == null):
 		var h = _handles[keys[idx]]
-		if(h.rect.has_point(point)):
+		if(h.has_point(point)):
 			to_return = h
 		idx += 1
 	if(to_return != null and to_return.disabled):
@@ -179,7 +191,7 @@ func does_move_handle_contain_mouse():
 		return false
 
 	var adj_mouse = get_local_mouse_position().rotated(get_global_transform().get_rotation())
-	if(_move_handle.rect.has_point(adj_mouse)):
+	if(_move_handle.has_point(adj_mouse)):
 		_focused_handle = _move_handle
 		return true
 	else:
@@ -208,9 +220,9 @@ func resize_expand_center_drag_handle_to(handle, new_position):
 	var new_size = new_half_size * 2
 	var size_diff = (size - new_size).abs()
 
-	if(!eh.lock_x and handle.get_center().x != 0):
+	if(!eh.lock_x and handle.position.x != 0):
 		size.x = new_size.x
-	if(!eh.lock_y and handle.get_center().y != 0):
+	if(!eh.lock_y and handle.position.y != 0):
 		size.y = new_size.y
 
 
@@ -219,14 +231,14 @@ func resize_sides_drag_handle_to(handle, mouse_global_pos):
 	if(grot != 0.0):
 		push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
 		return
-	var diff = mouse_global_pos - (global_position + handle.rect.position)
-	size += diff * handle.get_center().sign()
+	var diff = mouse_global_pos - (global_position + handle.position)
+	size += diff * handle.position.sign()
 	if(eh.lock_x):
 		diff.x = 0
 	if(eh.lock_y):
 		diff.y = 0
 
-	var pos_change : Vector2 = (diff / 2.0) * handle.get_center().sign().abs()
+	var pos_change : Vector2 = (diff / 2.0) * handle.position.sign().abs()
 	position += pos_change
 	eh.position = position
 
@@ -236,7 +248,7 @@ func print_info():
 	print("  position = ", position, ' :: ', eh.position)
 	print("  size = ", size, ' :: ', eh.size)
 	for key in _handles:
-		print("  ", key, "  l: ", _handles[key].get_center(), ' g: ', _handles[key].get_center() + position)
+		print("  ", key, "  l: ", _handles[key].position, ' g: ', _handles[key].position + position)
 # --------------------
 #endregion
 

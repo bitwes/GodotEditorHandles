@@ -138,7 +138,7 @@ func test_when_handle_disabled_handle_does_not_contain_mouse():
 #region Resize edges
 # --------------------
 func _resize_sides_drag_handle_by(ehc, handle, movement):
-	var hdl_glob_pos = handle.rect.position + ehc.eh.position
+	var hdl_glob_pos = handle.position + ehc.eh.position
 	ehc.resize_sides_drag_handle_to(handle, hdl_glob_pos + movement)
 
 
@@ -243,11 +243,11 @@ func test_resize_sides_when_rotated(p = use_parameters(_resize_size_rotated_drag
 
 # --------------------
 #endregion
-# region resize expand center
+#region resize expand center
 # --------------------
 
 func _resize_expand_center_drag_handle_by(ehc, handle, movement):
-	var hdl_glob_pos = handle.get_center() + ehc.position
+	var hdl_glob_pos = handle.position + ehc.position
 	ehc.resize_expand_center_drag_handle_to(handle, hdl_glob_pos + movement)
 
 var _resize_expand_center_drag_params = ParameterFactory.named_parameters(
@@ -305,5 +305,8 @@ func test_resize_expand_center_lock_height(p = use_parameters(_resize_expand_cen
 	_resize_expand_center_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, check_size, 'size')
 
+
+func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_drag_params)):
+	pending()
 # --------------------
 #endregion
