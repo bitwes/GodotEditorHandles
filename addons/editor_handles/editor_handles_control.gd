@@ -208,7 +208,7 @@ func handle_mouse_motion(event :InputEventMouseMotion):
 		if(eh.expand_from_center):
 			drag_handle_expand_center(_focused_handle, e.relative)
 		else:
-			resize_sides_drag_handle_to(_focused_handle, get_global_mouse_position())
+			drag_handle_drag_side(_focused_handle, e.relative)
 
 
 func release_handles():
@@ -226,19 +226,19 @@ func drag_handle_expand_center(handle, change_in_position):
 		size.y = new_size.y
 
 
-func resize_sides_drag_handle_to(handle, mouse_global_pos):
+func drag_handle_drag_side(handle, change_in_position):
 	var grot = get_global_transform().affine_inverse().get_rotation()
 	if(grot != 0.0):
 		push_error("Resizing with rotated bodies is only supported with 'expand from center' on.  I just haven't figured it out yet and it goes crazy-go-nuts.")
 		return
-	var diff = mouse_global_pos - (global_position + handle.position)
-	size += diff * handle.position.sign()
+	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
+	size += adj_change * handle.position.sign()
 	if(eh.lock_x):
-		diff.x = 0
+		adj_change.x = 0
 	if(eh.lock_y):
-		diff.y = 0
+		adj_change.y = 0
 
-	var pos_change : Vector2 = (diff / 2.0) * handle.position.sign().abs()
+	var pos_change : Vector2 = (adj_change / 2.0) * handle.position.sign().abs()
 	position += pos_change
 	eh.position = position
 

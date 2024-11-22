@@ -137,10 +137,6 @@ func test_when_handle_disabled_handle_does_not_contain_mouse():
 #endregion
 #region Resize edges
 # --------------------
-func _resize_sides_drag_handle_by(ehc, handle, movement):
-	var hdl_glob_pos = handle.position + ehc.eh.position
-	ehc.resize_sides_drag_handle_to(handle, hdl_glob_pos + movement)
-
 
 var _resize_size_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'move_by', 'new_size', 'new_position'],[
@@ -162,7 +158,7 @@ func test_resize_sides_basic(p = use_parameters(_resize_size_drag_params)):
 	eh.moveable = true
 	var ehc = _new_editor_handles_control(eh)
 
-	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_drag_side(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, p.new_size, 'size')
 	assert_eq(ehc.position, p.new_position, 'position')
 	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
@@ -180,7 +176,7 @@ func test_resize_sides_lock_x(p = use_parameters(_resize_size_drag_params)):
 	var check_size = Vector2(eh.lock_x_value, p.new_size.y)
 	var check_pos = Vector2(eh.position.x, p.new_position.y)
 
-	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_drag_side(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, check_size, 'size')
 	assert_eq(ehc.position, check_pos, 'position')
 	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
@@ -199,7 +195,7 @@ func test_resize_sides_lock_y(p = use_parameters(_resize_size_drag_params)):
 	var check_size = Vector2(p.new_size.x, eh.lock_y_value)
 	var check_pos = Vector2(p.new_position.x, eh.position.y)
 
-	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_drag_side(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, check_size, 'size')
 	assert_eq(ehc.position, check_pos, 'position')
 	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
@@ -233,7 +229,7 @@ func test_resize_sides_when_rotated(p = use_parameters(_resize_size_rotated_drag
 
 	if(p.pause == true):
 		await wait_seconds(1)
-	_resize_sides_drag_handle_by(ehc, ehc._handles[p.handle_key], p.move_by)
+	ehc.drag_handle_drag_side(ehc._handles[p.handle_key], p.move_by)
 	if(p.pause == true):
 		await wait_seconds(1)
 	assert_almost_eq(ehc.size, p.new_size, Vector2(.1, .1),'size')
@@ -350,33 +346,5 @@ func test_resize_expand_center_rotated(p = use_parameters(_resize_expand_center_
 	assert_almost_eq(ehc.size, p.new_size, Vector2(.1, .1),'size')
 	assert_eq(ehc.eh.position, ehc.position, 'upstream updated')
 
-
-func _print_translation(ehc, x, y):
-	var glob_pos = Vector2(x, y)
-	var result = ehc._translate_glob_pos(glob_pos)
-	print(glob_pos, ' -> ', result, ' for: scale=', ehc.scale, ' rot=', ehc.rotation_degrees)
-
-func test_a_bunch_of_things_i_dont_understand():
-	var eh = EditorHandles.new()
-	eh.position = Vector2(200, 200)
-	eh.size = Vector2(100, 100)
-	eh.expand_from_center = true
-	eh.moveable = false
-	var ehc = _new_editor_handles_control(eh)
-
-	_print_translation(ehc, 100, 100)
-
-	ehc.rotation_degrees = 90
-	_print_translation(ehc, 100, 100)
-
-	ehc.rotation_degrees = 0
-	ehc.scale = Vector2(2, 2)
-	_print_translation(ehc, 100, 100)
-
-	ehc.rotation_degrees = 180
-	ehc.scale = Vector2(.5, .5)
-	_print_translation(ehc, 100, 100)
-
-	pass_test("this does nothing but I don't like warnings")
 # --------------------
 #endregion
