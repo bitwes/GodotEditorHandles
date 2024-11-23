@@ -82,6 +82,12 @@ var _disabled_props := []
 ## NOT IMPLMENTED YET.  Snap resizing/movement to this increment.
 @export var drag_snap : Vector2 =  Vector2(1, 1)
 
+var handles = {} :
+	get():
+		if(_handles_ctrl != null):
+			return _handles_ctrl._handles
+	set(val):
+		push_error('handles is not settable')
 
 ## Emitted when size changes  You can also use the signal "changed".
 signal resized
