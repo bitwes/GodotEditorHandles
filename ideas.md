@@ -15,6 +15,7 @@
 * when resizing sides, undo should contain a size and position value, otherwise undo doesn't undo the move.
 * hide or visibly disable handles when lock_x or lock_y would prevent them from being used.
 * Do I need to honor the currently selected editor mode (move, resize, rotate, scale, etc)?
+* Change cursor
 
 
 # Handle drawing resource

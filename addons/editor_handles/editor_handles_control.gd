@@ -4,10 +4,12 @@ class_name EditorHandlesControl
 
 class SideHandle:
 	# Local position.
-	var _rect : Rect2 = Rect2(Vector2.ZERO, Vector2(20, 20))
+	var base_size = Vector2(20, 20)
+	var _rect : Rect2 = Rect2(Vector2.ZERO, base_size)
 
 	var color = Color.ORANGE
-	var color2 = Color.BLUE
+	var color_2 = Color.WHITE
+	var color_selected = Color.BLUE
 	var disabled = false
 	var active = false
 	## Center of handle, not rect position.
@@ -15,6 +17,7 @@ class SideHandle:
 		set(val):
 			position = val
 			_rect.position = position - _rect.size / 2
+
 	var size = Vector2(20, 20) :
 		set(val):
 			size = val
@@ -28,10 +31,16 @@ class SideHandle:
 
 	func draw(draw_on):
 		if(!disabled):
+			_rect.size = base_size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale()
+			_rect.position = position - _rect.size / 2
 			var c = color
 			if(active):
-				c = color2
-			draw_on.draw_rect(_rect, c)
+				c = color_selected
+			# draw_on.draw_rect(_rect, c)
+			var r = _rect.size.x / 2
+
+			draw_on.draw_circle(position, r, color_2)
+			draw_on.draw_circle(position, r * .8, c)
 
 
 
@@ -55,6 +64,13 @@ var is_being_edited = false:
 		is_being_edited = val
 		queue_redraw()
 		_focused_handle = null
+
+var outline_thickness = 1.0
+var outline_color = Color.ORANGE
+var handle_size = Vector2(20, 20)
+var handle_color_1 = Color.ORANGE
+var handle_color_2 = Color.WHITE
+var handle_color_selected = Color.BLUE
 
 
 var _move_handle_size = 30
@@ -86,12 +102,6 @@ func _init(edit_rect_props : EditorHandles):
 	_init_handles()
 
 
-func _init_handles():
-	_move_handle.color.a = .5
-	_move_handle.size = Vector2(30, 30)
-	# _move_handle.rect.position = _move_handle.rect.size / -2
-
-
 func _ready() -> void:
 	position = eh.position
 	_update_handles()
@@ -102,9 +112,30 @@ func _draw() -> void:
 		_editor_draw()
 
 
+var lastZoom
+func _process(delta):
+	if Engine.is_editor_hint() and is_inside_tree():
+		var newZoom = get_viewport().get_final_transform().x.x
+		if lastZoom != newZoom:
+			queue_redraw()
+			lastZoom = newZoom
+
 
 #region Private
 # --------------------
+func _init_handle(which):
+	which.color = handle_color_1
+	which.color_2 = handle_color_2
+	which.color_selected = handle_color_selected
+	which.base_size = handle_size
+
+
+func _init_handles():
+	for key in _handles:
+		_init_handle(_handles[key])
+	_init_handle(_move_handle)
+
+
 func _update_for_size():
 	_update_handles()
 	queue_redraw()
@@ -114,7 +145,8 @@ func _update_for_size():
 func _editor_draw():
 	if(is_being_edited):
 		# Border
-		draw_rect(Rect2(size / -2, size), Color.WHITE, false, 1)
+		var w = outline_thickness * get_viewport().get_final_transform().affine_inverse().x.x
+		draw_rect(Rect2(size / -2, size), outline_color, false, w)
 
 		if(eh.resizable):
 			for key in _handles:
@@ -134,9 +166,6 @@ func _update_handles():
 	_handles.cb.position = Vector2(0, size.y / 2)
 	_handles.bl.position = Vector2(size.x / -2, size.y / 2)
 	_handles.cl.position = Vector2(size.x / -2, 0)
-
-	# for key in _handles:
-	# 	_handles[key].rect.position -= _handles[key].rect.size / 2
 
 
 func _handle_move_for_mouse_motion(new_position):
