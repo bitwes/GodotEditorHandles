@@ -9,7 +9,7 @@ resource_local_to_scene = true
 script = ExtResource("2_j8lln")
 expand_from_center = true
 resizable = true
-size = Vector2(292, 248)
+size = Vector2(193.005, 167.39)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -23,20 +23,9 @@ script = ExtResource("1_v0ohn")
 editor_handles = SubResource("Resource_vc8xo")
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -146.0
-offset_top = -124.0
-offset_right = 146.0
-offset_bottom = 124.0
+offset_left = -96.5027
+offset_top = -83.6948
+offset_right = 96.5027
+offset_bottom = 83.6948
+mouse_filter = 2
 texture = ExtResource("2_4de50")
-
-[node name="CheckButton" type="CheckButton" parent="TextureRect"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -24.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[connection signal="toggled" from="TextureRect/CheckButton" to="." method="_on_check_button_toggled"]

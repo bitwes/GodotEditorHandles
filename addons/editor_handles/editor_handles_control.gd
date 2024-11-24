@@ -60,6 +60,8 @@ var is_being_edited = false:
 var _move_handle_size = 30
 var _side_handle_size = 20
 var _move_handle = SideHandle.new()
+
+# TODO Should be public, maybe a more concrete class
 var _handles = {
 	tl = SideHandle.new(),
 	ct = SideHandle.new(),
@@ -71,6 +73,7 @@ var _handles = {
 	cl = SideHandle.new()
 }
 
+# TODO Should be public, non-settable, or need a does_have_focused_handle method
 var _focused_handle : SideHandle = null :
 	set(val):
 		if(_focused_handle != null):

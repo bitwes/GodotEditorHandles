@@ -9,13 +9,13 @@ resource_local_to_scene = true
 script = ExtResource("3_8fvv3")
 expand_from_center = true
 resizable = true
-size = Vector2(260, 200)
+size = Vector2(312, 196)
 lock_x = false
 lock_x_value = 0
 lock_y = false
 lock_y_value = 0
 moveable = false
-position = Vector2(0, 0)
+position = Vector2(-2, 0)
 drag_snap = Vector2(1, 1)
 
 [sub_resource type="Resource" id="Resource_hjsq6"]
@@ -23,7 +23,7 @@ resource_local_to_scene = true
 script = ExtResource("3_8fvv3")
 expand_from_center = true
 resizable = true
-size = Vector2(164, 352)
+size = Vector2(440, 308)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -36,9 +36,9 @@ drag_snap = Vector2(1, 1)
 script = ExtResource("1_obrh1")
 
 [node name="RuntimeEditable" parent="." instance=ExtResource("2_ibuca")]
-position = Vector2(284, 248)
+position = Vector2(985, 354.2)
 editor_handles = SubResource("Resource_rtslo")
 
 [node name="RuntimeEditable2" parent="." instance=ExtResource("2_ibuca")]
-position = Vector2(850, 228)
+position = Vector2(387, 324.2)
 editor_handles = SubResource("Resource_hjsq6")

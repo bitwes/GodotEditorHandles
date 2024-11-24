@@ -15,6 +15,10 @@
 * when resizing sides, undo should contain a size and position value, otherwise undo doesn't undo the move.
 * hide or visibly disable handles when lock_x or lock_y would prevent them from being used.
 * Do I need to honor the currently selected editor mode (move, resize, rotate, scale, etc)?
+* min/max size
+* keep ratio flag and maybe a ratio variable
+* shift + drag keeps ratio.
+
 
 
 # Handle drawing resource

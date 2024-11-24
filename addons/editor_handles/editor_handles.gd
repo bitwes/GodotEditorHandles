@@ -2,6 +2,10 @@
 extends Resource
 class_name EditorHandles
 
+
+# ------------------------------------------------------------------------------
+# Class
+# ------------------------------------------------------------------------------
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
@@ -185,6 +189,20 @@ func editor_setup(for_what):
 	for_what.add_child(to_return)
 	_disable_handles_for_locks()
 	return to_return
+
+
+func runtime_setup(for_what):
+	var to_return  = EditorHandlesRuntimeControl.new(self)
+	_is_instance = for_what.owner != null
+	to_return.position = position
+	to_return.size = size
+	resized.emit()
+	moved.emit()
+	_handles_ctrl = to_return
+	for_what.add_child(to_return)
+	_disable_handles_for_locks()
+	return to_return
+
 
 
 ## The names of properties that should not appear in the inspector when editing
