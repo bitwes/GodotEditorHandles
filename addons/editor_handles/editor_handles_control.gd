@@ -78,7 +78,8 @@ var handle_color_1 = Color.ORANGE
 var handle_color_2 = Color.WHITE
 var handle_color_selected = Color.BLUE
 
-
+# Used to track drag distances over time so that snapping can be done.
+var _accum_change = Vector2.ZERO
 var _move_handle_size = 30
 var _side_handle_size = 20
 var _move_handle = SideHandle.new()
@@ -100,6 +101,7 @@ var _focused_handle : SideHandle = null :
 		_focused_handle = val
 		if(_focused_handle != null):
 			_focused_handle.active = true
+		_accum_change = Vector2.ZERO
 		queue_redraw()
 
 
@@ -250,15 +252,24 @@ func release_handles():
 	_focused_handle = null
 
 
+
 func drag_handle_expand_center(handle, change_in_position):
 	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
-	var size_diff = adj_change * handle.position.sign() * 2
+	_accum_change += adj_change * handle.position.sign()
+
+	var size_diff = _accum_change *  2
+	if(eh.snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
 	var new_size = size + size_diff
 
 	if(!eh.lock_x):
 		size.x = new_size.x
 	if(!eh.lock_y):
 		size.y = new_size.y
+
+	_accum_change -= size_diff / 2
+
 
 
 func drag_handle_drag_side(handle, change_in_position):

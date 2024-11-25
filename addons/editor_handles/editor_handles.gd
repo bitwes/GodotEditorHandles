@@ -1,6 +1,14 @@
 @tool
 extends Resource
 class_name EditorHandles
+# ------------------------------------------------------------------------------
+# Static
+# ------------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------------
+# Class
+# ------------------------------------------------------------------------------
 
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
@@ -9,6 +17,7 @@ var _handles_ctrl : EditorHandlesControl = null
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
+var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new()
 
 ## When resizing, it will expand in all directions from the center.
 @export var expand_from_center := true :
@@ -106,10 +115,10 @@ func _apply_properties_to_handles_ctrl():
 
 
 func _validate_property(property: Dictionary):
-	# Not supported yet so it is always hidden.  Already in use so I didn't
-	# want to remove it.
-	if property.name == "drag_snap":
-		property.usage ^= PROPERTY_USAGE_EDITOR
+	# # Not supported yet so it is always hidden.  Already in use so I didn't
+	# # want to remove it.
+	# if property.name == "drag_snap":
+	# 	property.usage ^= PROPERTY_USAGE_EDITOR
 
 	if property.name == "lock_x" and (lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY

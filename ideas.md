@@ -9,6 +9,8 @@
 * when resizing sides, undo should contain a size and position value, otherwise undo doesn't undo the move.
 * Do I need to honor the currently selected editor mode (move, resize, rotate, scale, etc)?
 * Change cursor when dragging?
+* Handle scaling is affected by node scale.  It should not be.
+* Can push around nodes when resizing sizes past an enforced minimum.
 
 
 # Handle drawing resource
@@ -51,7 +53,11 @@ Allows you to make a tool node that has parts that can be resized and moved whil
 
 
 # Reference Material
+## Editor plugin to draw/resize
 GDQuest:   How to Create a 2d Manipulator in Godot 3.1: Editor Plugin Overview
 https://www.youtube.com/watch?v=H6TfKYtuM9U
 GDQuest:  Canvas Input, Undo, and Redo in Godot: Plugin Tutorial 2
 https://www.youtube.com/watch?v=RDx5B_AzkPI
+
+## Getting snap settings
+https://github.com/godotengine/godot-proposals/issues/10529
