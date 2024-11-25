@@ -18,7 +18,6 @@ func _ready():
 		
 		#ctrl.rotation_degrees = 90
 		ctrl._handles.ct.color = Color.RED
-		print(ctrl.global_transform, rad_to_deg(ctrl.global_transform.get_rotation()))
 	_apply_resize_properties()
 
 
