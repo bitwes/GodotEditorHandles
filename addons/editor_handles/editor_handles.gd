@@ -1,14 +1,6 @@
 @tool
 extends Resource
 class_name EditorHandles
-# ------------------------------------------------------------------------------
-# Static
-# ------------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------------
-# Class
-# ------------------------------------------------------------------------------
 
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
@@ -88,9 +80,6 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 		_apply_properties_to_handles_ctrl()
 		_emit_signals([moved, changed])
 
-## NOT IMPLMENTED YET.  Snap resizing/movement to this increment.
-@export var drag_snap : Vector2 =  Vector2(1, 1)
-
 
 ## Emitted when size changes  You can also use the signal "changed".
 signal resized
@@ -115,11 +104,6 @@ func _apply_properties_to_handles_ctrl():
 
 
 func _validate_property(property: Dictionary):
-	# # Not supported yet so it is always hidden.  Already in use so I didn't
-	# # want to remove it.
-	# if property.name == "drag_snap":
-	# 	property.usage ^= PROPERTY_USAGE_EDITOR
-
 	if property.name == "lock_x" and (lock_y or !resizable):
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
