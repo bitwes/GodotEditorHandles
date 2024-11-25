@@ -176,9 +176,6 @@ func _update_handles():
 	_handles.cl.position = Vector2(size.x / -2, 0)
 
 
-func _handle_move_for_mouse_motion(new_position):
-	global_position = new_position
-	eh.position = position
 
 
 func _get_first_handle_containing_point(point):
@@ -239,7 +236,7 @@ func does_move_handle_contain_mouse():
 
 func handle_mouse_motion(event :InputEventMouseMotion):
 	if(_focused_handle == _move_handle):
-		_handle_move_for_mouse_motion(get_global_mouse_position())
+		drag_move_handle(get_global_mouse_position())
 	elif(_focused_handle != null):
 		var e = event.xformed_by(get_viewport().get_global_canvas_transform().affine_inverse())
 		if(eh.expand_from_center):
@@ -252,24 +249,30 @@ func release_handles():
 	_focused_handle = null
 
 
+func drag_move_handle(new_position):
+	var change_in_position = new_position
+	if(eh.snap_settings.snap_enabled):
+		change_in_position.x = snapped(change_in_position.x, eh.snap_settings.snap_step.x)
+		change_in_position.y = snapped(change_in_position.y, eh.snap_settings.snap_step.y)
+
+	global_position = change_in_position
+	eh.position = position
+
 
 func drag_handle_expand_center(handle, change_in_position):
 	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
+	if(eh.lock_x):
+		adj_change.x = 0
+	if(eh.lock_y):
+		adj_change.y = 0
 	_accum_change += adj_change * handle.position.sign()
 
 	var size_diff = _accum_change *  2
 	if(eh.snap_settings.snap_enabled):
 		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
 		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
-	var new_size = size + size_diff
-
-	if(!eh.lock_x):
-		size.x = new_size.x
-	if(!eh.lock_y):
-		size.y = new_size.y
-
+	size += size_diff
 	_accum_change -= size_diff / 2
-
 
 
 func drag_handle_drag_side(handle, change_in_position):
@@ -278,10 +281,16 @@ func drag_handle_drag_side(handle, change_in_position):
 		adj_change.x = 0
 	if(eh.lock_y):
 		adj_change.y = 0
+	_accum_change += adj_change * handle.position.sign()
 
-	size += adj_change * handle.position.sign()
+	var size_diff = _accum_change
+	if(eh.snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
+	size += size_diff
+	_accum_change -= size_diff
 
-	var pos_change : Vector2 = (adj_change / 2.0) * handle.position.sign().abs()
+	var pos_change : Vector2 = (size_diff / 2.0) * handle.position.sign()
 	position += pos_change
 	eh.position = position
 
