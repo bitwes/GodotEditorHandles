@@ -17,7 +17,7 @@ func _ready():
 		var ctrl = resize_properties.editor_setup(self)
 		
 		#ctrl.rotation_degrees = 90
-		ctrl._handles.ct.color = Color.RED
+		ctrl._handles.ct.color_1 = Color.RED
 	_apply_resize_properties()
 
 
