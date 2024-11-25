@@ -9,7 +9,7 @@ resource_local_to_scene = true
 script = ExtResource("2_tas10")
 expand_from_center = true
 resizable = true
-size = Vector2(124.551, 154.15)
+size = Vector2(147.796, 99.0459)
 lock_x = false
 lock_x_value = 0
 lock_y = false
@@ -24,7 +24,7 @@ editor_handles = SubResource("Resource_ppac3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.562807, 1.44392e-06, 4.33177e-07, 1)
-scale = Vector2(0.973055, 1.2043)
+scale = Vector2(1.15466, 0.773796)
 texture = ExtResource("3_on3tv")
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]

@@ -27,7 +27,7 @@ resize_properties = SubResource("Resource_nxr5t")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 offset_left = -127.888
-offset_top = -1.7466
+offset_top = -1.7468
 offset_right = 116.198
 offset_bottom = 190.324
 texture = ExtResource("1_6urua")

@@ -3,15 +3,6 @@ extends Node2D
 class_name EditorHandlesControl
 
 class SideHandle:
-	# Local position.
-	var base_size = Vector2(20, 20)
-	var _rect : Rect2 = Rect2(Vector2.ZERO, base_size)
-
-	var color = Color.ORANGE
-	var color_2 = Color.WHITE
-	var color_selected = Color.BLUE
-	var disabled = false
-	var active = false
 	## Center of handle, not rect position.
 	var position = Vector2.ZERO :
 		set(val):
@@ -23,6 +14,15 @@ class SideHandle:
 			size = val
 			_rect.size = val
 			_rect.position = position - _rect.size / 2
+	var color_1 = Color.ORANGE
+	var color_2 = Color.WHITE
+	var color_selected = Color.BLUE
+	var disabled = false
+	var active = false
+
+	# This will change based on editor zoom level.  To manipulate the size
+	# and position of the rect use base_size and position.
+	var _rect : Rect2 = Rect2(Vector2.ZERO, size)
 
 
 	func has_point(point):
@@ -31,14 +31,20 @@ class SideHandle:
 
 	func draw(draw_on):
 		if(!disabled):
-			_rect.size = base_size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale()
+			_rect.size = size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale()
 			_rect.position = position - _rect.size / 2
-			var c = color
+			var c = color_1
 			if(active):
 				c = color_selected
-			# draw_on.draw_rect(_rect, c)
-			var r = _rect.size.x / 2
+			_draw_circle(draw_on, c)
 
+
+	func _draw_Rect(draw_on, c):
+		draw_on.draw_rect(_rect, c)
+
+
+	func _draw_circle(draw_on, c):
+			var r = _rect.size.x / 2
 			draw_on.draw_circle(position, r, color_2)
 			draw_on.draw_circle(position, r * .8, c)
 
@@ -124,10 +130,10 @@ func _process(delta):
 #region Private
 # --------------------
 func _init_handle(which):
-	which.color = handle_color_1
+	which.color_1 = handle_color_1
 	which.color_2 = handle_color_2
 	which.color_selected = handle_color_selected
-	which.base_size = handle_size
+	which.size = handle_size
 
 
 func _init_handles():
