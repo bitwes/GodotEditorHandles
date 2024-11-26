@@ -19,6 +19,7 @@ position = Vector2(0, 0)
 
 [node name="ResizableTextureRect" type="Node2D"]
 position = Vector2(400, 400)
+scale = Vector2(4, 4)
 script = ExtResource("1_ug7y2")
 resize_properties = SubResource("Resource_nxr5t")
 

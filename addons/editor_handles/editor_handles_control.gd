@@ -21,7 +21,7 @@ class SideHandle:
 	var active = false
 
 	# This will change based on editor zoom level.  To manipulate the size
-	# and position of the rect use base_size and position.
+	# and position of the rect use size and position.
 	var _rect : Rect2 = Rect2(Vector2.ZERO, size)
 
 
@@ -31,7 +31,7 @@ class SideHandle:
 
 	func draw(draw_on):
 		if(!disabled):
-			_rect.size = size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale()
+			_rect.size = size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale() *	draw_on.get_global_transform().affine_inverse().get_scale()
 			_rect.position = position - _rect.size / 2
 			var c = color_1
 			if(active):
@@ -120,13 +120,13 @@ func _draw() -> void:
 		_editor_draw()
 
 
-var lastZoom
-func _process(delta):
+var _lastZoom
+func _process(_delta):
 	if Engine.is_editor_hint() and is_inside_tree():
 		var newZoom = get_viewport().get_final_transform().x.x
-		if lastZoom != newZoom:
+		if _lastZoom != newZoom:
 			queue_redraw()
-			lastZoom = newZoom
+			_lastZoom = newZoom
 
 
 #region Private
