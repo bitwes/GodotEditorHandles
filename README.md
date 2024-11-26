@@ -13,7 +13,9 @@ I've used this in my own game to create:
 * A turret that has a moveable/resizable "activation area".
 
 # SUPER VERY IMPORTANT CRITICAL DISCLAIMER
-Once you have made your `@export` and you have used your scene in another scene, DO NOT RENAME the exported variable or you will LOSE ALL SETTINGS IN ALL YOUR INSTANCES.  For this reason, I suggest that you name all your exports the same thing (I've been using `export_handles`).  You can only have one ([right now](https://github.com/bitwes/GodotEditorHandles/issues/19)) per node, so you don't have to differentiate between multiples on the same object.  Naming them the same everywhere will make it easy to understand what they are and may aleviate the urge to make their names more descriptive.  Think of the `EditorHandles` as a section of properties like the properties in the `Transform` or `Visibility` section of a Node.
+Once you have made your `@export` and you have used your scene in another scene, DO NOT RENAME the exported variable or you will LOSE ALL SETTINGS IN ALL YOUR INSTANCES.
+
+I suggest that you name all your exported `EditorHandles` the same thing (I've been using `editor_handles`).  You can only have one ([right now](https://github.com/bitwes/GodotEditorHandles/issues/19)) per node, so you don't have to differentiate between multiples on the same object.  Naming them the same everywhere will make it easy to understand what they are and may aleviate the urge to make their names more descriptive.  Think of the `EditorHandles` as a section of properties like the properties in the `Transform` or `Visibility` section of a Node.
 
 
 ## LESS IMPORTANT DISCLAIMER
@@ -35,6 +37,7 @@ extends Node2D # or whatever
 func _ready():
     if(Engine.is_editor_hint()):
         editor_handles.changed.connect(_apply_editor_handles)
+        # Adds the control that has the handles to the tree, amongst other things
         editor_handles.editor_setup(self)
 
     # Must call this in _ready or values will not be applied when running
@@ -42,7 +45,7 @@ func _ready():
     _apply_editor_handles()
 
 # Example of resizing and moving a TextureRect when handles are moved.  You must
-# implement both size and position if what you resize is not `ExpandFromCenter` only.
+# implement both size and position if what you resize is not `expand from center` only.
 func _apply_editor_handles():
     $TextureRect.size = editor_handles.size
     $TextureRect.position = editor_handles.position - $TextureRect.size / 2
@@ -51,7 +54,7 @@ func _apply_editor_handles():
 ## Add code to resize/move things.
 `EditorHandles` emits signals that you can use to update your nodes.
 * `changed` - emitted when any property is changed, this is probably the best signal to use.
-* `resized` - emitted when a resizing occurs.  A position change also occurs when resizing and "Expand from center" is NOT checked.  Position changes due to resizing will not cause the `moved` signal to be emitted.
+* `resized` - emitted when a resizing occurs.  A position change also occurs when resizing and "expand from center" is NOT checked.  Position changes due to resizing will not cause the `moved` signal to be emitted.
 * `moved` - emitted when the center "move" handle has caused been dragged, causing a movement.
 
 You can implement min/max values by setting values inside these signals.  Just do so before you use the values.  A more elegant min/max will [probably be implemented](https://github.com/bitwes/GodotEditorHandles/issues/14).
@@ -69,7 +72,7 @@ func _apply_editor_handles():
 ## Disable/Hide Properties
 You may want to permanently disable or hide properties in instances of your scene so that they are easier to use and don't introduce issues.  For example, if your node has a fixed width, you may want to hide or disable the `lock_x` and `lock_x_value` properties where the Node is being used.  You can do this with the `set_disabled_instance_properties` and `set_hidden_instance_properties` in `_ready`.
 
-In this example we are hiding `lock_x` so you don't even think about disabling it where it is used.  We are also disabling `lock_x_value` so you can see it, which will help you understand why the value won't change, but you can't change it.
+In this example we are hiding `lock_x` so you don't even think about unchecking it your Node is used.  We are also disabling `lock_x_value` so you can see it, which will help you understand why the x value reverts when you set it in the editor.
 
 `set_disabled_instance_properties` and `set_hidden_instance_properties` accept an array of property names.  Calling these multiple times will override any previous call.
 ```gdscript
@@ -90,12 +93,12 @@ func _ready():
 
 # Tips
 * Map a shortcut for "Reload Saved Scene", as it is sometimes necessary to relaod the scene to see changes made to `EditorHandles`.
-
+* Can I use this at runtime?  [Probably, but not easily yet](https://github.com/bitwes/GodotEditorHandles/issues/13)
 
 
 # Install
 * Downlaod the zip:  https://github.com/bitwes/GodotEditorHandles/archive/refs/heads/main.zip
-* Copy `addons/editor_handles` from the zip to your project.
+* Copy `addons/editor_handles` from the zip to `addons/editor_handles` in your project.
 * Enable the "EditorHandles" plugin in Project Settings.
 
 
