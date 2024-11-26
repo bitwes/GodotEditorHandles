@@ -53,5 +53,5 @@ position = Vector2(383, 140)
 collision_shape_props = SubResource("Resource_5kpys")
 
 [node name="ResizableCollisionShape3" parent="." instance=ExtResource("1_vcjlp")]
-position = Vector2(147, 294)
+position = Vector2(135, 290)
 collision_shape_props = SubResource("Resource_y6rdj")
