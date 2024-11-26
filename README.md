@@ -91,9 +91,11 @@ func _ready():
 
 ```
 
-# Tips
+# FAQs and Tips
+There's FAQs here yet, it's more a QITPMA (questions I thought people might ask).
 * Map a shortcut for "Reload Saved Scene", as it is sometimes necessary to relaod the scene to see changes made to `EditorHandles`.
-* Can I use this at runtime?  [Probably, but not easily yet](https://github.com/bitwes/GodotEditorHandles/issues/13)
+* Can I use this at runtime?  [Probably, but not easily yet.](https://github.com/bitwes/GodotEditorHandles/issues/13)
+* Will this "snap to grid".  Yep.
 
 
 # Install
@@ -114,3 +116,13 @@ Here you can see the collision shape being resized in another scene.
 
 
 
+
+# Reference Material
+## Editor plugin to draw/resize
+GDQuest:   How to Create a 2d Manipulator in Godot 3.1: Editor Plugin Overview
+https://www.youtube.com/watch?v=H6TfKYtuM9U
+GDQuest:  Canvas Input, Undo, and Redo in Godot: Plugin Tutorial 2
+https://www.youtube.com/watch?v=RDx5B_AzkPI
+
+## Getting snap settings
+https://github.com/godotengine/godot-proposals/issues/10529
