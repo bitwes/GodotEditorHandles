@@ -28,7 +28,7 @@ func _resize_click_area():
 func _unhandled_input(event: InputEvent) -> void:
 	if(event is InputEventMouseButton):
 		if(event.pressed):
-			if(do_handles_contain_mouse()):
+			if(does_a_resize_handle_contain_mouse()):
 				get_viewport().set_input_as_handled()
 			elif(does_move_handle_contain_mouse()):
 				get_viewport().set_input_as_handled()
