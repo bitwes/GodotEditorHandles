@@ -99,7 +99,7 @@ func test_when_resizable_side_handles_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_true(ehc.do_handles_contain_mouse())
+	assert_true(ehc.does_a_resize_handle_contain_mouse())
 
 
 func test_when_not_resizable_side_handles_do_not_contain_mouse():
@@ -115,7 +115,7 @@ func test_when_not_resizable_side_handles_do_not_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_false(ehc.do_handles_contain_mouse())
+	assert_false(ehc.does_a_resize_handle_contain_mouse())
 
 func test_when_handle_disabled_handle_does_not_contain_mouse():
 	var ehc = _new_editor_handles_control()
@@ -131,7 +131,7 @@ func test_when_handle_disabled_handle_does_not_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_false(ehc.do_handles_contain_mouse())
+	assert_false(ehc.does_a_resize_handle_contain_mouse())
 
 # --------------------
 #endregion

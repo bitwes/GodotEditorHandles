@@ -212,7 +212,7 @@ func change_position(new_position):
 	position = new_position
 
 
-func do_handles_contain_mouse():
+func does_a_resize_handle_contain_mouse():
 	if(!eh.resizable):
 		return false
 
@@ -287,12 +287,21 @@ func drag_handle_drag_side(handle, change_in_position):
 	if(eh.snap_settings.snap_enabled):
 		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
 		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
+
+	var orig_size = size
 	size += size_diff
 	_accum_change -= size_diff
 
-	var pos_change : Vector2 = (size_diff / 2.0) * handle.position.sign()
-	position += pos_change
-	eh.position = position
+	# The object can override size changes (custom min/max size or whatever).
+	# This means the size may not have actually changed, and if it did, it might
+	# not be by the amount we tried to change it by.  Repositioning has to take
+	# this into account or you can push things around when an minimum size is
+	# reached.
+	if(size != orig_size):
+		var actual_size_change = size - orig_size
+		var pos_change : Vector2 = (actual_size_change / 2.0) * handle.position.sign()
+		position += pos_change
+		eh.position = position
 
 
 func print_info():

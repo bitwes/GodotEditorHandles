@@ -77,7 +77,7 @@ func _handle_mouse_button(event : InputEventMouseButton):
 	if(event.button_index == MOUSE_BUTTON_LEFT):
 		var undo = get_undo_redo()
 		if(event.pressed):
-			if(editing.do_handles_contain_mouse()):
+			if(editing.does_a_resize_handle_contain_mouse()):
 				resizing = true
 				undo.create_action(&"resize_editor_handles")
 				undo.add_undo_property(editing.eh, &"position", editing.position)
