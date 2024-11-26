@@ -3,23 +3,26 @@ extends Node2D
 class_name EditorHandlesControl
 
 class SideHandle:
-	# Local position.
-	var _rect : Rect2 = Rect2(Vector2.ZERO, Vector2(20, 20))
-
-	var color = Color.ORANGE
-	var color2 = Color.BLUE
-	var disabled = false
-	var active = false
 	## Center of handle, not rect position.
 	var position = Vector2.ZERO :
 		set(val):
 			position = val
 			_rect.position = position - _rect.size / 2
+
 	var size = Vector2(20, 20) :
 		set(val):
 			size = val
 			_rect.size = val
 			_rect.position = position - _rect.size / 2
+	var color_1 = Color.ORANGE
+	var color_2 = Color.WHITE
+	var color_selected = Color.BLUE
+	var disabled = false
+	var active = false
+
+	# This will change based on editor zoom level.  To manipulate the size
+	# and position of the rect use base_size and position.
+	var _rect : Rect2 = Rect2(Vector2.ZERO, size)
 
 
 	func has_point(point):
@@ -28,10 +31,22 @@ class SideHandle:
 
 	func draw(draw_on):
 		if(!disabled):
-			var c = color
+			_rect.size = size * draw_on.get_viewport().get_global_canvas_transform().affine_inverse().get_scale()
+			_rect.position = position - _rect.size / 2
+			var c = color_1
 			if(active):
-				c = color2
-			draw_on.draw_rect(_rect, c)
+				c = color_selected
+			_draw_circle(draw_on, c)
+
+
+	func _draw_Rect(draw_on, c):
+		draw_on.draw_rect(_rect, c)
+
+
+	func _draw_circle(draw_on, c):
+			var r = _rect.size.x / 2
+			draw_on.draw_circle(position, r, color_2)
+			draw_on.draw_circle(position, r * .8, c)
 
 
 
@@ -56,7 +71,15 @@ var is_being_edited = false:
 		queue_redraw()
 		_focused_handle = null
 
+var outline_thickness = 1.0
+var outline_color = Color.ORANGE
+var handle_size = Vector2(20, 20)
+var handle_color_1 = Color.ORANGE
+var handle_color_2 = Color.WHITE
+var handle_color_selected = Color.BLUE
 
+# Used to track drag distances over time so that snapping can be done.
+var _accum_change = Vector2.ZERO
 var _move_handle_size = 30
 var _side_handle_size = 20
 var _move_handle = SideHandle.new()
@@ -81,18 +104,13 @@ var _focused_handle : SideHandle = null :
 		_focused_handle = val
 		if(_focused_handle != null):
 			_focused_handle.active = true
+		_accum_change = Vector2.ZERO
 		queue_redraw()
 
 
 func _init(edit_rect_props : EditorHandles):
 	eh = edit_rect_props
 	_init_handles()
-
-
-func _init_handles():
-	_move_handle.color.a = .5
-	_move_handle.size = Vector2(30, 30)
-	# _move_handle.rect.position = _move_handle.rect.size / -2
 
 
 func _ready() -> void:
@@ -105,9 +123,30 @@ func _draw() -> void:
 		_editor_draw()
 
 
+var lastZoom
+func _process(delta):
+	if Engine.is_editor_hint() and is_inside_tree():
+		var newZoom = get_viewport().get_final_transform().x.x
+		if lastZoom != newZoom:
+			queue_redraw()
+			lastZoom = newZoom
+
 
 #region Private
 # --------------------
+func _init_handle(which):
+	which.color_1 = handle_color_1
+	which.color_2 = handle_color_2
+	which.color_selected = handle_color_selected
+	which.size = handle_size
+
+
+func _init_handles():
+	for key in _handles:
+		_init_handle(_handles[key])
+	_init_handle(_move_handle)
+
+
 func _update_for_size():
 	_update_handles()
 	queue_redraw()
@@ -117,7 +156,8 @@ func _update_for_size():
 func _editor_draw():
 	if(is_being_edited):
 		# Border
-		draw_rect(Rect2(size / -2, size), Color.WHITE, false, 1)
+		var w = outline_thickness * get_viewport().get_final_transform().affine_inverse().x.x
+		draw_rect(Rect2(size / -2, size), outline_color, false, w)
 
 		if(eh.resizable):
 			for key in _handles:
@@ -138,13 +178,7 @@ func _update_handles():
 	_handles.bl.position = Vector2(size.x / -2, size.y / 2)
 	_handles.cl.position = Vector2(size.x / -2, 0)
 
-	# for key in _handles:
-	# 	_handles[key].rect.position -= _handles[key].rect.size / 2
 
-
-func _handle_move_for_mouse_motion(new_position):
-	global_position = new_position
-	eh.position = position
 
 
 func _get_first_handle_containing_point(point):
@@ -181,7 +215,7 @@ func change_position(new_position):
 	position = new_position
 
 
-func do_handles_contain_mouse():
+func does_a_resize_handle_contain_mouse():
 	if(!eh.resizable):
 		return false
 
@@ -205,7 +239,7 @@ func does_move_handle_contain_mouse():
 
 func handle_mouse_motion(event :InputEventMouseMotion):
 	if(_focused_handle == _move_handle):
-		_handle_move_for_mouse_motion(get_global_mouse_position())
+		drag_move_handle(get_global_mouse_position())
 	elif(_focused_handle != null):
 		var e = event.xformed_by(get_viewport().get_global_canvas_transform().affine_inverse())
 		if(eh.expand_from_center):
@@ -218,15 +252,30 @@ func release_handles():
 	_focused_handle = null
 
 
+func drag_move_handle(new_position):
+	var change_in_position = new_position
+	if(eh.snap_settings.snap_enabled):
+		change_in_position.x = snapped(change_in_position.x, eh.snap_settings.snap_step.x)
+		change_in_position.y = snapped(change_in_position.y, eh.snap_settings.snap_step.y)
+
+	global_position = change_in_position
+	eh.position = position
+
+
 func drag_handle_expand_center(handle, change_in_position):
 	var adj_change = get_global_transform().affine_inverse().basis_xform(change_in_position)
-	var size_diff = adj_change * handle.position.sign() * 2
-	var new_size = size + size_diff
+	if(eh.lock_x):
+		adj_change.x = 0
+	if(eh.lock_y):
+		adj_change.y = 0
+	_accum_change += adj_change * handle.position.sign()
 
-	if(!eh.lock_x):
-		size.x = new_size.x
-	if(!eh.lock_y):
-		size.y = new_size.y
+	var size_diff = _accum_change *  2
+	if(eh.snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
+	size += size_diff
+	_accum_change -= size_diff / 2
 
 
 func drag_handle_drag_side(handle, change_in_position):
@@ -235,12 +284,27 @@ func drag_handle_drag_side(handle, change_in_position):
 		adj_change.x = 0
 	if(eh.lock_y):
 		adj_change.y = 0
+	_accum_change += adj_change * handle.position.sign()
 
-	size += adj_change * handle.position.sign()
+	var size_diff = _accum_change
+	if(eh.snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
 
-	var pos_change : Vector2 = (adj_change / 2.0) * handle.position.sign().abs()
-	position += pos_change
-	eh.position = position
+	var orig_size = size
+	size += size_diff
+	_accum_change -= size_diff
+
+	# The object can override size changes (custom min/max size or whatever).
+	# This means the size may not have actually changed, and if it did, it might
+	# not be by the amount we tried to change it by.  Repositioning has to take
+	# this into account or you can push things around when an minimum size is
+	# reached.
+	if(size != orig_size):
+		var actual_size_change = size - orig_size
+		var pos_change : Vector2 = (actual_size_change / 2.0) * handle.position.sign()
+		position += pos_change
+		eh.position = position
 
 
 func print_info():

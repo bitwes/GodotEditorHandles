@@ -99,7 +99,7 @@ func test_when_resizable_side_handles_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_true(ehc.do_handles_contain_mouse())
+	assert_true(ehc.does_a_resize_handle_contain_mouse())
 
 
 func test_when_not_resizable_side_handles_do_not_contain_mouse():
@@ -115,7 +115,7 @@ func test_when_not_resizable_side_handles_do_not_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_false(ehc.do_handles_contain_mouse())
+	assert_false(ehc.does_a_resize_handle_contain_mouse())
 
 func test_when_handle_disabled_handle_does_not_contain_mouse():
 	var ehc = _new_editor_handles_control()
@@ -131,7 +131,7 @@ func test_when_handle_disabled_handle_does_not_contain_mouse():
 	_sender.mouse_motion(Vector2(50, 50)).wait_frames(5)
 	await _sender.idle
 
-	assert_false(ehc.do_handles_contain_mouse())
+	assert_false(ehc.does_a_resize_handle_contain_mouse())
 
 # --------------------
 #endregion
@@ -229,8 +229,8 @@ func test_resize_sides_when_rotated(p = use_parameters(_resize_size_rotated_drag
 
 	var ehc = _new_editor_handles_control(eh)
 	ehc.rotation_degrees = p.rotation
-	ehc._handles.ct.color = Color.RED
-	ehc._handles[p.handle_key].color = Color.BLUE
+	ehc._handles.ct.color_1 = Color.RED
+	ehc._handles[p.handle_key].color_1 = Color.BLUE
 	ehc.queue_redraw()
 
 	if(p.pause == true):
@@ -326,11 +326,12 @@ func test_resize_expand_center_scaled(p = use_parameters(_resize_expand_center_s
 	ehc.drag_handle_expand_center(ehc._handles[p.handle_key], p.move_by)
 	assert_eq(ehc.size, p.new_size, 'size')
 
+
 var _resize_expand_center_rotated_drag_params = ParameterFactory.named_parameters(
 	['handle_key', 'rotation', 'move_by', 'new_size', 'pause'],[
-	['tl', 90, Vector2(20, -20), Vector2(140, 140), true],
-	['br', 90, Vector2(-20, 20), Vector2(140, 140), true],
-	['cb', 90, Vector2(-20, 0), Vector2(100, 140), true]
+	['tl', 90, Vector2(20, -20), Vector2(140, 140)],
+	['br', 90, Vector2(-20, 20), Vector2(140, 140)],
+	['cb', 90, Vector2(-20, 0), Vector2(100, 140)]
 ])
 func test_resize_expand_center_rotated(p = use_parameters(_resize_expand_center_rotated_drag_params)):
 	var eh = EditorHandles.new()
@@ -341,8 +342,8 @@ func test_resize_expand_center_rotated(p = use_parameters(_resize_expand_center_
 
 	var ehc = _new_editor_handles_control(eh)
 	ehc.rotation_degrees = p.rotation
-	ehc._handles.ct.color = Color.RED
-	ehc._handles[p.handle_key].color = Color.BLUE
+	ehc._handles.ct.color_1 = Color.RED
+	ehc._handles[p.handle_key].color_1 = Color.BLUE
 	ehc.queue_redraw()
 
 	if(p.pause == true):

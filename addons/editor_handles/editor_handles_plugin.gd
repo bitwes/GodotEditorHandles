@@ -11,6 +11,7 @@ func _enter_tree():
 	add_custom_type(plugin_name, "Resource", preload("editor_handles.gd"), preload("icon.svg"))
 
 
+
 func _exit_tree():
 	remove_custom_type(plugin_name)
 
@@ -76,25 +77,27 @@ func _handle_mouse_button(event : InputEventMouseButton):
 	if(event.button_index == MOUSE_BUTTON_LEFT):
 		var undo = get_undo_redo()
 		if(event.pressed):
-			if(editing.do_handles_contain_mouse()):
+			if(editing.does_a_resize_handle_contain_mouse()):
 				resizing = true
-				undo.create_action("resize_editor_handles")
-				undo.add_undo_property(editing, 'size', editing.size)
+				undo.create_action(&"resize_editor_handles")
+				undo.add_undo_property(editing.eh, &"position", editing.position)
+				undo.add_undo_property(editing.eh, &'size', editing.size)
 				input_handled = true
 			elif(editing.does_move_handle_contain_mouse()):
 				moving = true
-				undo.create_action("move_editor_handles")
-				undo.add_undo_property(editing, "position", editing.position)
+				undo.create_action(&"move_editor_handles")
+				undo.add_undo_property(editing.eh, &"position", editing.position)
 				input_handled = true
 		elif(resizing):
 			input_handled = true
-			undo.add_do_property(editing, 'size', editing.size)
+			undo.add_do_property(editing.eh, &'size', editing.size)
+			undo.add_do_property(editing.eh, &'position', editing.position)
 			undo.commit_action()
 			resizing = false
 			editing.release_handles()
 		elif(moving):
 			input_handled = true
-			undo.add_do_property(editing, 'position', editing.position)
+			undo.add_do_property(editing.eh, &'position', editing.position)
 			undo.commit_action()
 			moving = false
 			editing.release_handles()
