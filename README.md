@@ -1,4 +1,6 @@
 # EditorHandles
+<img width="162" alt="image" src="https://github.com/user-attachments/assets/cb5e0173-b8e7-435b-850f-26747a7fb58c">
+
 Have you ever thought _I would like to be able to resize/move things in this thing when I use this thing in other things_?  This does that.
 
 How about _I want those little circles you can drag around for resizing/scaling/moving but the base object for my thing doesn't have them_?  This does that.
@@ -109,10 +111,13 @@ If you are upgrading, make sure to backup your project before you test the new v
 
 # Screenshots
 This is a node that has a `CollsionShape2D` that can be resized in another scene.
-![image](https://github.com/user-attachments/assets/895c6df6-c750-43d3-b5db-1409f121cc09)
+![image](https://github.com/user-attachments/assets/46ed3027-aafb-4828-ae1a-b148c8669833)
 
-Here you can see the collision shape being resized in another scene.
-![image](https://github.com/user-attachments/assets/9f1c1cc7-3e04-48b1-b835-0d9dcf966e6c)
+
+Here you can multiple instances of the node above in a scene.  Each has different sizes for the collsion shape.  You can also see that some properties have been hidden, which is a cool thing `EditorHandles` can do.
+![image](https://github.com/user-attachments/assets/c88c24ca-cea3-4ca7-baa2-ec57a9be4180)
+
+
 
 
 
