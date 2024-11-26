@@ -161,7 +161,7 @@ func _disable_handles_for_locks():
 ## a way to determine what this resource is for, so you have to tell it.  Also
 ## the control has to be added to the root node for it to be found by the plugin
 ## when selecting the node in other scenes.
-func editor_setup(for_what):
+func editor_setup(for_what : Variant) -> EditorHandlesControl:
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position
