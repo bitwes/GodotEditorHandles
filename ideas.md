@@ -1,9 +1,8 @@
 # TODO
-* Draw a line from the center of the EditorRect to the parent?
-* rotation handles would be cool
+* Draw a line from the center of the EditorHandleControl to the parent when moved?
+* Rotation handles would be cool
 * Do I need to honor the currently selected editor mode (move, resize, rotate, scale, etc)?
 * Change cursor when dragging?
-* Handle scaling is affected by node scale.  It should not be.
 
 
 # Handle drawing resource
