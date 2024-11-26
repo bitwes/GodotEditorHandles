@@ -9,18 +9,17 @@ resource_local_to_scene = true
 script = ExtResource("2_21sjh")
 expand_from_center = true
 resizable = true
-size = Vector2(50, 323.4)
-lock_x = true
+size = Vector2(210, 145.4)
+lock_x = false
 lock_x_value = 50
 lock_y = false
 lock_y_value = 0
 moveable = false
 position = Vector2(0, 0)
-drag_snap = Vector2(1, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nvf70"]
 resource_local_to_scene = true
-size = Vector2(50, 323.4)
+size = Vector2(210, 145.4)
 
 [node name="ResizableCollisionShape" type="Node2D"]
 script = ExtResource("1_0nhfk")

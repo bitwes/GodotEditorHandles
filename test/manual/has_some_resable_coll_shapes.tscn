@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://x8qsmedjkqvl"]
+
+[ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="1_vcjlp"]
+[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_eioi0"]
+
+[sub_resource type="Resource" id="Resource_441cp"]
+resource_local_to_scene = true
+script = ExtResource("2_eioi0")
+expand_from_center = true
+resizable = true
+size = Vector2(260, 49.4)
+lock_x = false
+lock_x_value = 50
+lock_y = false
+lock_y_value = 0
+moveable = false
+position = Vector2(0, 0)
+
+[sub_resource type="Resource" id="Resource_5kpys"]
+resource_local_to_scene = true
+script = ExtResource("2_eioi0")
+expand_from_center = true
+resizable = true
+size = Vector2(70, 209.4)
+lock_x = false
+lock_x_value = 50
+lock_y = false
+lock_y_value = 0
+moveable = false
+position = Vector2(0, 0)
+
+[sub_resource type="Resource" id="Resource_y6rdj"]
+resource_local_to_scene = true
+script = ExtResource("2_eioi0")
+expand_from_center = true
+resizable = true
+size = Vector2(210, 275.4)
+lock_x = false
+lock_x_value = 50
+lock_y = false
+lock_y_value = 0
+moveable = false
+position = Vector2(0, 0)
+
+[node name="HasSomeResableCollShapes" type="Node2D"]
+
+[node name="ResizableCollisionShape" parent="." instance=ExtResource("1_vcjlp")]
+position = Vector2(143, 77)
+collision_shape_props = SubResource("Resource_441cp")
+
+[node name="ResizableCollisionShape2" parent="." instance=ExtResource("1_vcjlp")]
+position = Vector2(383, 140)
+collision_shape_props = SubResource("Resource_5kpys")
+
+[node name="ResizableCollisionShape3" parent="." instance=ExtResource("1_vcjlp")]
+position = Vector2(135, 290)
+collision_shape_props = SubResource("Resource_y6rdj")

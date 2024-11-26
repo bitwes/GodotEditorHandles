@@ -16,7 +16,6 @@ lock_y = false
 lock_y_value = 0
 moveable = false
 position = Vector2(0, 0)
-drag_snap = Vector2(1, 1)
 
 [node name="ManualResizing" type="Node2D"]
 script = ExtResource("1_pa1hb")

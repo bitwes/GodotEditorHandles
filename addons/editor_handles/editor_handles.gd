@@ -11,13 +11,15 @@ var _hidden_props := []
 var _disabled_props := []
 var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new()
 
-## When resizing, it will expand in all directions from the center.
+## When resizing, it will expand in all directions from the center.  When
+## false, resizing will only resize the sides being dragged and the position
+## will change to keep the undragged sides at the same location.
 @export var expand_from_center := true :
 	set(val):
 		expand_from_center = val
 		_apply_properties_to_handles_ctrl()
 
-## Enable/disable resizing the rect.
+## Enable/disable resizing.
 @export var resizable := true :
 	set(val):
 		resizable = val
@@ -30,7 +32,9 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 		_apply_properties_to_handles_ctrl()
 		_emit_signals([resized, changed])
 
-## Enable/disable locking the width of the rect.  Disabled when y_lock enabled.
+## Enable/disable locking the width.  Disabled when y_lock enabled.
+## Causes all handles except the center side handles to be removed.
+## Changes made to the x value for size will be immediately reverted.
 @export var lock_x := false :
 	set(val):
 		lock_x = val
@@ -40,7 +44,7 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 		_disable_handles_for_locks()
 		_emit_signals([changed])
 
-## The locked width value
+## The locked width value.  Disabled when lock_x is false.
 @export var lock_x_value := 0 :
 	set(val):
 		lock_x_value = val
@@ -49,7 +53,9 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 			_apply_properties_to_handles_ctrl()
 		_emit_signals([changed])
 
-## Enable/Disable locking the height of the rect.  Disabled when x_lock enabled.
+## Enable/Disable locking the height.  Disabled when x_lock enabled.
+## Causes all handles except the center top and bottom handles to be removed.
+## Changes made to y value for size will be immediately reverted.
 @export var lock_y := false :
 	set(val):
 		lock_y = val
@@ -58,7 +64,7 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 		_disable_handles_for_locks()
 		_emit_signals([changed])
 
-## The locked height value
+## The locked height value.  Disabled when lock_y is false.
 @export var lock_y_value := 0 :
 	set(val):
 		lock_y_value = val
@@ -66,14 +72,14 @@ var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new(
 			size.y = val
 		_emit_signals([changed])
 
-## Whether the rect is moveable.  There will be a handle in the middle that you
-## can use to drag it about.
+## Whether the EditorHandles is moveable.  There will be a handle in the middle
+## that you can use to drag it about when this is enabled.
 @export var moveable := false :
 	set(val):
 		moveable = val
 		_emit_signals([changed])
 
-## The position of the rect, enabled only when moveable.
+## The position, only enabled only when moveable.
 @export var position := Vector2.ZERO:
 	set(val):
 		position = val
@@ -161,7 +167,7 @@ func _disable_handles_for_locks():
 ## a way to determine what this resource is for, so you have to tell it.  Also
 ## the control has to be added to the root node for it to be found by the plugin
 ## when selecting the node in other scenes.
-func editor_setup(for_what):
+func editor_setup(for_what : Variant) -> EditorHandlesControl:
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position
