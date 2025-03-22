@@ -9,7 +9,7 @@ var _handles_ctrl : EditorHandlesControl = null
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
-
+static var _engine_global = Engine
 
 ## When resizing, it will expand in all directions from the center.  When
 ## false, resizing will only resize the sides being dragged and the position
@@ -168,6 +168,9 @@ func _disable_handles_for_locks():
 ## the control has to be added to the root node for it to be found by the plugin
 ## when selecting the node in other scenes.
 func editor_setup(for_what : Variant) -> EditorHandlesControl:
+	if(!_engine_global.is_editor_hint()):
+		return null
+
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position

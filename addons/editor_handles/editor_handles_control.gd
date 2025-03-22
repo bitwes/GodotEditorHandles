@@ -49,7 +49,7 @@ class SideHandle:
 			draw_on.draw_circle(position, r * .8, c)
 
 
-var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new()
+var snap_settings = load('res://addons/editor_handles/snap_settings.gd').new()
 var eh : EditorHandles
 var size = Vector2(100, 100) :
 	set(val):
