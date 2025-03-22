@@ -8,7 +8,7 @@ resource_local_to_scene = true
 script = ExtResource("2_eioi0")
 expand_from_center = true
 resizable = true
-size = Vector2(260, 49.4)
+size = Vector2(187.926, 86.9)
 lock_x = false
 lock_x_value = 50
 lock_y = false
@@ -21,7 +21,7 @@ resource_local_to_scene = true
 script = ExtResource("2_eioi0")
 expand_from_center = true
 resizable = true
-size = Vector2(70, 209.4)
+size = Vector2(127.983, 202.897)
 lock_x = false
 lock_x_value = 50
 lock_y = false
@@ -45,7 +45,7 @@ position = Vector2(0, 0)
 [node name="HasSomeResableCollShapes" type="Node2D"]
 
 [node name="ResizableCollisionShape" parent="." instance=ExtResource("1_vcjlp")]
-position = Vector2(143, 77)
+position = Vector2(135, 68)
 collision_shape_props = SubResource("Resource_441cp")
 
 [node name="ResizableCollisionShape2" parent="." instance=ExtResource("1_vcjlp")]

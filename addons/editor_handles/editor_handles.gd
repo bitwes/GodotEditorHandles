@@ -9,7 +9,7 @@ var _handles_ctrl : EditorHandlesControl = null
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
-var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new()
+
 
 ## When resizing, it will expand in all directions from the center.  When
 ## false, resizing will only resize the sides being dragged and the position

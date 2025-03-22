@@ -9,7 +9,7 @@ resource_local_to_scene = true
 script = ExtResource("3_kctkp")
 expand_from_center = true
 resizable = true
-size = Vector2(50, 258.346)
+size = Vector2(50, 202.346)
 lock_x = true
 lock_x_value = 50
 lock_y = false
@@ -22,7 +22,7 @@ resource_local_to_scene = true
 script = ExtResource("3_kctkp")
 expand_from_center = true
 resizable = true
-size = Vector2(160.309, 187.636)
+size = Vector2(148.995, 185.376)
 lock_x = false
 lock_x_value = 50
 lock_y = false
@@ -38,5 +38,5 @@ position = Vector2(174, 170)
 collision_shape_props = SubResource("Resource_fykbu")
 
 [node name="ResizableCollisionShape2" parent="." instance=ExtResource("3_r43y3")]
-position = Vector2(346, 264)
+position = Vector2(352, 256)
 collision_shape_props = SubResource("Resource_yas4p")

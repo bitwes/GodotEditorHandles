@@ -49,7 +49,7 @@ class SideHandle:
 			draw_on.draw_circle(position, r * .8, c)
 
 
-
+var snap_settings = preload('res://addons/editor_handles/snap_settings.gd').new()
 var eh : EditorHandles
 var size = Vector2(100, 100) :
 	set(val):
@@ -113,6 +113,7 @@ func _init(edit_rect_props : EditorHandles):
 func _ready() -> void:
 	position = eh.position
 	_update_handles()
+	snap_settings.update_values_from_editor.call_deferred()
 
 
 func _draw() -> void:
@@ -251,9 +252,9 @@ func release_handles():
 
 func drag_move_handle(new_position):
 	var change_in_position = new_position
-	if(eh.snap_settings.snap_enabled):
-		change_in_position.x = snapped(change_in_position.x, eh.snap_settings.snap_step.x)
-		change_in_position.y = snapped(change_in_position.y, eh.snap_settings.snap_step.y)
+	if(snap_settings.snap_enabled):
+		change_in_position.x = snapped(change_in_position.x, snap_settings.snap_step.x)
+		change_in_position.y = snapped(change_in_position.y, snap_settings.snap_step.y)
 
 	global_position = change_in_position
 	eh.position = position
@@ -268,9 +269,9 @@ func drag_handle_expand_center(handle, change_in_position):
 	_accum_change += adj_change * handle.position.sign()
 
 	var size_diff = _accum_change *  2
-	if(eh.snap_settings.snap_enabled):
-		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
-		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
+	if(snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, snap_settings.snap_step.y)
 	size += size_diff
 	_accum_change -= size_diff / 2
 
@@ -284,9 +285,9 @@ func drag_handle_drag_side(handle, change_in_position):
 	_accum_change += adj_change * handle.position.sign()
 
 	var size_diff = _accum_change
-	if(eh.snap_settings.snap_enabled):
-		size_diff.x = snapped(size_diff.x, eh.snap_settings.snap_step.x)
-		size_diff.y = snapped(size_diff.y, eh.snap_settings.snap_step.y)
+	if(snap_settings.snap_enabled):
+		size_diff.x = snapped(size_diff.x, snap_settings.snap_step.x)
+		size_diff.y = snapped(size_diff.y, snap_settings.snap_step.y)
 
 	var orig_size = size
 	size += size_diff

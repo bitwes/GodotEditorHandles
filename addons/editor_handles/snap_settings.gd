@@ -19,7 +19,6 @@ var editor_controls = {
 func _init():
 	if(Engine.is_editor_hint()):
 		setup_controls()
-		update_values_from_editor()
 
 
 func setup_controls():
@@ -39,8 +38,16 @@ func setup_controls():
 	else:
 		found_all_editor_controls = true
 
-	editor_controls.snap_toggle.toggled.connect(func(tog: bool) -> void: snap_enabled = tog)
+	editor_controls.grid_offset_x.value_changed.connect(func(_val): update_values_from_editor)
+	editor_controls.grid_offset_y.value_changed.connect(func(_val): update_values_from_editor)
+	editor_controls.grid_snap_x.value_changed.connect(func(_val): update_values_from_editor)
+	editor_controls.grid_snap_y.value_changed.connect(func(_val): update_values_from_editor)
+
+	editor_controls.snap_toggle.toggled.connect(func(tog: bool) -> void: 
+		update_values_from_editor()
+		snap_enabled = tog)
 	editor_controls.dialog.get_ok_button().pressed.connect(update_values_from_editor)
+	update_values_from_editor()
 
 
 func update_values_from_editor():
@@ -53,11 +60,10 @@ func update_values_from_editor():
 	snap_step.y = editor_controls.grid_snap_y.value
 
 
+
 func print_info():
 	print("-- Snap Info --")
 	print("  found all = ", found_all_editor_controls)
 	print("  enabled = ", snap_enabled)
 	print("  offset = ", snap_offset)
 	print("  step = ", snap_step)
-
-
