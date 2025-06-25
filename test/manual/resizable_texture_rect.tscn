@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c4qd3xkc68w6p"]
 
 [ext_resource type="Texture2D" uid="uid://wv03lnx2jywn" path="res://icon.svg" id="1_6urua"]
-[ext_resource type="Script" path="res://test/manual/resizable_texture_rect.gd" id="1_ug7y2"]
-[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_qagh0"]
+[ext_resource type="Script" uid="uid://ctaf5tncwgyhr" path="res://test/manual/resizable_texture_rect.gd" id="1_ug7y2"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_qagh0"]
 
 [sub_resource type="Resource" id="Resource_emjf3"]
 resource_local_to_scene = true

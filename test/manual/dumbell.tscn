@@ -1,12 +1,13 @@
 [gd_scene load_steps=5 format=3 uid="uid://cqns8x0646dej"]
 
-[ext_resource type="Script" path="res://test/manual/dumbell.gd" id="1_xi3xt"]
-[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_buphq"]
+[ext_resource type="Script" uid="uid://csdgtq4w34pmg" path="res://test/manual/dumbell.gd" id="1_xi3xt"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_buphq"]
 [ext_resource type="Texture2D" uid="uid://wv03lnx2jywn" path="res://icon.svg" id="3_2resm"]
 
 [sub_resource type="Resource" id="Resource_q6o8n"]
 resource_local_to_scene = true
 script = ExtResource("2_buphq")
+expand_from_center = true
 resizable = true
 size = Vector2(137.5, 20)
 lock_x = false
@@ -15,7 +16,6 @@ lock_y = true
 lock_y_value = 20
 moveable = false
 position = Vector2(0, 0)
-drag_snap = Vector2(1, 1)
 
 [node name="Dumbell" type="Node2D"]
 script = ExtResource("1_xi3xt")

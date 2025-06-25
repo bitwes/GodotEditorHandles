@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c0uoq3mo3deub"]
 
-[ext_resource type="Script" path="res://test/manual/manual_resizing.gd" id="1_pa1hb"]
-[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_tas10"]
+[ext_resource type="Script" uid="uid://c7dnc5luadqxo" path="res://test/manual/manual_resizing.gd" id="1_pa1hb"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_tas10"]
 [ext_resource type="Texture2D" uid="uid://cpjmmagggbf5n" path="res://icon.png" id="3_on3tv"]
 
 [sub_resource type="Resource" id="Resource_ppac3"]

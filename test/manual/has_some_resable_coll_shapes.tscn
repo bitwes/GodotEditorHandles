@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://x8qsmedjkqvl"]
 
 [ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="1_vcjlp"]
-[ext_resource type="Script" path="res://addons/editor_handles/editor_handles.gd" id="2_eioi0"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_eioi0"]
 
 [sub_resource type="Resource" id="Resource_441cp"]
 resource_local_to_scene = true
