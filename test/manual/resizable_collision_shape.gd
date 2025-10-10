@@ -15,3 +15,4 @@ func _ready() -> void:
 
 func _apply_editor_handles():
 	$Area2D/CollisionShape2D.shape.size = collision_shape_props.size
+	$Area2D/CollisionShape2D.position = collision_shape_props.position

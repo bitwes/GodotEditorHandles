@@ -18,6 +18,10 @@ static var _engine_global = Engine
 	set(val):
 		expand_from_center = val
 		_apply_properties_to_handles_ctrl()
+## Incremental resize.  Takes precedence over snap settings.  Setting size
+## manually not affected by snap.  Resize Snap only checks the drag distance,
+## not that the size is a multiple of Resize Snap.  Set to (0,0) to disable.
+@export var resize_snap := Vector2.ZERO
 
 ## Enable/disable resizing.
 @export var resizable := true :

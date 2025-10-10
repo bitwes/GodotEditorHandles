@@ -197,7 +197,7 @@ func _get_first_handle_containing_point(point):
 #endregion
 #region Public
 # --------------------
-## Mechanism for EditorHandles to update the global position of this contorl
+## Mechanism for EditorHandles to update the global position of this control
 ## without causing recursion and allowing the manipulated
 ## objects to have their position changed.  This function is needed because
 ## this extends Node2D which has a position property that, as far as I can tell,
@@ -285,7 +285,10 @@ func drag_handle_drag_side(handle, change_in_position):
 	_accum_change += adj_change * handle.position.sign()
 
 	var size_diff = _accum_change
-	if(snap_settings.snap_enabled):
+	if(eh.resize_snap != Vector2.ZERO):
+		size_diff.x = snapped(size_diff.x, eh.resize_snap.x)
+		size_diff.y = snapped(size_diff.y, eh.resize_snap.y)
+	elif(snap_settings.snap_enabled):
 		size_diff.x = snapped(size_diff.x, snap_settings.snap_step.x)
 		size_diff.y = snapped(size_diff.y, snap_settings.snap_step.y)
 
