@@ -269,7 +269,10 @@ func drag_handle_expand_center(handle, change_in_position):
 	_accum_change += adj_change * handle.position.sign()
 
 	var size_diff = _accum_change *  2
-	if(snap_settings.snap_enabled):
+	if(eh.resize_snap != Vector2.ZERO):
+		size_diff.x = snapped(size_diff.x, eh.resize_snap.x)
+		size_diff.y = snapped(size_diff.y, eh.resize_snap.y)
+	elif(snap_settings.snap_enabled):
 		size_diff.x = snapped(size_diff.x, snap_settings.snap_step.x)
 		size_diff.y = snapped(size_diff.y, snap_settings.snap_step.y)
 	size += size_diff

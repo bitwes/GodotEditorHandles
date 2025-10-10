@@ -4,26 +4,30 @@
 [ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="3_kctkp"]
 [ext_resource type="PackedScene" uid="uid://bgmdvuxbj6y41" path="res://test/manual/resizable_collision_shape.tscn" id="3_r43y3"]
 
-[sub_resource type="Resource" id="Resource_fykbu"]
-resource_local_to_scene = true
-script = ExtResource("3_kctkp")
-size = Vector2(50, 192.34601)
-lock_x = true
-lock_x_value = 50
-
 [sub_resource type="Resource" id="Resource_yas4p"]
 resource_local_to_scene = true
 script = ExtResource("3_kctkp")
-size = Vector2(166.995, 193.376)
+resize_snap = Vector2(50, 50)
+size = Vector2(128, 128)
+lock_x_value = 50
+
+[sub_resource type="Resource" id="Resource_fykbu"]
+resource_local_to_scene = true
+script = ExtResource("3_kctkp")
+resize_snap = Vector2(30, 30)
+size = Vector2(50, 159.34601)
+lock_x = true
 lock_x_value = 50
 
 [node name="ManualResizeTesting" type="Node2D"]
 script = ExtResource("1_5wxv1")
 
-[node name="ResizableCollisionShape" parent="." instance=ExtResource("3_r43y3")]
-position = Vector2(174, 170)
-collision_shape_props = SubResource("Resource_fykbu")
+[node name="NewParent" type="Node2D" parent="."]
 
-[node name="ResizableCollisionShape2" parent="." instance=ExtResource("3_r43y3")]
+[node name="ResizableCollisionShape2" parent="NewParent" instance=ExtResource("3_r43y3")]
 position = Vector2(352, 224)
 collision_shape_props = SubResource("Resource_yas4p")
+
+[node name="ResizableCollisionShape" parent="." instance=ExtResource("3_r43y3")]
+position = Vector2(179, 170)
+collision_shape_props = SubResource("Resource_fykbu")
