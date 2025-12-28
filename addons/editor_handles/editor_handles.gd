@@ -1,7 +1,35 @@
 @tool
 extends Resource
 class_name EditorHandles
+# ------------
+# Static
+# ------------
+static var _engine_global = Engine
 
+static func get_proper_editor_handles_for(for_what, new_value):
+	if(new_value == null):
+		return null
+
+	var to_return = new_value
+	if(new_value._for_what != null and for_what != new_value._for_what):
+		to_return = new_value.duplicate()
+		to_return._for_what = for_what
+	else:
+		new_value._for_what = for_what
+
+	for_what.ready.connect(func():
+		to_return._auto_editor_setup(),
+		CONNECT_ONE_SHOT
+	)
+
+	return to_return
+
+
+
+
+# ------------
+# Local
+# ------------
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
@@ -10,11 +38,12 @@ var _handles_ctrl : EditorHandlesControl = null :
 		if(_handles_ctrl == null):
 			_handles_ctrl = val
 		else:
-			p('Cannot set EHC again.  cur=', _handles_ctrl, ' incoming ', val)
+			push_warning('Cannot set EHC again.  Ignore this warning for duplicates.')
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
-static var _engine_global = Engine
+var _for_what = null
+
 
 ## When resizing, it will expand in all directions from the center.  When
 ## false, resizing will only resize the sides being dragged and the position
@@ -109,7 +138,7 @@ func _init() -> void:
 	# This resource should always be local to scene since that is what it is
 	# created for.
 	resource_local_to_scene = true
-	p("new resource")
+	# p("new resource")
 
 
 # Set properties only if different to avoid recursion.
@@ -150,7 +179,6 @@ func _validate_property(property: Dictionary):
 
 
 func _emit_signals(signal_list : Array[Signal]):
-	p(' emitting ', signal_list)
 	notify_property_list_changed()
 	if(!_is_currently_setting_property):
 		_is_currently_setting_property = true
@@ -173,19 +201,7 @@ func _disable_handles_for_locks():
 		for key in ['ct', 'cb']:
 			_handles_ctrl._handles[key].disabled = lock_y
 
-
-## Call this in ready.  You probably want to call this only when
-## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
-## all the time.
-## for_what should ALWAYS be the root node of the scene.  I don't think there is
-## a way to determine what this resource is for, so you have to tell it.  Also
-## the control has to be added to the root node for it to be found by the plugin
-## when selecting the node in other scenes.
-func editor_setup(for_what : Variant) -> EditorHandlesControl:
-	p('editor_setup for ', for_what)
-	if(!_engine_global.is_editor_hint()):
-		return null
-
+func _create_editor_handles_ctrl(for_what):
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position
@@ -195,6 +211,33 @@ func editor_setup(for_what : Variant) -> EditorHandlesControl:
 	_handles_ctrl = to_return
 	for_what.add_child(to_return)
 	_disable_handles_for_locks()
+	return to_return
+
+
+func _auto_editor_setup():
+	if(_handles_ctrl == null):
+		var to_return  = _create_editor_handles_ctrl(_for_what)
+		_disable_handles_for_locks()
+	resized.emit()
+	moved.emit()
+
+
+## Call this in ready.  You probably want to call this only when
+## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
+## all the time.
+## for_what should ALWAYS be the root node of the scene.  I don't think there is
+## a way to determine what this resource is for, so you have to tell it.  Also
+## the control has to be added to the root node for it to be found by the plugin
+## when selecting the node in other scenes.
+func editor_setup(for_what : Variant) -> EditorHandlesControl:
+	push_warning("editor_setup is deprecated use the new stuff")
+	if(!_engine_global.is_editor_hint()):
+		return null
+	_for_what = for_what
+	var to_return  = _create_editor_handles_ctrl(for_what)
+	_disable_handles_for_locks()
+	resized.emit()
+	moved.emit()
 	return to_return
 
 

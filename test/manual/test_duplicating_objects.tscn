@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bt5b20ap0iyfp"]
+[gd_scene load_steps=10 format=3 uid="uid://bt5b20ap0iyfp"]
 
 [ext_resource type="Script" uid="uid://dt2v3efl3nu25" path="res://test/manual/test_duplicating_objects.gd" id="1_fkiv3"]
 [ext_resource type="PackedScene" uid="uid://cqns8x0646dej" path="res://test/manual/ObjectsWithHandles/dumbell.tscn" id="2_p705n"]
@@ -7,7 +7,15 @@
 [sub_resource type="Resource" id="Resource_r30gw"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
-size = Vector2(289.2828, 20)
+size = Vector2(301.2828, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-17.278488, 0)
+
+[sub_resource type="Resource" id="Resource_fg5wa"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+size = Vector2(192.2828, 20)
 lock_y = true
 lock_y_value = 20
 position = Vector2(-17.278488, 0)
@@ -16,28 +24,37 @@ position = Vector2(-17.278488, 0)
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
 expand_from_center = false
-size = Vector2(191.28284, 20)
+size = Vector2(180.28284, 20)
 lock_y = true
 lock_y_value = 20
-position = Vector2(-225.77849, 0)
+position = Vector2(-231.2785, 0)
+
+[sub_resource type="Resource" id="Resource_vevku"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+expand_from_center = false
+size = Vector2(178.28284, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-202.2785, 0)
 
 [sub_resource type="Resource" id="Resource_yl12d"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
 expand_from_center = false
-size = Vector2(189.28284, 20)
+size = Vector2(177.28284, 20)
 lock_y = true
 lock_y_value = 20
-position = Vector2(-226.77849, 0)
+position = Vector2(-232.7785, 0)
 
 [sub_resource type="Resource" id="Resource_p705n"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
 expand_from_center = false
-size = Vector2(161.82399, 20)
+size = Vector2(205.82399, 20)
 lock_y = true
 lock_y_value = 20
-position = Vector2(-81.00791, 0)
+position = Vector2(-59.00791, 0)
 
 [node name="TestDuplicatingObjects" type="Node2D"]
 script = ExtResource("1_fkiv3")
@@ -46,18 +63,27 @@ script = ExtResource("1_fkiv3")
 position = Vector2(288, 128)
 rectable = SubResource("Resource_r30gw")
 
+[node name="Dumbell3" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(288, 224)
+rectable = SubResource("Resource_fg5wa")
+
 [node name="DupeOfDumbellOriginal" parent="." instance=ExtResource("2_p705n")]
-position = Vector2(448, 704)
+position = Vector2(288, 704)
 rotation = 1.5707964
 rectable = SubResource("Resource_hqe4j")
 
+[node name="DupeOfDumbellOriginal3" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(608, 672)
+rotation = 1.5707964
+rectable = SubResource("Resource_vevku")
+
 [node name="DupeOfDumbellOriginal2" parent="." instance=ExtResource("2_p705n")]
-position = Vector2(736, 256)
+position = Vector2(896, 256)
 rotation = 4.712389
 rectable = SubResource("Resource_yl12d")
 
 [node name="Dumbell2" parent="." instance=ExtResource("2_p705n")]
-position = Vector2(800, 224)
+position = Vector2(800, 96)
 rectable = SubResource("Resource_p705n")
 
 [node name="Borders" type="Node2D" parent="."]
@@ -85,11 +111,11 @@ offset_bottom = 256.0
 [node name="ColorRect5" type="ColorRect" parent="Borders"]
 offset_left = 256.0
 offset_top = 320.0
-offset_right = 917.2358
+offset_right = 928.0
 offset_bottom = 354.3282
 
 [node name="ColorRect6" type="ColorRect" parent="Borders"]
 offset_left = 256.0
 offset_top = 608.0
-offset_right = 917.2358
+offset_right = 928.0
 offset_bottom = 642.3282

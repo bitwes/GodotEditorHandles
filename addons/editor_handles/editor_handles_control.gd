@@ -112,25 +112,19 @@ var _focused_handle : SideHandle = null :
 
 func _init(edit_rect_props : EditorHandles = null):
 	if(edit_rect_props == null):
-		p('probably a duplicate, reload scene.')
 		eh = null
 	else:
-		p("new ")
 		eh = edit_rect_props
 		_init_handles()
 
 
 func _ready() -> void:
 	if(eh == null):
-		p("freeing")
+		# If we made it to ready and we don't have an editor handles instance
+		# then this was created by duplicating an object and so therefore
+		# should be freed.
 		queue_free()
-		# position.x += 50
-		# outline_color = Color.RED
-		# outline_thickness = 100.0
-		# queue_redraw()
-		# z_index = 255
 	else:
-		p("  New ready for ", get_parent())
 		position = eh.position
 		_update_handles()
 		snap_settings.update_values_from_editor.call_deferred()
@@ -256,7 +250,6 @@ func does_move_handle_contain_mouse():
 
 
 func handle_mouse_motion(event :InputEventMouseMotion):
-	p('handle mouse ')
 	if(_focused_handle == _move_handle):
 		drag_move_handle(get_global_mouse_position())
 	elif(_focused_handle != null):
