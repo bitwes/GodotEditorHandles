@@ -5,7 +5,12 @@ class_name EditorHandles
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
-var _handles_ctrl : EditorHandlesControl = null
+var _handles_ctrl : EditorHandlesControl = null :
+	set(val):
+		if(_handles_ctrl == null):
+			_handles_ctrl = val
+		else:
+			p('Cannot set EHC again.  cur=', _handles_ctrl, ' incoming ', val)
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
@@ -96,11 +101,15 @@ signal resized
 ## Emitted when position changes.  You can also use the signal "changed".
 signal moved
 
+func p(p1='', p2='', p3='', p4='', p5='', p6='', p7='', p8='', p9='', p10='', ):
+	print("EHRes", self, '::', _handles_ctrl, ':  ', str(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10))
+
 
 func _init() -> void:
 	# This resource should always be local to scene since that is what it is
 	# created for.
 	resource_local_to_scene = true
+	p("new resource")
 
 
 # Set properties only if different to avoid recursion.
@@ -141,6 +150,7 @@ func _validate_property(property: Dictionary):
 
 
 func _emit_signals(signal_list : Array[Signal]):
+	p(' emitting ', signal_list)
 	notify_property_list_changed()
 	if(!_is_currently_setting_property):
 		_is_currently_setting_property = true
@@ -172,6 +182,7 @@ func _disable_handles_for_locks():
 ## the control has to be added to the root node for it to be found by the plugin
 ## when selecting the node in other scenes.
 func editor_setup(for_what : Variant) -> EditorHandlesControl:
+	p('editor_setup for ', for_what)
 	if(!_engine_global.is_editor_hint()):
 		return null
 

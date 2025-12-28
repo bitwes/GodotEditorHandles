@@ -49,6 +49,8 @@ class SideHandle:
 			draw_on.draw_circle(position, r * .8, c)
 
 
+
+
 var snap_settings = load('res://addons/editor_handles/snap_settings.gd').new()
 var eh : EditorHandles
 var size = Vector2(100, 100) :
@@ -94,6 +96,9 @@ var _handles = {
 	cl = SideHandle.new()
 }
 
+func p(p1='', p2='', p3='', p4='', p5='', p6='', p7='', p8='', p9='', p10='', ):
+	print("EHC|", self, '|:  ', str(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10))
+
 var _focused_handle : SideHandle = null :
 	set(val):
 		if(_focused_handle != null):
@@ -105,15 +110,30 @@ var _focused_handle : SideHandle = null :
 		queue_redraw()
 
 
-func _init(edit_rect_props : EditorHandles):
-	eh = edit_rect_props
-	_init_handles()
+func _init(edit_rect_props : EditorHandles = null):
+	if(edit_rect_props == null):
+		p('probably a duplicate, reload scene.')
+		eh = null
+	else:
+		p("new ")
+		eh = edit_rect_props
+		_init_handles()
 
 
 func _ready() -> void:
-	position = eh.position
-	_update_handles()
-	snap_settings.update_values_from_editor.call_deferred()
+	if(eh == null):
+		p("freeing")
+		queue_free()
+		# position.x += 50
+		# outline_color = Color.RED
+		# outline_thickness = 100.0
+		# queue_redraw()
+		# z_index = 255
+	else:
+		p("  New ready for ", get_parent())
+		position = eh.position
+		_update_handles()
+		snap_settings.update_values_from_editor.call_deferred()
 
 
 func _draw() -> void:
@@ -236,6 +256,7 @@ func does_move_handle_contain_mouse():
 
 
 func handle_mouse_motion(event :InputEventMouseMotion):
+	p('handle mouse ')
 	if(_focused_handle == _move_handle):
 		drag_move_handle(get_global_mouse_position())
 	elif(_focused_handle != null):

@@ -1,0 +1,95 @@
+[gd_scene load_steps=8 format=3 uid="uid://bt5b20ap0iyfp"]
+
+[ext_resource type="Script" uid="uid://dt2v3efl3nu25" path="res://test/manual/test_duplicating_objects.gd" id="1_fkiv3"]
+[ext_resource type="PackedScene" uid="uid://cqns8x0646dej" path="res://test/manual/ObjectsWithHandles/dumbell.tscn" id="2_p705n"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="3_hqe4j"]
+
+[sub_resource type="Resource" id="Resource_r30gw"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+size = Vector2(289.2828, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-17.278488, 0)
+
+[sub_resource type="Resource" id="Resource_hqe4j"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+expand_from_center = false
+size = Vector2(191.28284, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-225.77849, 0)
+
+[sub_resource type="Resource" id="Resource_yl12d"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+expand_from_center = false
+size = Vector2(189.28284, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-226.77849, 0)
+
+[sub_resource type="Resource" id="Resource_p705n"]
+resource_local_to_scene = true
+script = ExtResource("3_hqe4j")
+expand_from_center = false
+size = Vector2(161.82399, 20)
+lock_y = true
+lock_y_value = 20
+position = Vector2(-81.00791, 0)
+
+[node name="TestDuplicatingObjects" type="Node2D"]
+script = ExtResource("1_fkiv3")
+
+[node name="Dumbell" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(288, 128)
+rectable = SubResource("Resource_r30gw")
+
+[node name="DupeOfDumbellOriginal" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(448, 704)
+rotation = 1.5707964
+rectable = SubResource("Resource_hqe4j")
+
+[node name="DupeOfDumbellOriginal2" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(736, 256)
+rotation = 4.712389
+rectable = SubResource("Resource_yl12d")
+
+[node name="Dumbell2" parent="." instance=ExtResource("2_p705n")]
+position = Vector2(800, 224)
+rectable = SubResource("Resource_p705n")
+
+[node name="Borders" type="Node2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Borders"]
+offset_left = 64.0
+offset_right = 96.0
+offset_bottom = 256.0
+
+[node name="ColorRect2" type="ColorRect" parent="Borders"]
+offset_left = 448.0
+offset_right = 480.0
+offset_bottom = 256.0
+
+[node name="ColorRect3" type="ColorRect" parent="Borders"]
+offset_left = 576.0
+offset_right = 608.0
+offset_bottom = 256.0
+
+[node name="ColorRect4" type="ColorRect" parent="Borders"]
+offset_left = 832.0
+offset_right = 864.0
+offset_bottom = 256.0
+
+[node name="ColorRect5" type="ColorRect" parent="Borders"]
+offset_left = 256.0
+offset_top = 320.0
+offset_right = 917.2358
+offset_bottom = 354.3282
+
+[node name="ColorRect6" type="ColorRect" parent="Borders"]
+offset_left = 256.0
+offset_top = 608.0
+offset_right = 917.2358
+offset_bottom = 642.3282
