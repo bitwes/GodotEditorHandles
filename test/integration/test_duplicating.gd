@@ -6,23 +6,24 @@ class NodeWithHandles:
 	var _engine = Engine
 	@export var editor_handles : EditorHandles :
 		set(val):
-			editor_handles = EditorHandles.get_proper_editor_handles_for(self, val)
+			editor_handles = EditorHandles.get_valid_editor_handles_instance(self, val)
 
 
-	func _init() -> void:
-		print('NEW ', self, ' ', editor_handles)
-		print_stack()
+	# func _init() -> void:
+	# 	print('NEW ', self, ' ', editor_handles)
+	# 	print_stack()
 
 
 	func _ready() -> void:
 		if(_engine.is_editor_hint()):
-			print("HERE ", self)
+			# print("HERE ", self)
 			# editor_handles.editor_setup(self)
 			editor_handles.resized.connect(_on_editor_handles_resized)
 
 
 	func _on_editor_handles_resized():
-		print(self, ' resized')
+		pass
+		# print(self, ' resized')
 
 
 
@@ -37,7 +38,7 @@ func test_duplicate_gets_new_editor_handles():
 	add_child(orig)
 
 	await wait_idle_frames(2)
-	print("------- ----------- -----------")
+	# print("------- ----------- -----------")
 	var dupe = autofree(orig.duplicate())
 	dupe._engine = engine_dbl
 	add_child(dupe)

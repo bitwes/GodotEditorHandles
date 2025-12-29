@@ -5,15 +5,10 @@ extends Node2D
 
 @export var rectable : EditorHandles :
 	set(val):
-		# print(self, ' set eh ', rectable, '->', val)
-		rectable = EditorHandles.get_proper_editor_handles_for(self, val)
+		rectable = EditorHandles.get_valid_editor_handles_instance(self, val)
 @onready var center = $Center
 @onready var left = $Left
 @onready var right = $Right
-
-
-# func _init():
-# 	print(self, '.init()')
 
 
 func _ready():

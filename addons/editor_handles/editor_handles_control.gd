@@ -1,7 +1,11 @@
 @tool
 extends Node2D
 class_name EditorHandlesControl
-
+# ------------------------------------------------------------------------------
+# This is the control that hadles user input in the editor.  This should not be
+# instantiated directly.  The EditorHandles resource is responsible for
+# creating instances of this when in the editor.
+# ------------------------------------------------------------------------------
 class SideHandle:
 	## Center of handle, not rect position.
 	var position = Vector2.ZERO :

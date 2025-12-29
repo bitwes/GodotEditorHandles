@@ -6,7 +6,9 @@ class_name EditorHandles
 # ------------
 static var _engine_global = Engine
 
-static func get_proper_editor_handles_for(for_what, new_value):
+## Use in the setter for your editor handles.  Preserves unique (local_to_scene)
+## EditorHandles instances when duplicating the object in the editor.
+static func get_valid_editor_handles_instance(for_what, new_value):
 	if(new_value == null):
 		return null
 
@@ -201,6 +203,7 @@ func _disable_handles_for_locks():
 		for key in ['ct', 'cb']:
 			_handles_ctrl._handles[key].disabled = lock_y
 
+
 func _create_editor_handles_ctrl(for_what):
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
@@ -216,7 +219,7 @@ func _create_editor_handles_ctrl(for_what):
 
 func _auto_editor_setup():
 	if(_handles_ctrl == null):
-		var to_return  = _create_editor_handles_ctrl(_for_what)
+		_create_editor_handles_ctrl(_for_what)
 		_disable_handles_for_locks()
 	resized.emit()
 	moved.emit()
