@@ -5,7 +5,8 @@ extends Node2D
 
 @export var rectable : EditorHandles :
 	set(val):
-		rectable = EditorHandles.get_valid_editor_handles_instance(self, val)
+		rectable = EditorHandles.create_or_copy_resource(self, val)
+
 @onready var center = $Center
 @onready var left = $Left
 @onready var right = $Right

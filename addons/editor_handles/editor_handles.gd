@@ -4,11 +4,10 @@ class_name EditorHandles
 # ------------
 # Static
 # ------------
-static var _engine_global = Engine
 
 ## Use in the setter for your editor handles.  Preserves unique (local_to_scene)
 ## EditorHandles instances when duplicating the object in the editor.
-static func get_valid_editor_handles_instance(for_what, new_value):
+static func create_or_copy_resource(for_what, new_value : EditorHandles):
 	if(new_value == null):
 		return null
 
@@ -32,6 +31,8 @@ static func get_valid_editor_handles_instance(for_what, new_value):
 # ------------
 # Local
 # ------------
+var _Engine = Engine
+
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
@@ -140,7 +141,6 @@ func _init() -> void:
 	# This resource should always be local to scene since that is what it is
 	# created for.
 	resource_local_to_scene = true
-	# p("new resource")
 
 
 # Set properties only if different to avoid recursion.
@@ -177,7 +177,6 @@ func _validate_property(property: Dictionary):
 			property.usage ^= PROPERTY_USAGE_EDITOR
 		elif(property.name in _disabled_props):
 			property.usage |= PROPERTY_USAGE_READ_ONLY
-
 
 
 func _emit_signals(signal_list : Array[Signal]):
@@ -234,7 +233,7 @@ func _auto_editor_setup():
 ## when selecting the node in other scenes.
 func editor_setup(for_what : Variant) -> EditorHandlesControl:
 	push_warning("editor_setup is deprecated use the new stuff")
-	if(!_engine_global.is_editor_hint()):
+	if(!_Engine.is_editor_hint()):
 		return null
 	_for_what = for_what
 	var to_return  = _create_editor_handles_ctrl(for_what)
@@ -258,3 +257,7 @@ func set_hidden_instance_properties(to_hide : Array):
 func set_disabled_instance_properties(to_disable : Array):
 	_disabled_props = to_disable
 	notify_property_list_changed()
+
+
+func get_handles_control():
+	return _handles_ctrl

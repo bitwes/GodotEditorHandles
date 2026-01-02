@@ -1,33 +1,34 @@
 [gd_scene load_steps=6 format=3 uid="uid://cqns8x0646dej"]
 
 [ext_resource type="Script" uid="uid://do20r0gscc15s" path="res://test/manual/ObjectsWithHandles/dumbell.gd" id="1_xi3xt"]
-[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_buphq"]
+[ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_cqshe"]
 [ext_resource type="Texture2D" uid="uid://wv03lnx2jywn" path="res://icon.svg" id="3_2resm"]
 [ext_resource type="Texture2D" uid="uid://cpjmmagggbf5n" path="res://icon.png" id="4_cqshe"]
 
-[sub_resource type="Resource" id="Resource_q6o8n"]
+[sub_resource type="Resource" id="Resource_sclyy"]
 resource_local_to_scene = true
-script = ExtResource("2_buphq")
-size = Vector2(137.5, 20)
+script = ExtResource("2_cqshe")
+size = Vector2(100, 30)
 lock_y = true
-lock_y_value = 20
+lock_y_value = 30
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [node name="Dumbell" type="Node2D"]
 script = ExtResource("1_xi3xt")
-rectable = SubResource("Resource_q6o8n")
+rectable = SubResource("Resource_sclyy")
 
 [node name="Center" type="Sprite2D" parent="."]
-scale = Vector2(1.0742188, 0.15625)
+scale = Vector2(0.78125, 0.234375)
 texture = ExtResource("3_2resm")
 
 [node name="Right" type="Sprite2D" parent="."]
-position = Vector2(68.75, 0)
+position = Vector2(50, 0)
 scale = Vector2(0.5, 0.479)
 texture = ExtResource("4_cqshe")
 flip_h = true
 
 [node name="Left" type="Sprite2D" parent="."]
 modulate = Color(3.85046e-06, 0.60275996, 0.9321527, 1)
-position = Vector2(-68.75, 0)
+position = Vector2(-50, 0)
 scale = Vector2(0.5, 0.479)
 texture = ExtResource("4_cqshe")

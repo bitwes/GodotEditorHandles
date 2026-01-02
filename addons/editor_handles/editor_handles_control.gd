@@ -84,6 +84,8 @@ var handle_color_1 = Color.ORANGE
 var handle_color_2 = Color.WHITE
 var handle_color_selected = Color.BLUE
 
+var _Engine = Engine
+
 # Used to track drag distances over time so that snapping can be done.
 var _accum_change = Vector2.ZERO
 var _move_handle_size = 30
@@ -135,13 +137,13 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	if(Engine.is_editor_hint()):
+	if(_Engine.is_editor_hint()):
 		_editor_draw()
 
 
 var _lastZoom
 func _process(_delta):
-	if Engine.is_editor_hint() and is_inside_tree():
+	if _Engine.is_editor_hint() and is_inside_tree():
 		var newZoom = get_viewport().get_final_transform().x.x
 		if _lastZoom != newZoom:
 			queue_redraw()

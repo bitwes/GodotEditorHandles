@@ -6,7 +6,7 @@ class NodeWithHandles:
 	var _engine = Engine
 	@export var editor_handles : EditorHandles :
 		set(val):
-			editor_handles = EditorHandles.get_valid_editor_handles_instance(self, val)
+			editor_handles = EditorHandles.create_or_copy_resource(self, val)
 
 
 	# func _init() -> void:

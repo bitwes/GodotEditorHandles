@@ -6,41 +6,20 @@
 [sub_resource type="Resource" id="Resource_441cp"]
 resource_local_to_scene = true
 script = ExtResource("2_eioi0")
-expand_from_center = true
-resizable = true
-size = Vector2(187.926, 86.9)
-lock_x = false
+size = Vector2(209.13927, 86.9)
 lock_x_value = 50
-lock_y = false
-lock_y_value = 0
-moveable = false
-position = Vector2(0, 0)
 
 [sub_resource type="Resource" id="Resource_5kpys"]
 resource_local_to_scene = true
 script = ExtResource("2_eioi0")
-expand_from_center = true
-resizable = true
-size = Vector2(127.983, 202.897)
-lock_x = false
+size = Vector2(127.983, 163.2989)
 lock_x_value = 50
-lock_y = false
-lock_y_value = 0
-moveable = false
-position = Vector2(0, 0)
 
 [sub_resource type="Resource" id="Resource_y6rdj"]
 resource_local_to_scene = true
 script = ExtResource("2_eioi0")
-expand_from_center = true
-resizable = true
 size = Vector2(210, 275.4)
-lock_x = false
 lock_x_value = 50
-lock_y = false
-lock_y_value = 0
-moveable = false
-position = Vector2(0, 0)
 
 [node name="HasSomeResableCollShapes" type="Node2D"]
 

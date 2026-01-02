@@ -11,32 +11,36 @@ size = Vector2(301.2828, 20)
 lock_y = true
 lock_y_value = 20
 position = Vector2(-17.278488, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [sub_resource type="Resource" id="Resource_fg5wa"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
-size = Vector2(192.2828, 20)
+size = Vector2(207.2828, 20)
 lock_y = true
 lock_y_value = 20
 position = Vector2(-17.278488, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [sub_resource type="Resource" id="Resource_hqe4j"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
 expand_from_center = false
-size = Vector2(180.28284, 20)
+size = Vector2(195.28284, 20)
 lock_y = true
 lock_y_value = 20
-position = Vector2(-231.2785, 0)
+position = Vector2(-223.7785, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [sub_resource type="Resource" id="Resource_vevku"]
 resource_local_to_scene = true
 script = ExtResource("3_hqe4j")
 expand_from_center = false
-size = Vector2(178.28284, 20)
+size = Vector2(188.28284, 20)
 lock_y = true
 lock_y_value = 20
-position = Vector2(-202.2785, 0)
+position = Vector2(-197.2785, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [sub_resource type="Resource" id="Resource_yl12d"]
 resource_local_to_scene = true
@@ -46,6 +50,7 @@ size = Vector2(177.28284, 20)
 lock_y = true
 lock_y_value = 20
 position = Vector2(-232.7785, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [sub_resource type="Resource" id="Resource_p705n"]
 resource_local_to_scene = true
@@ -55,6 +60,7 @@ size = Vector2(205.82399, 20)
 lock_y = true
 lock_y_value = 20
 position = Vector2(-59.00791, 0)
+metadata/_custom_type_script = "uid://4dgjbcjd2gu4"
 
 [node name="TestDuplicatingObjects" type="Node2D"]
 script = ExtResource("1_fkiv3")
@@ -68,7 +74,7 @@ position = Vector2(288, 224)
 rectable = SubResource("Resource_fg5wa")
 
 [node name="DupeOfDumbellOriginal" parent="." instance=ExtResource("2_p705n")]
-position = Vector2(288, 704)
+position = Vector2(128, 736)
 rotation = 1.5707964
 rectable = SubResource("Resource_hqe4j")
 
