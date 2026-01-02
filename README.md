@@ -133,7 +133,7 @@ This is a node that has a `CollsionShape2D` that can be resized in another scene
 ![image](https://github.com/user-attachments/assets/46ed3027-aafb-4828-ae1a-b148c8669833)
 
 
-Here you can multiple instances of the node above in a scene.  Each has different sizes for the collsion shape.  You can also see that some properties have been hidden, which is a cool thing `EditorHandles` can do.
+Here you can see multiple instances of the node above in a scene.  Each has different sizes for the collsion shape.  You can also see that some properties have been hidden, which is a cool thing `EditorHandles` can do.
 ![image](https://github.com/user-attachments/assets/c88c24ca-cea3-4ca7-baa2-ec57a9be4180)
 
 
