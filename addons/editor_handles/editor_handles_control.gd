@@ -1,13 +1,26 @@
 @tool
 extends Node2D
 class_name EditorHandlesControl
+## INTERNAL USE ONLY.
+##
+## This control is added to the tree during design time and is responsible for
+## rendering the handles and handling user input to resize/move.
+##
+## [b]INTERNAL USE ONLY[/b].
+
+
 # ------------------------------------------------------------------------------
 # This is the control that hadles user input in the editor.  This should not be
 # instantiated directly.  The EditorHandles resource is responsible for
 # creating instances of this when in the editor.
 # ------------------------------------------------------------------------------
+## INTERNAL USE ONLY.
+##
+## This is an individual handle of an EditorHandlesControl.
+##
+## [b]INTERNAL USE ONLY[/b].
 class SideHandle:
-	## Center of handle, not rect position.
+	# Center of handle, not rect position.
 	var position = Vector2.ZERO :
 		set(val):
 			position = val

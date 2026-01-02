@@ -17,11 +17,13 @@ I've used this in my own game to create:
 # SUPER VERY IMPORTANT CRITICAL DISCLAIMER
 Once you have made your `@export` and you have used your scene in another scene, DO NOT RENAME the exported variable or you will LOSE ALL SETTINGS IN ALL YOUR INSTANCES.
 
-I suggest that you name all your exported `EditorHandles` the same thing (I've been using `editor_handles`).  You can only have one ([right now](https://github.com/bitwes/GodotEditorHandles/issues/19)) per node, so you don't have to differentiate between multiples on the same object.  Naming them the same everywhere will make it easy to understand what they are and may aleviate the urge to make their names more descriptive.  Think of the `EditorHandles` as a section of properties like the properties in the `Transform` or `Visibility` section of a Node.
+I suggest that you name all your exported `EditorHandles` the same thing (I've been using `editor_handles`).  You can only have one ([right now](https://github.com/bitwes/GodotEditorHandles/issues/19)) per node, so you don't have to differentiate between multiples on the same object.  Naming them the same everywhere will make it easy to understand what they are and may alleviate the urge to make their names more descriptive.  Think of the `EditorHandles` as a section of properties; like the properties in the `Transform` or `Visibility` section of a Node.
 
 
 # VERY IMPORTANT DISCLAIMER
 If you are upgrading, make sure to BACKUP your project BEFORE you install the new version.  There is a chance that upgrading could lose all your settings, making all your objects the wrong size.
+
+You should also restart the editor if you update through the Asset Library.
 
 
 ## LESS IMPORTANT DISCLAIMER
@@ -29,7 +31,7 @@ All `EditorHandles` resources are ALWAYS "local to scene".  This means that if y
 
 
 # Usage
-Your thing that uses an `EditorHandles` MUST be a `@tool`.
+Your script for your Node that uses an `EditorHandles` MUST contain `@tool`.
 
 
 ## Add an EditorHandles property and use it:
@@ -54,11 +56,15 @@ func _ready():
     # scenes or loading scenes in the edtior.
     _apply_editor_handles()
 
-# Example of resizing and moving a TextureRect when handles are moved.  You must
-# implement both size and position if what you resize is not `expand from center` only.
+# Example of resizing and moving a couple things when handles are moved.
+# Even if you do not allow MOVE, you still need to set the size if you want
+# to support `expand_from_center` being disabled.
 func _apply_editor_handles():
     $TextureRect.size = editor_handles.size
     $TextureRect.position = editor_handles.position - $TextureRect.size / 2
+
+	$Area2D/CollisionShape2D.shape.size = collision_shape_props.size
+	$Area2D/CollisionShape2D.position = collision_shape_props.position
 ```
 
 ## Add code to resize/move things.
@@ -106,7 +112,8 @@ As of version `0.2` if you use the new `create_or_copy_resource` method, then yo
     set(val):
         editor_handles = EditorHandles.create_or_copy_resource(self, val)
 ```
-You must still make sure that any other resources in your Node are "local to scene" and you may need to reload the scene to ensure you have new copies of those.
+Any resource you are resizing (such as a `CollisionShap2D.shape`) must be "local_to_scene".  When a node with such a resource is duplicated, you should reload the scene before resizing.  I think it's Godot doing it, but if you do not reload, both the source and the duplicate will appear to resize, but only the one you are resizing will actually get the values.
+
 
 # FAQs and Tips
 There's no FAQs here yet, it's more a QITPMA (questions I thought people might ask).

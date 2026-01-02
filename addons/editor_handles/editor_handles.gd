@@ -1,13 +1,47 @@
 @tool
 extends Resource
 class_name EditorHandles
+## This resource handles all the magic of making cool little handles available
+## in the editor for your objects.
+##
+## Please read [url=https://github.com/bitwes/GodotEditorHandles/blob/main/README.md]the README[/url]
+## before using.  Especially these disclaimers:[br]
+## - SUPER VERY IMPORTANT CRITICAL DISCLAIMER[br]
+## - VERY IMPORTANT DISCLAIMER[br]
+## - LESS IMPORTANT DISCLAIMER[br]
+## [br]
+## [br]
+## Example:
+## [codeblock]
+## @tool # IMPORTANT
+## extends Node2D # or any other type of Node
+##
+## @export var editor_handles : EditorHandles :
+##     set(val):
+##         editor_handles = EditorHandles.create_or_copy_resource(self, val)
+##
+## func _ready():
+##     if(Engine.is_editor_hint()):
+##         editor_handles.changed.connect(_apply_editor_handles)
+##
+##     _apply_editor_handles()
+##
+## func _apply_editor_handles():
+##     $TextureRect.size = editor_handles.size
+##     $TextureRect.position = editor_handles.position - $TextureRect.size / 2
+##
+##     $Area2D/CollisionShape2D.shape.size = collision_shape_props.size
+##     $Area2D/CollisionShape2D.position = collision_shape_props.position
+## [/codeblock]
+
+
 # ------------
 # Static
 # ------------
 
 ## Use in the setter for your editor handles.  Preserves unique (local_to_scene)
 ## EditorHandles instances when duplicating the object in the editor.
-static func create_or_copy_resource(for_what, new_value : EditorHandles):
+static func create_or_copy_resource(for_what : Node, new_value : EditorHandles):
 	if(new_value == null):
 		return null
 
@@ -41,7 +75,7 @@ var _handles_ctrl : EditorHandlesControl = null :
 		if(_handles_ctrl == null):
 			_handles_ctrl = val
 		else:
-			push_warning('Cannot set EHC again.  Ignore this warning for duplicates.')
+			push_error('Cannot set EHC again.')
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
@@ -50,11 +84,13 @@ var _for_what = null
 
 ## When resizing, it will expand in all directions from the center.  When
 ## false, resizing will only resize the sides being dragged and the position
-## will change to keep the undragged sides at the same location.
+## will change to keep the undragged sides at the same location.  For this to
+## work properly you must handle a change in position as well as resize.
 @export var expand_from_center := true :
 	set(val):
 		expand_from_center = val
 		_apply_properties_to_handles_ctrl()
+
 ## Incremental resize.  Takes precedence over snap settings.  Setting size
 ## manually not affected by snap.  Resize Snap only checks the drag distance,
 ## not that the size is a multiple of Resize Snap.  Set to (0,0) to disable.
@@ -128,13 +164,10 @@ var _for_what = null
 		_emit_signals([moved, changed])
 
 
-## Emitted when size changes  You can also use the signal "changed".
+## Emitted when size changes  You can also use the [signal Resource.changed] signal.
 signal resized
-## Emitted when position changes.  You can also use the signal "changed".
+## Emitted when position changes.  You can also use the [signal Resource.changed] signal.
 signal moved
-
-func p(p1='', p2='', p3='', p4='', p5='', p6='', p7='', p8='', p9='', p10='', ):
-	print("EHRes", self, '::', _handles_ctrl, ':  ', str(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10))
 
 
 func _init() -> void:
@@ -217,11 +250,12 @@ func _create_editor_handles_ctrl(for_what):
 
 
 func _auto_editor_setup():
-	if(_handles_ctrl == null):
-		_create_editor_handles_ctrl(_for_what)
-		_disable_handles_for_locks()
-	resized.emit()
-	moved.emit()
+	if(_Engine.is_editor_hint()):
+		if(_handles_ctrl == null):
+			_create_editor_handles_ctrl(_for_what)
+			_disable_handles_for_locks()
+		resized.emit()
+		moved.emit()
 
 
 ## Call this in ready.  You probably want to call this only when

@@ -19,14 +19,14 @@ func _new_editor_handles_control(with_these_props = null):
 		eh.size = Vector2(100, 100)
 		eh.position = Vector2(100, 100)
 
-	eh.create_or_copy_resource(add_to, eh)
-	add_child(add_to)
-
 	var e = double_singleton(Engine).new()
 	stub(e.is_editor_hint).to_return(true)
 
-	eh._auto_editor_setup()
-	var ehc = autofree(eh.get_handles_control())
+	eh._Engine = e
+	eh.create_or_copy_resource(add_to, eh)
+	add_child(add_to)
+
+	var ehc = eh.get_handles_control()
 	ehc._Engine = e
 	ehc.is_being_edited = true
 
@@ -38,6 +38,7 @@ func _new_editor_handles_control(with_these_props = null):
 func test_can_make_one():
 	var ehc = autofree(EditorHandlesControl.new(EditorHandles.new()))
 	assert_not_null(ehc)
+
 
 func test_lock_x_disables_handles():
 	var ehc = _new_editor_handles_control()
