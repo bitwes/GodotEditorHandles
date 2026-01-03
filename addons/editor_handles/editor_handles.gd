@@ -65,6 +65,7 @@ static func create_or_copy_resource(for_what : Node, new_value : EditorHandles):
 # ------------
 # Local
 # ------------
+# Injectable Singleton
 var _Engine = Engine
 
 # used to prevent signals from firing when a property is being set in a signal
@@ -258,7 +259,9 @@ func _auto_editor_setup():
 		moved.emit()
 
 
-## Call this in ready.  You probably want to call this only when
+## @deprecated use [method create_or_copy_resource]
+## [br]
+## Use Call this in ready.  You probably want to call this only when
 ## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
 ## all the time.
 ## for_what should ALWAYS be the root node of the scene.  I don't think there is
@@ -293,5 +296,9 @@ func set_disabled_instance_properties(to_disable : Array):
 	notify_property_list_changed()
 
 
+## This returns the EditorHandlesControl that is added during design time.  
+## I can't think of a reason you would want to use this.  I needed it, and 
+## I hate calling "private" methods so much that I had to write this, instead
+## of hiding it away.
 func get_handles_control():
 	return _handles_ctrl
