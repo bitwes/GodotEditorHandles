@@ -119,7 +119,7 @@ Any resource you are resizing (such as a `CollisionShap2D.shape`) must be "local
 There's no FAQs here yet, it's more a QITPMA (questions I thought people might ask).
 * Map a shortcut for "Reload Saved Scene", as it is sometimes necessary to relaod the scene to see changes made to `EditorHandles`.
 * Can I use this at runtime?  [Probably, but not easily yet.](https://github.com/bitwes/GodotEditorHandles/issues/13)
-* Will this "snap to grid".  Yep.
+* Will this "snap to grid".  Yep, but you have to open the "Configure Snap" dialog once per session.
 
 
 # Install
