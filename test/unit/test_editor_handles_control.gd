@@ -11,18 +11,25 @@ func after_each():
 	_sender.clear()
 
 
-func _new_editor_handles_control(with_these_props = null, add_to = self):
+func _new_editor_handles_control(with_these_props = null):
+	var add_to = autofree(Node2D.new())
 	var eh = with_these_props
 	if(eh == null):
 		eh = EditorHandles.new()
 		eh.size = Vector2(100, 100)
 		eh.position = Vector2(100, 100)
-	# editor_setup does the add_child
-	var ehc = autofree(eh.editor_setup(add_to))
+
+	var e = double_singleton(Engine).new()
+	stub(e.is_editor_hint).to_return(true)
+
+	eh._Engine = e
+	eh.create_or_copy_resource(add_to, eh)
+	add_child(add_to)
+
+	var ehc = eh.get_handles_control()
+	ehc._Engine = e
 	ehc.is_being_edited = true
 
-	# get around it not drawing when not in editor.
-	ehc.draw.connect(func(): ehc._editor_draw())
 	ehc.queue_redraw()
 
 	return ehc
@@ -31,6 +38,7 @@ func _new_editor_handles_control(with_these_props = null, add_to = self):
 func test_can_make_one():
 	var ehc = autofree(EditorHandlesControl.new(EditorHandles.new()))
 	assert_not_null(ehc)
+
 
 func test_lock_x_disables_handles():
 	var ehc = _new_editor_handles_control()

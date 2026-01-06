@@ -1,9 +1,26 @@
 @tool
 extends Node2D
 class_name EditorHandlesControl
+## INTERNAL USE ONLY.
+##
+## This control is added to the tree during design time and is responsible for
+## rendering the handles and handling user input to resize/move.
+##
+## [b]INTERNAL USE ONLY[/b].
 
+
+# ------------------------------------------------------------------------------
+# This is the control that hadles user input in the editor.  This should not be
+# instantiated directly.  The EditorHandles resource is responsible for
+# creating instances of this when in the editor.
+# ------------------------------------------------------------------------------
+## INTERNAL USE ONLY.
+##
+## This is an individual handle of an EditorHandlesControl.
+##
+## [b]INTERNAL USE ONLY[/b].
 class SideHandle:
-	## Center of handle, not rect position.
+	# Center of handle, not rect position.
 	var position = Vector2.ZERO :
 		set(val):
 			position = val
@@ -49,6 +66,8 @@ class SideHandle:
 			draw_on.draw_circle(position, r * .8, c)
 
 
+
+
 var snap_settings = load('res://addons/editor_handles/snap_settings.gd').new()
 var eh : EditorHandles
 var size = Vector2(100, 100) :
@@ -78,6 +97,8 @@ var handle_color_1 = Color.ORANGE
 var handle_color_2 = Color.WHITE
 var handle_color_selected = Color.BLUE
 
+var _Engine = Engine
+
 # Used to track drag distances over time so that snapping can be done.
 var _accum_change = Vector2.ZERO
 var _move_handle_size = 30
@@ -94,6 +115,9 @@ var _handles = {
 	cl = SideHandle.new()
 }
 
+func p(p1='', p2='', p3='', p4='', p5='', p6='', p7='', p8='', p9='', p10='', ):
+	print("EHC|", self, '|:  ', str(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10))
+
 var _focused_handle : SideHandle = null :
 	set(val):
 		if(_focused_handle != null):
@@ -105,25 +129,34 @@ var _focused_handle : SideHandle = null :
 		queue_redraw()
 
 
-func _init(edit_rect_props : EditorHandles):
-	eh = edit_rect_props
-	_init_handles()
+func _init(edit_rect_props : EditorHandles = null):
+	if(edit_rect_props == null):
+		eh = null
+	else:
+		eh = edit_rect_props
+		_init_handles()
 
 
 func _ready() -> void:
-	position = eh.position
-	_update_handles()
-	snap_settings.update_values_from_editor.call_deferred()
+	if(eh == null):
+		# If we made it to ready and we don't have an editor handles instance
+		# then this was created by duplicating an object and so therefore
+		# should be freed.
+		queue_free()
+	else:
+		position = eh.position
+		_update_handles()
+		snap_settings.update_values_from_editor.call_deferred()
 
 
 func _draw() -> void:
-	if(Engine.is_editor_hint()):
+	if(_Engine.is_editor_hint()):
 		_editor_draw()
 
 
 var _lastZoom
 func _process(_delta):
-	if Engine.is_editor_hint() and is_inside_tree():
+	if _Engine.is_editor_hint() and is_inside_tree():
 		var newZoom = get_viewport().get_final_transform().x.x
 		if _lastZoom != newZoom:
 			queue_redraw()

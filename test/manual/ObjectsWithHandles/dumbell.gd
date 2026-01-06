@@ -1,19 +1,24 @@
 @tool
+class_name Dumbell
 extends Node2D
 
-@export var rectable : EditorHandles
+
+@export var rectable : EditorHandles :
+	set(val):
+		rectable = EditorHandles.create_or_copy_resource(self, val)
+
 @onready var center = $Center
 @onready var left = $Left
 @onready var right = $Right
 
 
 func _ready():
-	rectable.editor_setup(self)
-	rectable.resized.connect(_resize_for_rect)
-	_resize_for_rect()
+	if(Engine.is_editor_hint()):
+		rectable.resized.connect(_apply_editor_handles)
+	_apply_editor_handles()
 
 
-func _resize_for_rect():
+func _apply_editor_handles():
 	center.scale = rectable.size / center.texture.get_size()
 	center.position = rectable.position
 	left.position = rectable.position - rectable.size / 2

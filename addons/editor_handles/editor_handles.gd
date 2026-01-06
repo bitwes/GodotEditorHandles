@@ -1,23 +1,97 @@
 @tool
 extends Resource
 class_name EditorHandles
+## This resource handles all the magic of making cool little handles available
+## in the editor for your objects.
+##
+## Please read [url=https://github.com/bitwes/GodotEditorHandles/blob/main/README.md]the README[/url]
+## before using.  Especially these disclaimers:[br]
+## - SUPER VERY IMPORTANT CRITICAL DISCLAIMER[br]
+## - VERY IMPORTANT DISCLAIMER[br]
+## - LESS IMPORTANT DISCLAIMER[br]
+## [br]
+## [br]
+## Example:
+## [codeblock]
+## @tool # IMPORTANT
+## extends Node2D # or any other type of Node
+##
+## @export var editor_handles : EditorHandles :
+##     set(val):
+##         editor_handles = EditorHandles.create_or_copy_resource(self, val)
+##
+## func _ready():
+##     if(Engine.is_editor_hint()):
+##         editor_handles.changed.connect(_apply_editor_handles)
+##
+##     _apply_editor_handles()
+##
+## func _apply_editor_handles():
+##     $TextureRect.size = editor_handles.size
+##     $TextureRect.position = editor_handles.position - $TextureRect.size / 2
+##
+##     $Area2D/CollisionShape2D.shape.size = collision_shape_props.size
+##     $Area2D/CollisionShape2D.position = collision_shape_props.position
+## [/codeblock]
+
+
+# ------------
+# Static
+# ------------
+
+## Use in the setter for your editor handles.  Preserves unique (local_to_scene)
+## EditorHandles instances when duplicating the object in the editor.
+static func create_or_copy_resource(for_what : Node, new_value : EditorHandles):
+	if(new_value == null):
+		return null
+
+	var to_return = new_value
+	if(new_value._for_what != null and for_what != new_value._for_what):
+		to_return = new_value.duplicate()
+		to_return._for_what = for_what
+	else:
+		new_value._for_what = for_what
+
+	for_what.ready.connect(func():
+		to_return._auto_editor_setup(),
+		CONNECT_ONE_SHOT
+	)
+
+	return to_return
+
+
+
+
+# ------------
+# Local
+# ------------
+# Injectable Singleton
+var _Engine = Engine
 
 # used to prevent signals from firing when a property is being set in a signal
 # handler (such as clamping the position or size).
 var _is_currently_setting_property = false
-var _handles_ctrl : EditorHandlesControl = null
+var _handles_ctrl : EditorHandlesControl = null :
+	set(val):
+		if(_handles_ctrl == null):
+			_handles_ctrl = val
+		else:
+			push_error('Cannot set EHC again.')
 var _is_instance = false
 var _hidden_props := []
 var _disabled_props := []
-static var _engine_global = Engine
+var _for_what = null
+
 
 ## When resizing, it will expand in all directions from the center.  When
 ## false, resizing will only resize the sides being dragged and the position
-## will change to keep the undragged sides at the same location.
+## will change to keep the undragged sides at the same location.  For this to
+## work properly you must handle a change in position as well as resize.
 @export var expand_from_center := true :
 	set(val):
 		expand_from_center = val
 		_apply_properties_to_handles_ctrl()
+
 ## Incremental resize.  Takes precedence over snap settings.  Setting size
 ## manually not affected by snap.  Resize Snap only checks the drag distance,
 ## not that the size is a multiple of Resize Snap.  Set to (0,0) to disable.
@@ -91,9 +165,9 @@ static var _engine_global = Engine
 		_emit_signals([moved, changed])
 
 
-## Emitted when size changes  You can also use the signal "changed".
+## Emitted when size changes  You can also use the [signal Resource.changed] signal.
 signal resized
-## Emitted when position changes.  You can also use the signal "changed".
+## Emitted when position changes.  You can also use the [signal Resource.changed] signal.
 signal moved
 
 
@@ -139,7 +213,6 @@ func _validate_property(property: Dictionary):
 			property.usage |= PROPERTY_USAGE_READ_ONLY
 
 
-
 func _emit_signals(signal_list : Array[Signal]):
 	notify_property_list_changed()
 	if(!_is_currently_setting_property):
@@ -164,17 +237,7 @@ func _disable_handles_for_locks():
 			_handles_ctrl._handles[key].disabled = lock_y
 
 
-## Call this in ready.  You probably want to call this only when
-## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
-## all the time.
-## for_what should ALWAYS be the root node of the scene.  I don't think there is
-## a way to determine what this resource is for, so you have to tell it.  Also
-## the control has to be added to the root node for it to be found by the plugin
-## when selecting the node in other scenes.
-func editor_setup(for_what : Variant) -> EditorHandlesControl:
-	if(!_engine_global.is_editor_hint()):
-		return null
-
+func _create_editor_handles_ctrl(for_what):
 	var to_return  = EditorHandlesControl.new(self)
 	_is_instance = for_what.owner != null
 	to_return.position = position
@@ -184,6 +247,36 @@ func editor_setup(for_what : Variant) -> EditorHandlesControl:
 	_handles_ctrl = to_return
 	for_what.add_child(to_return)
 	_disable_handles_for_locks()
+	return to_return
+
+
+func _auto_editor_setup():
+	if(_Engine.is_editor_hint()):
+		if(_handles_ctrl == null):
+			_create_editor_handles_ctrl(_for_what)
+			_disable_handles_for_locks()
+		resized.emit()
+		moved.emit()
+
+
+## @deprecated use [method create_or_copy_resource]
+## [br]
+## Use Call this in ready.  You probably want to call this only when
+## `Engine.is_editor_hint()` is true, but it won't hurt anything if you do it
+## all the time.
+## for_what should ALWAYS be the root node of the scene.  I don't think there is
+## a way to determine what this resource is for, so you have to tell it.  Also
+## the control has to be added to the root node for it to be found by the plugin
+## when selecting the node in other scenes.
+func editor_setup(for_what : Variant) -> EditorHandlesControl:
+	push_warning("editor_setup is deprecated use the new stuff")
+	if(!_Engine.is_editor_hint()):
+		return null
+	_for_what = for_what
+	var to_return  = _create_editor_handles_ctrl(for_what)
+	_disable_handles_for_locks()
+	resized.emit()
+	moved.emit()
 	return to_return
 
 
@@ -201,3 +294,11 @@ func set_hidden_instance_properties(to_hide : Array):
 func set_disabled_instance_properties(to_disable : Array):
 	_disabled_props = to_disable
 	notify_property_list_changed()
+
+
+## This returns the EditorHandlesControl that is added during design time.  
+## I can't think of a reason you would want to use this.  I needed it, and 
+## I hate calling "private" methods so much that I had to write this, instead
+## of hiding it away.
+func get_handles_control():
+	return _handles_ctrl

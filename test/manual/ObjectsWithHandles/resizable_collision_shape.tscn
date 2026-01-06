@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bgmdvuxbj6y41"]
 
-[ext_resource type="Script" uid="uid://cd3xnp4pf4tjt" path="res://test/manual/resizable_collision_shape.gd" id="1_0nhfk"]
+[ext_resource type="Script" uid="uid://cd3xnp4pf4tjt" path="res://test/manual/ObjectsWithHandles/resizable_collision_shape.gd" id="1_0nhfk"]
 [ext_resource type="Script" uid="uid://4dgjbcjd2gu4" path="res://addons/editor_handles/editor_handles.gd" id="2_21sjh"]
 [ext_resource type="Texture2D" uid="uid://wv03lnx2jywn" path="res://icon.svg" id="3_50r73"]
 
@@ -8,14 +8,13 @@
 resource_local_to_scene = true
 script = ExtResource("2_21sjh")
 expand_from_center = false
-resize_snap = Vector2(20, 20)
-size = Vector2(128, 128)
+size = Vector2(128, 128.15656)
 lock_x_value = 50
-position = Vector2(0.00025177002, 0)
+position = Vector2(0.00025177002, -0.07827759)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nvf70"]
 resource_local_to_scene = true
-size = Vector2(128, 128)
+size = Vector2(128, 128.15656)
 
 [node name="ResizableCollisionShape" type="Node2D"]
 script = ExtResource("1_0nhfk")
@@ -28,5 +27,5 @@ texture = ExtResource("3_50r73")
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(0.00025177002, 0)
+position = Vector2(0.00025177002, -0.07827759)
 shape = SubResource("RectangleShape2D_nvf70")
